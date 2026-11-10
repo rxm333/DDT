@@ -104,7 +104,8 @@
 }
 /* Hauteur : la section tient dans l'écran (100 svh) sur ordinateur, la scène prend la place libre */
 @media (min-width: 992px) {
-  .section_col-hero .col-hero_component { height: 100vh; height: 100svh; min-height: 36rem; box-sizing: border-box; align-items: stretch; }
+  .section_col-hero .col-hero_component { height: 100vh; height: 100svh; min-height: 36rem; box-sizing: border-box; flex-wrap: nowrap; align-items: stretch; }
+  .section_col-hero .col-hero_viewer { height: auto; max-height: 100%; }
   .section_col-hero .col-hero_content { align-self: center; }
   .section_col-hero .col-hero_viewer { display: flex; min-height: 0; }
   .section_col-hero .col-viewer_component { flex: 1; height: auto; min-height: 0; }

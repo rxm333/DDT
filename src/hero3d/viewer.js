@@ -115,7 +115,7 @@ export async function mountViewer(viewer) {
     const r = (active?.full || 10) * 0.62;
     const vfov = THREE.MathUtils.degToRad(camera.fov) / 2;
     const hfov = Math.atan(Math.tan(vfov) * camera.aspect);
-    orbit.dist = Math.max(r / Math.sin(vfov), r / Math.sin(hfov)) * 0.84;
+    orbit.dist = Math.max((r / Math.sin(vfov)) * 0.84, (r / Math.sin(hfov)) * 0.98);
   };
   const place = () => {
     const { az, el, dist, target } = orbit;

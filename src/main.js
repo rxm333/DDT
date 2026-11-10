@@ -21,7 +21,7 @@ import { initModelViewers } from './modules/model-viewer.js';
 import { initSwipers } from './modules/swiper.js';
 import { initAnnounce } from './modules/announce.js';
 
-const VERSION = '1.10.0';
+const VERSION = '1.10.1';
 
 function safe(name, fn) {
   try {
