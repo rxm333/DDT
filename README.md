@@ -51,8 +51,8 @@ npm run dev     # rebuild automatique à chaque modification
 1. Pousser le repo sur GitHub **avec le dossier `dist/`** (il n'est pas ignoré).
 2. Créer un tag de version : `git tag v1.0.0 && git push --tags`.
 3. URLs CDN (remplacer `rxm333`) :
-   - `https://cdn.jsdelivr.net/gh/rxm333/DDT@v1.0.0/dist/dame-de-tours.min.css`
-   - `https://cdn.jsdelivr.net/gh/rxm333/DDT@v1.0.0/dist/dame-de-tours.min.js`
+   - `https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.css`
+   - `https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.js`
 
 Toujours pointer vers un **tag** (et pas `@main`) : cache CDN long, aucune mise en production accidentelle.
 
@@ -61,12 +61,12 @@ Toujours pointer vers un **tag** (et pas `@main`) : cache CDN long, aucune mise 
 **Site settings → Custom code → Head code**
 ```html
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rxm333/DDT@v1.0.0/dist/dame-de-tours.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.css">
 ```
 
 **Site settings → Custom code → Footer code**
 ```html
-<script defer src="https://cdn.jsdelivr.net/gh/rxm333/DDT@v1.0.0/dist/dame-de-tours.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.js"></script>
 ```
 
 Le script ne tourne que sur le site publié / la prévisualisation, pas dans le canvas du Designer.
