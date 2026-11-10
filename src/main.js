@@ -18,7 +18,7 @@ import { initCustomizer } from './modules/customizer.js';
 import { initAccordions } from './modules/accordion.js';
 import { loadHero3d } from './modules/hero3d-loader.js';
 
-const VERSION = '1.7.1';
+const VERSION = '1.7.2';
 
 function safe(name, fn) {
   try {

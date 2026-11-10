@@ -85,8 +85,8 @@ function boardTexture(size) {
 // ---------- Scène ----------
 function buildBoard(maxTex) {
   const g = new THREE.Group();
-  const top = new THREE.MeshStandardMaterial({ map: boardTexture(maxTex), roughness: 0.55, metalness: 0.05 });
-  const side = new THREE.MeshStandardMaterial({ color: COLORS.frame, roughness: 0.6 });
+  const top = new THREE.MeshStandardMaterial({ map: boardTexture(maxTex), roughness: 0.55, metalness: 0.05, transparent: true, opacity: 0 });
+  const side = new THREE.MeshStandardMaterial({ color: COLORS.frame, roughness: 0.6, transparent: true, opacity: 0 });
   const body = new THREE.Mesh(new THREE.BoxGeometry(FULL, THICK, FULL), [side, side, top, side, side, side]);
   body.position.y = -THICK / 2;
   body.receiveShadow = true;
@@ -94,8 +94,9 @@ function buildBoard(maxTex) {
   g.add(body);
 
   // Coins sombres et clous ornementaux
-  const cornerMat = new THREE.MeshStandardMaterial({ color: '#0f0f12', roughness: 0.35, metalness: 0.2 });
-  const studMat = new THREE.MeshStandardMaterial({ color: COLORS.stud, roughness: 0.3, metalness: 0.9 });
+  const cornerMat = new THREE.MeshStandardMaterial({ color: '#0f0f12', roughness: 0.35, metalness: 0.2, transparent: true, opacity: 0 });
+  const studMat = new THREE.MeshStandardMaterial({ color: COLORS.stud, roughness: 0.3, metalness: 0.9, transparent: true, opacity: 0 });
+  g.userData.mats = [top, side, cornerMat, studMat];
   const corner = new THREE.BoxGeometry(FRAME * 0.92, THICK + 0.05, FRAME * 0.92);
   const stud = new THREE.CylinderGeometry(0.06, 0.06, 0.03, 16);
   const h = FULL / 2 - FRAME * 0.46;
@@ -129,20 +130,21 @@ function buildPieces(geos) {
   const pieces = [];
   const make = (type, color, file, rank) => {
     const g = new THREE.Group();
+    const mat = mats[color].clone(); // une matière par pièce : fondu d'apparition individuel
     geos[type].forEach((part) => {
       const geometry = part.geometry || part;
-      const m = new THREE.Mesh(geometry, mats[color]);
+      const m = new THREE.Mesh(geometry, mat);
       if (part.y) m.position.y = part.y;
       m.castShadow = true;
       m.receiveShadow = true;
       g.add(m);
     });
-    const deco = decorate(type, mats[color]);
+    const deco = decorate(type, mat);
     deco.traverse((o) => (o.castShadow = true));
     g.add(deco);
     g.position.set(file - 3.5, 0, rank - 3.5);
     if (type === 'knight') g.rotation.y = color === 'white' ? 0 : Math.PI;
-    g.userData = { type, color, file, rank, home: g.position.clone() };
+    g.userData = { type, color, file, rank, home: g.position.clone(), mat };
     pieces.push(g);
   };
   for (let f = 0; f < 8; f++) {
@@ -151,13 +153,10 @@ function buildPieces(geos) {
     make('pawn', 'black', f, 6);
     make(BACK[f], 'black', f, 7);
   }
-  // Ordre d'arrivée : pions en vague, puis tours → rois, en alternant les couleurs
-  const rankOrder = { pawn: 0, rook: 1, knight: 2, bishop: 3, queen: 4, king: 5 };
-  pieces.sort((a, b) => {
-    const A = a.userData;
-    const B = b.userData;
-    return rankOrder[A.type] - rankOrder[B.type] || Math.abs(A.file - 3.5) - Math.abs(B.file - 3.5) || (A.color < B.color ? -1 : 1);
-  });
+  // Ordre d'arrivée : une vague qui balaie le plateau de gauche à droite, à l'écran
+  const yaw = THREE.MathUtils.degToRad(WORLD_YAW);
+  const screenX = (p) => p.position.x * Math.cos(yaw) + p.position.z * Math.sin(yaw);
+  pieces.sort((a, b) => screenX(a) - screenX(b));
   return pieces;
 }
 
@@ -165,7 +164,6 @@ function buildPieces(geos) {
 const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeOutQuint = (t) => 1 - (1 - t) ** 5;
-const easeOutBack = (t, s = 1.6) => 1 + (s + 1) * (t - 1) ** 3 + s * (t - 1) ** 2;
 
 export function mount(container) {
   if (!container || container.dataset.hero3d) return null;
@@ -173,7 +171,8 @@ export function mount(container) {
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   } catch {
-    return null; // pas de WebGL : on laisse le héros tel quel
+    container.closest('.section_hero')?.classList.add('is-hero-in'); // pas de WebGL : le texte s'affiche
+    return null;
   }
   container.dataset.hero3d = 'true';
   const section = container.closest('.section_hero') || container.parentElement;
@@ -220,6 +219,7 @@ export function mount(container) {
   const world = new THREE.Group();
   const board = buildBoard(Math.min(renderer.capabilities.maxTextureSize, mobile ? 1024 : 2048));
   const pieces = buildPieces(createGeometries());
+  const boardMats = board.userData.mats;
   world.add(ground, board, ...pieces);
   world.rotation.y = THREE.MathUtils.degToRad(WORLD_YAW); // blancs au fond à gauche, noirs devant à droite
   scene.add(world);
@@ -249,6 +249,7 @@ export function mount(container) {
     const h = container.clientHeight || 1;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
+    camera.zoom = 1;
     camera.clearViewOffset();
     camera.updateProjectionMatrix();
     const wantH = FRAME_BOX.bottom - FRAME_BOX.top;
@@ -266,28 +267,50 @@ export function mount(container) {
   };
   fit();
 
-  // ---------- Intro : le plateau arrive, puis les pièces se posent une à une ----------
+  // ---------- Intro ----------
+  // 1. le plateau apparaît en douceur pendant que la caméra s'approche ;
+  // 2. les pièces se posent en vague (petite descente + fondu, sans rebond) ;
+  // 3. puis le texte du héros apparaît (classes posées sur la section, transitions en CSS).
   const still = reduceMotion();
-  const T = { board: 1.3, start: 0.85, stagger: 0.055, drop: 0.7 };
-  const introEnd = T.start + pieces.length * T.stagger + T.drop + 0.2;
+  const T = { board: 1.8, start: 0.7, stagger: 0.034, piece: 0.95, camera: 3.2 };
+  const introEnd = T.start + pieces.length * T.stagger + T.piece;
+  const TEXT_AT = T.start + pieces.length * T.stagger * 0.75;
   pieces.forEach((p, i) => (p.userData.t0 = T.start + i * T.stagger));
 
   const pose = (t) => {
     const b = easeOutQuint(clamp01(t / T.board));
-    board.position.y = -1.4 * (1 - b);
-    board.rotation.y = 0.35 * (1 - b);
+    board.position.y = -0.35 * (1 - b);
     ground.material.opacity = 0.35 * b;
+    boardMats.forEach((m) => (m.opacity = b));
+    if (b >= 1 && boardMats[0].transparent) boardMats.forEach((m) => ((m.transparent = false), (m.needsUpdate = true)));
     pieces.forEach((p) => {
-      const k = clamp01((t - p.userData.t0) / T.drop);
+      const u = p.userData;
+      const k = clamp01((t - u.t0) / T.piece);
       p.visible = k > 0;
-      const fall = easeOutCubic(Math.min(k / 0.72, 1)); // chute
-      const land = clamp01((k - 0.62) / 0.38); // petit tassement à l'atterrissage
-      const squash = k < 0.62 ? 1 : 1 - 0.1 * Math.sin(land * Math.PI) * (1 - land * 0.4);
-      p.position.y = p.userData.home.y + 2.6 * (1 - fall);
-      p.scale.set(2 - squash, squash, 2 - squash).multiplyScalar(PIECE_SCALE * (0.92 + 0.08 * easeOutBack(Math.min(k * 1.4, 1))));
-      p.rotation.x = 0;
+      const e = easeOutQuint(k);
+      p.position.y = u.home.y + 0.45 * (1 - e);
+      p.scale.setScalar(PIECE_SCALE * (0.97 + 0.03 * e));
+      const fading = k < 1;
+      if (u.mat.transparent !== fading) {
+        u.mat.transparent = fading;
+        u.mat.needsUpdate = true;
+      }
+      u.mat.opacity = easeOutCubic(k);
+      const shadow = k > 0.35;
+      if (u.shadow !== shadow) {
+        u.shadow = shadow;
+        p.traverse((o) => (o.castShadow = shadow));
+      }
     });
   };
+
+  let textShown = false;
+  const showText = () => {
+    if (textShown) return;
+    textShown = true;
+    section.classList.add('is-hero-in');
+  };
+  if (still) showText();
 
   // ---------- Mouvement au repos + parallaxe souris ----------
   const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
@@ -360,10 +383,13 @@ export function mount(container) {
     pose(still ? introEnd : elapsed);
     pointer.sx += (pointer.x - pointer.sx) * Math.min(dt * 3, 1);
     pointer.sy += (pointer.y - pointer.sy) * Math.min(dt * 3, 1);
-    const settle = easeOutCubic(clamp01((elapsed - T.start) / 2.5));
-    const idle = still ? 0 : Math.sin(elapsed * 0.45) * 0.035 * settle;
-    const az = view.azimuth + idle + pointer.sx * 0.07 * settle - 0.12 * (1 - settle);
-    const el = view.elevation + pointer.sy * 0.03 * settle + 0.08 * (1 - settle);
+    if (elapsed >= TEXT_AT) showText();
+    const settle = still ? 1 : easeOutQuint(clamp01(elapsed / T.camera));
+    const idle = still ? 0 : Math.sin(Math.max(elapsed - T.camera, 0) * 0.45) * 0.03 * easeOutCubic(clamp01((elapsed - T.camera) / 2));
+    const az = view.azimuth + idle + pointer.sx * 0.06 * settle - 0.16 * (1 - settle);
+    const el = view.elevation + pointer.sy * 0.025 * settle + 0.07 * (1 - settle);
+    camera.zoom = 1 - 0.08 * (1 - settle); // léger travelling avant
+    camera.updateProjectionMatrix();
     // Élan après un lancer, puis l'inclinaison revient doucement
     if (!spin.drag) {
       spin.yaw += spin.v * dt;
