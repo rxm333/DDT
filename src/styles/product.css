@@ -1,0 +1,35 @@
+/* Fiche produit : états (miniature active, finition courante), quantité, accordéon, carte personnaliseur. */
+
+
+/* ---------- Fiche produit ---------- */
+/* Miniature sélectionnée / finition courante */
+.prod-hero_thumb[aria-pressed="true"] { opacity: 1; border-color: var(--_theme---accent--default); border-width: 1.5px; }
+.prod-buy_option[aria-current="page"] { border-color: var(--_theme---accent--default); border-width: 1.5px; color: var(--_theme---text--default); }
+/* Sélecteur de quantité */
+.prod-qty_input { -moz-appearance: textfield; appearance: textfield; }
+.prod-qty_input::-webkit-outer-spin-button, .prod-qty_input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.prod-qty_input:focus-visible { outline: 2px solid var(--_theme---system--focus-state); outline-offset: 2px; border-radius: 4px; }
+.prod-qty_button:disabled { opacity: 0.4; cursor: not-allowed; background-color: transparent; }
+/* Accordéon natif (details/summary) */
+.prod-acc_summary::-webkit-details-marker { display: none; }
+.prod-acc_summary::marker { content: ""; }
+.prod-acc_item[open] > .prod-acc_summary .prod-acc_icon path:last-child { display: none; }
+.prod-acc_list-item::before { content: ""; position: absolute; left: 0; top: 0.5625rem; width: 5px; height: 5px; border-radius: 50%; background-color: var(--_theme---accent--default); }
+.prod-acc_link:hover { color: var(--_theme---accent--hover); }
+/* Carte « Créez le vôtre » */
+.prod-custom_swatch:nth-child(1) { background-color: #f3efd4; }
+.prod-custom_swatch:nth-child(2) { background-color: #32234e; }
+.prod-custom_swatch:nth-child(3) { background-color: #b30624; }
+.prod-custom_swatch:nth-child(4) { background-color: #ea6414; }
+.prod-custom_swatch:nth-child(5) { background-color: #d9b364; }
+.prod-custom_swatch:nth-child(6) { background-color: #2b4923; }
+.prod-custom_swatch:nth-child(7) { background-color: #2d6a75; }
+.prod-custom_swatch:nth-child(8) { background-color: #d90075; }
+.prod-custom_swatch:nth-child(9) { background-color: #141414; }
+.prod-custom_card:hover .prod-custom_media { border-color: var(--_theme---accent--border-strong); box-shadow: 0 0 0 1px var(--_theme---accent--border), 0 20px 48px -12px rgba(178, 107, 255, 0.28); }
+.prod-custom_card:hover .prod-custom_image { transform: scale(1.04); }
+.prod-custom_card:hover .prod-custom_button { background-color: var(--_theme---accent--hover); }
+@media (prefers-reduced-motion: reduce) {
+  .prod-hero_thumb, .prod-buy_option, .prod-buy_add, .prod-custom_media, .prod-custom_image, .prod-custom_button { transition: none; }
+  .prod-custom_card:hover .prod-custom_image { transform: none; }
+}

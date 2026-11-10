@@ -3,6 +3,7 @@
  * Chargé depuis Webflow avec <script defer>. Aucune interaction Webflow / webflow.js n'est utilisée.
  */
 import './styles/main.css';
+import './styles/product.css';
 import { ScrollTrigger } from './core/gsap.js';
 import { initSmoothScroll, scrollToTarget, stopScroll, startScroll } from './modules/smooth-scroll.js';
 import { initNavbar } from './modules/navbar.js';
