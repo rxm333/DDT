@@ -86,6 +86,8 @@ function create(list, items, cfg, n) {
     const on = mq.matches;
     list.classList.toggle('is-swiper', on);
     dots.hidden = !on;
+    // La marge d'accroche suit la marge intérieure réelle (pleine largeur + alignement sur la grille)
+    list.style.scrollPaddingInline = on ? getComputedStyle(list).paddingLeft : '';
     if (on) {
       list.setAttribute('aria-roledescription', 'carrousel');
       list.setAttribute('aria-label', cfg.label);
@@ -98,6 +100,7 @@ function create(list, items, cfg, n) {
     watch();
   };
   mq.addEventListener('change', apply);
+  window.addEventListener('resize', () => mq.matches && (list.style.scrollPaddingInline = getComputedStyle(list).paddingLeft), { passive: true });
   apply();
   // Le focus clavier sur une carte hors champ la ramène dans le cadre (comportement natif) : on suit
   list.addEventListener('focusin', (e) => {

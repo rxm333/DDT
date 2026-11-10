@@ -133,7 +133,7 @@ function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } 
   const pieces = [];
   const make = (type, color, file, rank) => {
     const g = new THREE.Group();
-    const mat = mats[color]; // matière partagée : pas de transparence à l'apparition, donc rien à recompiler
+    const mat = mats[color].clone(); // une matière par pièce : fondu d'apparition individuel (même shader)
     geos[type].forEach((part) => {
       const geometry = part.geometry || part;
       const m = new THREE.Mesh(geometry, mat);
@@ -174,6 +174,7 @@ function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } 
 const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeOutQuint = (t) => 1 - (1 - t) ** 5;
+const easeOutQuart = (t) => 1 - (1 - t) ** 4;
 
 // ---------- Modèles de l'atelier (glTF, compression meshopt) ----------
 const MODELS = (() => {
@@ -357,28 +358,24 @@ export async function mount(container) {
 
   // ---------- Intro ----------
   // 1. la toile s'éclaire en fondu, le plateau monte à peine pendant que la caméra s'approche ;
-  // 2. chaque pièce sort de sa case, comme poussée depuis l'intérieur du plateau (découpe au ras
-  //    du damier, aucune transparence), avec un halo très doux qui s'éteint sur la case ;
+  // 2. les pièces sont posées une à une, comme par la main d'un joueur : elles arrivent d'au-dessus,
+  //    depuis le côté de leur camp, légèrement inclinées, ralentissent, se redressent et se posent
+  //    avec un infime tassement ; leur ombre se resserre à l'approche du plateau ;
   //    ordre de mise en place : rois et dames d'abord, puis vers les tours, puis les pions ;
   // 3. puis le texte du héros apparaît (classes posées sur la section, transitions en CSS).
   const still = reduceMotion();
-  const T = { board: 1.6, start: 0.55, file: 0.085, pawns: 0.42, piece: 1.25, camera: 3.4 };
+  const T = { board: 1.4, start: 0.5, file: 0.11, pawns: 0.5, piece: 1.05, camera: 3.4 };
   pieces.forEach((p) => {
     const u = p.userData;
     const fromCentre = Math.floor(Math.abs(u.file - 3.5)); // 0 (roi, dame) → 3 (tours)
     const pawn = u.type === 'pawn';
-    u.t0 = T.start + (pawn ? T.pawns : 0) + fromCentre * T.file * (pawn ? 0.8 : 1) + (u.color === 'black' ? 0.04 : 0);
+    const leftFirst = u.file < 4 ? 0 : 0.045; // les deux mains ne posent pas exactement en même temps
+    u.t0 = T.start + (pawn ? T.pawns : 0) + fromCentre * T.file * (pawn ? 0.75 : 1) + leftFirst + (u.color === 'black' ? 0.07 : 0);
+    u.side = u.color === 'white' ? -1 : 1; // côté du joueur (z) d'où vient la main
+    u.baseQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), u.type === 'knight' && u.color === 'black' ? Math.PI : 0);
   });
   const introEnd = Math.max(...pieces.map((p) => p.userData.t0)) + T.piece;
-  const TEXT_AT = T.start + T.pawns + 0.15;
-
-  // Découpe au ras du damier : la partie encore « dans » le plateau n'est pas dessinée (ombres comprises)
-  renderer.localClippingEnabled = true;
-  const clip = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0.0005);
-  new Set(pieces.map((p) => p.userData.mat)).forEach((m) => {
-    m.clippingPlanes = [clip];
-    m.clipShadows = true;
-  });
+  const TEXT_AT = T.start + T.pawns + 0.2;
 
   // Halo de case : un seul dégradé radial, un petit disque additif par pièce, masqué après l'intro
   const haloTex = (() => {
@@ -408,12 +405,10 @@ export async function mount(container) {
         return m;
       });
 
-  // Courbe de sortie : départ franc, longue arrivée très douce, sans rebond
-  const rise = (k) => {
-    const soft = k * k * (3 - 2 * k) * 0.4 + k * 0.6; // démarrage adouci (pas d'apparition « en pop »)
-    return 1 - (1 - soft) ** 3.4;
-  };
+  const X = new THREE.Vector3(1, 0, 0);
+  const tiltQ = new THREE.Quaternion();
   let introDone = false;
+  const LAND = 0.8; // part de la durée consacrée au trajet, le reste au tassement
   const pose = (t) => {
     const b = easeOutQuint(clamp01(t / T.board));
     board.position.y = -0.22 * (1 - b);
@@ -422,18 +417,31 @@ export async function mount(container) {
       const u = p.userData;
       const k = clamp01((t - u.t0) / T.piece);
       p.visible = k > 0;
-      const e = rise(k);
-      p.position.y = u.home.y + board.position.y - u.height * 1.02 * (1 - e);
-      p.rotation.y = (u.type === 'knight' && u.color === 'black' ? Math.PI : 0) + 0.5 * (1 - easeOutCubic(k));
-      p.scale.setScalar(u.baseScale);
+      if (!p.visible) return;
+      const a = clamp01(k / LAND); // trajet de la main
+      const go = 1 - easeOutCubic(a); // 1 → 0, ralentit fort avant le contact
+      const down = 1 - easeOutQuart(a);
+      p.position.set(u.home.x, u.home.y + board.position.y + 1.35 * down, u.home.z + 0.7 * u.side * go);
+      // inclinaison de la pièce tenue entre les doigts, qui se redresse avant de toucher
+      tiltQ.setFromAxisAngle(X, 0.26 * u.side * go * go);
+      p.quaternion.copy(tiltQ).multiply(u.baseQ);
+      // tassement à peine perceptible au contact
+      const s2 = k > LAND ? Math.sin(Math.PI * clamp01((k - LAND) / (1 - LAND))) : 0;
+      p.scale.set(u.baseScale * (1 + 0.012 * s2), u.baseScale * (1 - 0.025 * s2), u.baseScale * (1 + 0.012 * s2));
+      // apparition en fondu bref, tant que la pièce est encore haute
+      const o = easeOutCubic(clamp01(a / 0.3));
+      const fading = o < 1;
+      if (u.mat.transparent !== fading) {
+        u.mat.transparent = fading;
+        u.mat.needsUpdate = true;
+      }
+      u.mat.opacity = o;
       if (u.halo) {
-        const h = Math.sin(Math.PI * clamp01(k * 1.35)); // monte puis s'éteint avant l'arrivée
-        u.halo.visible = h > 0.001;
-        u.halo.material.opacity = 0.45 * h;
-        u.halo.scale.setScalar(0.55 + 0.6 * easeOutCubic(k));
+        u.halo.visible = s2 > 0.001;
+        u.halo.material.opacity = 0.3 * s2;
+        u.halo.scale.setScalar(0.7 + 0.45 * clamp01((k - LAND) / (1 - LAND)));
       }
     });
-    clip.constant = 0.0005 - board.position.y; // la découpe suit le damier pendant sa montée
     if (!introDone && t >= introEnd) {
       introDone = true;
       halos.forEach((m) => world.remove(m));
@@ -608,10 +616,17 @@ export async function mount(container) {
   try {
     board.traverse((o) => o.isMesh && [].concat(o.material).forEach((m) => Object.values(m).forEach((v) => v?.isTexture && renderer.initTexture(v))));
     await renderer.compileAsync(scene, camera);
+    // variante « en fondu » des matières des pièces, pour qu'aucun shader ne se compile pendant l'intro
+    const pm = new Set(pieces.map((p) => p.userData.mat));
+    pm.forEach((m) => ((m.transparent = true), (m.needsUpdate = true)));
+    await renderer.compileAsync(scene, camera);
+    renderer.render(scene, camera);
+    pm.forEach((m) => ((m.transparent = false), (m.needsUpdate = true)));
   } catch {
     /* compilation à la volée au premier rendu */
   }
   renderer.render(scene, camera);
+  halos.forEach((m) => (m.visible = false));
   introDone = false;
   renderer.shadowMap.autoUpdate = true;
   clock.update();

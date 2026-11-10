@@ -354,7 +354,6 @@ html.lenis.lenis-smooth {
     /* pleine largeur d'écran, les cartes restent alignées sur la marge du site */
     margin-inline: calc(50% - 50vw);
     padding-inline: calc(50vw - 50%);
-    scroll-padding-inline: calc(50vw - 50%);
     padding-block: 0.25rem; /* laisse respirer l'anneau de focus */
   }
   .dds-swiper.is-swiper::-webkit-scrollbar {
