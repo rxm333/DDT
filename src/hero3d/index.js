@@ -516,19 +516,28 @@ export async function mount(container) {
 
   // Résolution adaptative : si l'image n'arrive plus à suivre (machine modeste, écran très dense),
   // on baisse un peu la définition plutôt que de laisser l'animation saccader.
-  const dpr = { max: Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.75), cur: 0, avg: 1 / 60, n: 0 };
+  const dpr = { max: Math.min(window.devicePixelRatio || 1, 1.5), cur: 0, avg: 1 / 60, n: 0, jank: [] };
   dpr.cur = dpr.max;
   renderer.setPixelRatio(dpr.cur);
+  const lower = () => {
+    if (dpr.cur <= 1) return;
+    dpr.cur = Math.max(1, Math.round((dpr.cur - 0.25) * 4) / 4);
+    renderer.setPixelRatio(dpr.cur);
+    fit();
+    dpr.n = 0;
+    dpr.jank.length = 0;
+  };
   const adapt = (raw) => {
-    if (raw > 0.25) return; // onglet repris, chargement… : on ignore
-    dpr.avg += (raw - dpr.avg) * 0.05;
-    if (++dpr.n < 90) return;
-    if (dpr.avg > 1 / 42 && dpr.cur > 1) {
-      dpr.cur = Math.max(1, dpr.cur - 0.25);
-      renderer.setPixelRatio(dpr.cur);
-      fit();
-      dpr.n = 0;
+    if (raw > 1) return; // onglet repris : on ignore
+    const now = performance.now();
+    // À-coups répétés (images de plus de 50 ms) : 3 en moins de 3 s → on allège
+    if (raw > 0.05) {
+      dpr.jank.push(now);
+      while (dpr.jank.length && now - dpr.jank[0] > 3000) dpr.jank.shift();
+      if (dpr.jank.length >= 3) return lower();
     }
+    dpr.avg += (Math.min(raw, 0.1) - dpr.avg) * 0.05;
+    if (++dpr.n >= 90 && dpr.avg > 1 / 45) lower(); // cadence moyenne sous 45 i/s
   };
 
   const frame = () => {
