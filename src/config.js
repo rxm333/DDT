@@ -14,7 +14,7 @@ export const SELECTORS = {
     magnetic: '.navbar_button',
   },
   // Survol « texte qui roule »
-  roll: ['.product-card_button', '.navbar_link', '.button', '.prod-buy_add'],
+  roll: ['.product-card_button', '.navbar_link', '.button', '.prod-buy_add', '.cfg_order'],
   marquee: {
     section: '.section_atelier',
     list: '.atelier_marquee-list',
@@ -54,10 +54,8 @@ export const MARQUEE = {
 export const BUTTONS = {
   variants: {
     // Fond lilas : remplissage lilas clair + reflet
-    solid: ['.button:not(.is-secondary)', '.prod-buy_add'],
+    solid: ['.button:not(.is-secondary)', '.prod-buy_add', '.cfg_order'],
     // Contour : remplissage lilas plein, texte qui passe en encre
     ghost: ['.button.is-secondary', '.product-card_button'],
   },
-  magnetic: ['.button', '.prod-buy_add'],
-  magneticStrength: 0.16,
 };

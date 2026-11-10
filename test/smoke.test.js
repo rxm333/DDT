@@ -38,6 +38,22 @@ const html = `<!doctype html><html><head></head><body>
     <div data-qty="blanc"><button type="button" data-qty-minus="">−</button><input type="number" value="1" min="1" max="3" data-qty-input=""><button type="button" data-qty-plus="">+</button></div>
     <button type="button" class="prod-buy_add" data-cart="add" data-product="blanc" data-quantity="1"><span>Ajouter au panier</span></button>
   </section>
+  <section class="section_cfg"><div class="cfg_component" data-customizer="">
+    <div class="cfg_panel"><div class="cfg_steps">
+      <details class="cfg_step" data-cfg-step="plateau" open="open"><summary><span data-cfg-summary="plateau"></span></summary><div>
+        <fieldset><legend>Revêtement</legend>
+          <label class="cfg_choice"><input type="radio" name="plateau" value="couleur-unie" checked="checked"><span class="cfg_choice-name">Couleur unie</span></label>
+          <label class="cfg_choice"><input type="radio" name="plateau" value="votre-image" data-price="20"><span class="cfg_choice-name">Votre image</span></label></fieldset>
+        <fieldset><legend><span>Teinte du cuir</span><span data-cfg-label="cuir"></span></legend>
+          <input class="cfg_swatch" type="radio" name="cuir" value="noir" aria-label="Noir">
+          <input class="cfg_swatch" type="radio" name="cuir" value="blanc-os" aria-label="Blanc os" checked="checked"></fieldset></div></details>
+      <details class="cfg_step" data-cfg-step="inscription"><summary><span data-cfg-summary="inscription"></span></summary><div>
+        <label for="z1">Zone 1</label><input type="text" id="z1" name="inscription-1" maxlength="40" data-cfg-zone="inscription" data-price="6">
+        <label for="z2">Zone 2</label><input type="text" id="z2" name="inscription-2" maxlength="40" data-cfg-zone="inscription" data-price="6"></div></details>
+    </div><div class="cfg_total"><span data-cfg-total="">249,00 €</span>
+      <button type="button" class="cfg_order" data-cfg-order="" data-cart="add" data-product="sur-mesure"><span>Passer ma commande</span></button>
+      <button type="button" class="cfg_save" data-cfg-save=""><span>Sauvegarder ma création</span></button>
+      <p class="sr-only" role="status" data-cfg-status=""></p></div></div></div></section>
 </main>
 </body></html>`;
 
@@ -71,9 +87,9 @@ assert.ok(btn.hasAttribute('data-dds-roll'), 'bouton préparé pour le roll');
 assert.equal(btn.querySelector('.dds-roll__text').dataset.text, 'Ajouter au panier');
 assert.equal(btn.getAttribute('aria-label'), 'Ajouter au panier : Blanc', 'aria-label conservé');
 assert.ok(btn.classList.contains('dds-btn') && btn.classList.contains('dds-btn--ghost'), 'bouton contour amélioré');
-const fill = btn.firstElementChild;
-assert.ok(fill.classList.contains('dds-btn__fill') && fill.getAttribute('aria-hidden') === 'true', 'calque de remplissage décoratif');
-assert.equal(btn.textContent.trim(), 'Ajouter au panier', 'libellé intact');
+assert.equal(btn.querySelector('.dds-sr').textContent, 'Ajouter au panier', 'libellé lisible d’un seul tenant');
+assert.equal(btn.querySelector('.dds-roll').getAttribute('aria-hidden'), 'true', 'lettres décoratives masquées');
+assert.equal(btn.querySelectorAll('.dds-roll__char').length, 'Ajouter au panier'.length, 'une lettre par span');
 const addSolid = document.querySelector('[data-cart="add"][data-product="blanc"]');
 assert.ok(addSolid.classList.contains('dds-btn--solid'), 'bouton plein amélioré');
 
@@ -124,6 +140,29 @@ assert.equal(qty.value, '3', 'quantité bornée au maximum');
 assert.ok(plusB.disabled, '+ désactivé au maximum');
 assert.equal(addB.dataset.quantity, '3', 'quantité transmise au bouton panier');
 
+// Personnaliseur
+const fmt = (t) => t.replace(/\s/g, ' ');
+const cfgTotal = document.querySelector('[data-cfg-total]');
+assert.equal(fmt(cfgTotal.textContent), '249,00 €', 'total de base');
+assert.equal(document.querySelector('[data-cfg-summary="plateau"]').textContent, 'Couleur unie · Blanc os', 'résumé étape 01');
+assert.equal(document.querySelector('[data-cfg-label="cuir"]').textContent, 'Blanc os', 'teinte affichée');
+assert.equal(document.querySelector('[data-cfg-summary="inscription"]').textContent, 'Aucune', 'aucune inscription');
+const img = document.querySelector('input[value="votre-image"]');
+img.checked = true; img.dispatchEvent(new window.Event('change', { bubbles: true }));
+const noir = document.querySelector('input[value="noir"]');
+noir.checked = true; noir.dispatchEvent(new window.Event('change', { bubbles: true }));
+const z1 = document.getElementById('z1');
+z1.value = 'Pour Léa'; z1.dispatchEvent(new window.Event('input', { bubbles: true }));
+assert.equal(fmt(cfgTotal.textContent), '275,00 €', 'total : base + image + 1 zone');
+assert.equal(document.querySelector('[data-cfg-summary="plateau"]').textContent, 'Votre image · Noir');
+assert.equal(document.querySelector('[data-cfg-summary="inscription"]').textContent, '1 zone');
+const orderB = document.querySelector('[data-cfg-order]');
+assert.equal(orderB.dataset.price, '275');
+assert.deepEqual(JSON.parse(orderB.dataset.config), { plateau: 'votre-image', cuir: 'noir', 'inscription-1': 'Pour Léa' });
+assert.ok(orderB.classList.contains('dds-btn--solid'), 'bouton commande amélioré');
+const url = window.DDS.customizer.shareUrl();
+assert.ok(url.includes('plateau=votre-image') && url.includes('cuir=noir'), 'lien de sauvegarde');
+
 assert.equal(errors.length, 0, `Erreurs : ${errors.join(' | ')}`);
-console.log('✓ Test de fumée OK — init, roll, navbar (aria, Échap, focus, clic extérieur), ancres, fiche produit (galerie, quantité)');
+console.log('✓ Test de fumée OK — init, roll, navbar (aria, Échap, focus, clic extérieur), ancres, fiche produit (galerie, quantité), personnaliseur (total, résumés, sauvegarde)');
 window.close();

@@ -4,8 +4,8 @@ import { SELECTORS } from '../config.js';
 
 /**
  * Survols :
- *  1. « Texte qui roule » : le libellé glisse vers le haut et sa copie arrive par le bas.
- *     Le JS prépare le markup, la transition est 100 % CSS (compositor, aucun coût JS au survol).
+ *  1. « Texte qui roule » : chaque lettre monte et sa copie arrive par le bas, en cascade.
+ *     Le JS découpe le libellé ; la transition est 100 % CSS (transform, aucun coût JS au survol).
  *  2. Boutons magnétiques (icônes de la navbar) : souris uniquement, via gsap.quickTo.
  * Les soulignements animés et le zoom des images sont en CSS pur (voir styles/main.css).
  */
@@ -28,14 +28,28 @@ function enhanceRoll(el) {
   const text = host.textContent.trim();
   if (!text) return;
 
+  // Texte lu par les lecteurs d'écran, d'un seul tenant
+  const sr = document.createElement('span');
+  sr.className = 'dds-sr';
+  sr.textContent = text;
+
+  // Copie visuelle découpée en lettres : chacune monte avec un léger décalage
   const mask = document.createElement('span');
   mask.className = 'dds-roll';
+  mask.setAttribute('aria-hidden', 'true');
   const label = document.createElement('span');
   label.className = 'dds-roll__text';
   label.dataset.text = text;
-  label.textContent = text;
+  Array.from(text).forEach((char, i) => {
+    const c = document.createElement('span');
+    c.className = 'dds-roll__char';
+    c.style.setProperty('--i', String(i));
+    c.textContent = char === ' ' ? '\u00a0' : char;
+    label.append(c);
+  });
   mask.append(label);
-  host.replaceChildren(mask);
+  host.replaceChildren(sr, mask);
+  el.style.setProperty('--dds-chars', String(text.length));
   el.setAttribute('data-dds-roll', '');
 }
 

@@ -5,6 +5,7 @@
 import './styles/main.css';
 import './styles/product.css';
 import './styles/buttons.css';
+import './styles/customizer.css';
 import { ScrollTrigger } from './core/gsap.js';
 import { initSmoothScroll, scrollToTarget, stopScroll, startScroll } from './modules/smooth-scroll.js';
 import { initNavbar } from './modules/navbar.js';
@@ -13,8 +14,9 @@ import { initReveal } from './modules/reveal.js';
 import { initMarquee } from './modules/marquee.js';
 import { initProduct } from './modules/product.js';
 import { initButtons } from './modules/buttons.js';
+import { initCustomizer } from './modules/customizer.js';
 
-const VERSION = '1.4.0';
+const VERSION = '1.5.0';
 
 function safe(name, fn) {
   try {
@@ -31,10 +33,11 @@ function boot() {
   const lenis = safe('smooth-scroll', initSmoothScroll);
   const navbar = safe('navbar', () => initNavbar({ lenis }));
   safe('hover', initHover);
-  safe('buttons', initButtons); // après le roll : il prépend le calque de remplissage
+  safe('buttons', initButtons);
   safe('reveal', initReveal);
   safe('marquee', () => initMarquee({ lenis }));
   safe('product', initProduct);
+  const customizer = safe('customizer', initCustomizer);
 
   // Les positions changent quand images et polices arrivent
   window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
@@ -47,6 +50,7 @@ function boot() {
     version: VERSION,
     lenis,
     navbar,
+    customizer,
     scrollTo: scrollToTarget,
     stopScroll,
     startScroll,

@@ -1,185 +1,85 @@
 /* =========================================================================
-   Boutons — remplissage circulaire depuis le curseur, reflet, pression, flèche
+   Boutons — léger agrandissement au survol, pression au clic.
+   Le libellé roule lettre par lettre (voir .dds-roll dans main.css).
    Classes posées par modules/buttons.js : .dds-btn, .dds-btn--solid, .dds-btn--ghost
-   Spécificité (0,3,0) : passe devant les états :hover des classes Webflow.
    ========================================================================= */
 
 .dds-btn {
-  --dds-x: 50%;
-  --dds-y: 50%;
-  --dds-d: 0px;
-  position: relative;
-  isolation: isolate; /* le calque de remplissage reste sous le texte, au-dessus du fond */
-  overflow: hidden;
   -webkit-tap-highlight-color: transparent;
+  transform-origin: 50% 50%;
   transition:
-    color 0.45s var(--dds-ease-out),
-    border-color 0.45s var(--dds-ease-out),
-    box-shadow 0.5s var(--dds-ease-out),
-    scale 0.2s var(--dds-ease-out);
+    scale 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+    background-color 0.35s var(--dds-ease-out),
+    border-color 0.35s var(--dds-ease-out),
+    color 0.35s var(--dds-ease-out),
+    box-shadow 0.45s var(--dds-ease-out);
 }
 
-/* Cercle de remplissage : naît au point d'entrée du pointeur, se rétracte vers le point de sortie */
-.dds-btn__fill {
-  position: absolute;
-  left: var(--dds-x);
-  top: var(--dds-y);
-  z-index: -1;
-  width: var(--dds-d);
-  height: var(--dds-d);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.6s var(--dds-ease-out);
-}
-
-/* Reflet lumineux qui traverse le bouton */
-.dds-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%);
-  transform: translateX(-120%);
-  opacity: 0;
-}
-
-/* ---------- Variante pleine (lilas) ---------- */
-.dds-btn.dds-btn--solid {
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.26),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.16),
-    0 1px 2px 0 rgba(0, 0, 0, 0.26),
-    0 4px 10px 0 rgba(0, 0, 0, 0.16);
-}
-.dds-btn--solid .dds-btn__fill {
-  background: radial-gradient(circle, var(--_theme---accent--hover) 0%, var(--_theme---accent--hover) 55%, #d4b3ff 100%);
-}
-
-/* ---------- Variante contour ---------- */
-.dds-btn--ghost .dds-btn__fill {
-  background-color: var(--_theme---accent--default);
-}
-.dds-btn--ghost::after {
-  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
-}
-
-/* ---------- Survol (souris) et focus clavier ---------- */
 @media (hover: hover) and (pointer: fine) {
+  .dds-btn:hover {
+    scale: 1.03;
+  }
   .dds-btn.dds-btn--solid:hover {
-    background-color: var(--_theme---accent--default);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.32),
-      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.14),
       0 2px 4px 0 rgba(0, 0, 0, 0.24),
-      0 10px 28px -6px rgba(178, 107, 255, 0.55);
+      0 8px 18px -6px rgba(0, 0, 0, 0.4);
   }
   .dds-btn.dds-btn--ghost:hover {
-    background-color: transparent;
-    border-color: var(--_theme---accent--default);
-    color: var(--_theme---text--on-accent);
-    box-shadow: 0 10px 28px -8px rgba(178, 107, 255, 0.5);
+    border-color: var(--_theme---text--muted);
   }
-  .dds-btn:hover .dds-btn__fill {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  .dds-btn:hover::after {
-    animation: dds-btn-sheen 0.9s var(--dds-ease-out) 0.08s both;
-  }
-}
-.dds-btn.dds-btn--ghost:focus-visible {
-  border-color: var(--_theme---accent--default);
-  color: var(--_theme---text--on-accent);
-}
-.dds-btn:focus-visible .dds-btn__fill {
-  transform: translate(-50%, -50%) scale(1);
 }
 
-@keyframes dds-btn-sheen {
-  0% { transform: translateX(-120%); opacity: 1; }
-  100% { transform: translateX(120%); opacity: 1; }
-}
-
-/* Pression : léger enfoncement (propriété scale, indépendante de l'aimantation GSAP) */
+/* Pression : léger enfoncement, rapide */
 .dds-btn:active {
-  scale: 0.97;
-  transition-duration: 0.45s, 0.45s, 0.5s, 0.08s;
+  scale: 0.98;
+  transition-duration: 0.12s, 0.35s, 0.35s, 0.35s, 0.45s;
 }
 
-/* Bouton désactivé : pas d'effet */
-.dds-btn:disabled .dds-btn__fill,
-.dds-btn[aria-disabled='true'] .dds-btn__fill {
-  display: none;
-}
-
-/* ---------- Flèches et icônes dans les boutons / cartes ---------- */
+/* ---------- Flèches et icônes dans les cartes ---------- */
 .prod-custom_arrow {
   transition: transform 0.45s var(--dds-ease-out);
-}
-.prod-custom_button {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.prod-custom_button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%);
-  transform: translateX(-120%);
 }
 @media (hover: hover) and (pointer: fine) {
   .prod-custom_card:hover .prod-custom_arrow {
     transform: translate(3px, -3px);
-  }
-  .prod-custom_card:hover .prod-custom_button::after {
-    animation: dds-btn-sheen 0.9s var(--dds-ease-out) 0.08s both;
   }
 }
 .prod-custom_card:focus-visible .prod-custom_arrow {
   transform: translate(3px, -3px);
 }
 
-/* Bouton « Voir le film » : l'icône lecture respire au survol */
+/* Bouton « Voir le film » */
 .col-note_film-button {
-  transition: background-color 0.4s var(--dds-ease-out), scale 0.2s var(--dds-ease-out);
+  transition: background-color 0.4s var(--dds-ease-out), scale 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 @media (hover: hover) and (pointer: fine) {
   .col-note_film-button:hover {
     background-color: rgba(23, 23, 27, 0.86);
+    scale: 1.03;
   }
 }
 .col-note_film-button:active {
-  scale: 0.97;
+  scale: 0.98;
 }
 
-/* ---------- Mouvement réduit : changement d'état instantané, sans balayage ---------- */
+/* ---------- Mouvement réduit : pas d'agrandissement ni de roulement ---------- */
 @media (prefers-reduced-motion: reduce) {
   .dds-btn,
-  .dds-btn__fill,
   .prod-custom_arrow,
-  .col-note_film-button {
+  .col-note_film-button,
+  .dds-roll__char {
     transition: none;
   }
-  .dds-btn__fill {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
-  }
-  .dds-btn:hover .dds-btn__fill,
-  .dds-btn:focus-visible .dds-btn__fill {
-    opacity: 1;
-  }
-  .dds-btn:hover::after,
-  .prod-custom_card:hover .prod-custom_button::after {
-    animation: none;
-  }
+  .dds-btn:hover,
   .dds-btn:active,
+  .col-note_film-button:hover,
   .col-note_film-button:active {
     scale: none;
   }
+  [data-dds-roll]:hover .dds-roll__char,
+  [data-dds-roll]:focus-visible .dds-roll__char,
   .prod-custom_card:hover .prod-custom_arrow,
   .prod-custom_card:focus-visible .prod-custom_arrow {
     transform: none;
