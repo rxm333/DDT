@@ -466,3 +466,44 @@ html.lenis.lenis-smooth {
     font-size: 0.75rem;
   }
 }
+
+/* ---------- Page contact : états des champs ---------- */
+.contact_input {
+  transition: border-color 0.2s var(--dds-ease-out), box-shadow 0.2s var(--dds-ease-out), background-color 0.2s var(--dds-ease-out);
+}
+.contact_input:hover {
+  border-color: var(--_theme---line--default);
+}
+.contact_input:focus,
+.contact_input:focus-visible {
+  outline: none;
+  border-color: var(--_theme---accent--default);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--_theme---accent--default) 28%, transparent);
+}
+.contact_input::placeholder {
+  color: var(--_theme---text--subtle);
+  opacity: 1;
+}
+.contact_input:user-invalid {
+  border-color: #ff8a9b;
+}
+.contact_input:-webkit-autofill {
+  -webkit-text-fill-color: var(--_theme---text--default);
+  box-shadow: 0 0 0 1000px var(--_theme---bg--well) inset;
+  caret-color: var(--_theme---text--default);
+}
+.contact_legal-link:hover {
+  color: var(--_theme---text--default);
+}
+.contact_detail-link:hover {
+  text-decoration-color: currentColor;
+}
+.contact_form-footer .button {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact_input {
+    transition: none;
+  }
+}
