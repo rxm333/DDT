@@ -54,6 +54,7 @@ const html = `<!doctype html><html><head></head><body>
       <button type="button" class="cfg_order" data-cfg-order="" data-cart="add" data-product="sur-mesure"><span>Passer ma commande</span></button>
       <button type="button" class="cfg_save" data-cfg-save=""><span>Sauvegarder ma création</span></button>
       <p class="sr-only" role="status" data-cfg-status=""></p></div></div></div></section>
+<div data-model-viewer=""><p data-viewer-title="">La Chute des Anges</p><img data-viewer-image="" src="https://x.test/a.webp" alt="A"><button type="button" aria-pressed="true" data-viewer-model="la-chute-des-anges" data-title="La Chute des Anges" data-src="https://x.test/a.webp">A</button><button type="button" aria-pressed="false" data-viewer-model="blanc" data-title="Blanc" data-src="https://x.test/b.webp" data-alt="B">B</button></div>
 </main>
 </body></html>`;
 
@@ -153,6 +154,14 @@ assert.ok(stepInscr.open, 'étape ouverte au clic');
 assert.ok(!stepPlateau.open, 'les autres étapes du groupe se ferment');
 stepInscr.querySelector('summary').click();
 assert.ok(!stepInscr.open, 'étape refermée au second clic');
+
+// Visualiseur de la collection : choix du modèle
+const mv = document.querySelector('[data-model-viewer]');
+const mvBtns = mv.querySelectorAll('[data-viewer-model]');
+mvBtns[1].click();
+assert.equal(mvBtns[1].getAttribute('aria-pressed'), 'true');
+assert.equal(mvBtns[0].getAttribute('aria-pressed'), 'false');
+assert.equal(mv.querySelector('[data-viewer-title]').textContent, 'Blanc', 'titre du modèle mis à jour');
 
 // Personnaliseur
 const fmt = (t) => t.replace(/\s/g, ' ');

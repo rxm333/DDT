@@ -40,3 +40,22 @@
   .prod-hero_thumb, .prod-buy_option, .prod-buy_add, .prod-custom_media, .prod-custom_image, .prod-custom_button { transition: none; }
   .prod-custom_card:hover .prod-custom_image { transform: none; }
 }
+
+/* ---------- Enveloppe du visualiseur 3D (héros collection) ---------- */
+.col-viewer_component:not(.is-3d) .col-viewer_hint { display: none; } /* « Faites pivoter » : seulement quand la 3D est là */
+.col-viewer_model[aria-pressed="true"] {
+  background-color: var(--_theme---bg--soft, #2e2938);
+  color: var(--_theme---text--default);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.35), 0 2px 6px 0 rgba(0, 0, 0, 0.18);
+}
+.col-viewer_model:hover { color: var(--_theme---text--default); }
+.col-viewer_model:focus-visible { outline: 2px solid var(--_theme---system--focus-state); outline-offset: 2px; }
+.col-viewer_image { transition: opacity 0.35s var(--dds-ease-out), transform 0.6s var(--dds-ease-out); }
+.col-viewer_image.is-swapping { opacity: 0; transform: scale(0.98); }
+@media (max-width: 767px) {
+  .col-viewer_component { min-height: 22rem; padding: 1rem; border-radius: 1.25rem; }
+  .col-viewer_title { font-size: 1.125rem; }
+  .col-viewer_model { column-gap: 0.5rem; padding: 0.25rem 0.625rem 0.25rem 0.25rem; font-size: 0.8125rem; }
+  .col-viewer_model-thumb { width: 2.25rem; height: 1.875rem; }
+}
+@media (prefers-reduced-motion: reduce) { .col-viewer_image, .col-viewer_model { transition: none; } }

@@ -1,6 +1,6 @@
 {
   "name": "dame-de-tours-js",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "private": true,
   "description": "Scripts externes du site Dame de Tours (Webflow) : smooth scroll, navbar, survols, apparitions au scroll.",
   "type": "module",

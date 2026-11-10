@@ -17,8 +17,9 @@ import { initButtons } from './modules/buttons.js';
 import { initCustomizer } from './modules/customizer.js';
 import { initAccordions } from './modules/accordion.js';
 import { loadHero3d } from './modules/hero3d-loader.js';
+import { initModelViewers } from './modules/model-viewer.js';
 
-const VERSION = '1.7.2';
+const VERSION = '1.7.3';
 
 function safe(name, fn) {
   try {
@@ -41,6 +42,7 @@ function boot() {
   safe('product', initProduct);
   safe('accordions', initAccordions);
   safe('hero3d', loadHero3d);
+  safe('model-viewer', initModelViewers);
   const customizer = safe('customizer', initCustomizer);
 
   // Les positions changent quand images et polices arrivent
