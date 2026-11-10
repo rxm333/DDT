@@ -48,13 +48,17 @@ npm run dev     # rebuild automatique à chaque modification
 
 ## Hébergement (GitHub + jsDelivr)
 
-1. Pousser le repo sur GitHub **avec le dossier `dist/`** (il n'est pas ignoré).
-2. Créer un tag de version : `git tag v1.0.0 && git push --tags`.
-3. URLs CDN (remplacer `rxm333`) :
-   - `https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.css`
-   - `https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.js`
+Dépôt : https://github.com/rxm333/DDT (public, dossier `dist/` versionné).
 
-Toujours pointer vers un **tag** (et pas `@main`) : cache CDN long, aucune mise en production accidentelle.
+URLs actuelles, **figées sur le commit du build v1.0.0** :
+- `https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.css`
+- `https://cdn.jsdelivr.net/gh/rxm333/DDT@2a89d63edd2b3009d6c5233c07f44fe54965035f/dist/dame-de-tours.min.js`
+
+Ne jamais pointer vers `@main` : avec un commit (ou un tag de release), le cache CDN est permanent
+et rien ne change en production sans mise à jour volontaire de l'URL dans Webflow.
+
+Publier une nouvelle version : `npm run build`, commit + push, puis remplacer l'identifiant de commit
+dans les deux URLs Webflow (ou créer une release `vX.Y.Z` sur GitHub et utiliser `@vX.Y.Z`).
 
 ## Intégration Webflow
 
