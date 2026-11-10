@@ -30,7 +30,7 @@ const html = `<!doctype html><html><head></head><body>
   <section class="section_collection" id="collection"><h2 class="collection_heading">Collection Ancolie</h2>
     <article class="product-card_component"><button type="button" class="product-card_button" aria-label="Ajouter au panier : Blanc"><span>Ajouter au panier</span></button></article>
   </section>
-  <section class="section_atelier"><div class="atelier_marquee"><ul class="atelier_marquee-list"></ul></div></section>
+  <section class="section_atelier"><div class="atelier_marquee"><ul class="atelier_marquee-list" aria-label="Photos"><li class="atelier_marquee-item"><img src="https://x.test/a.webp" alt="A"></li></ul><ul class="atelier_marquee-list" aria-hidden="true"><li class="atelier_marquee-item"><img src="https://x.test/a.webp" alt=""></li></ul></div><input type="checkbox" class="atelier_pause-input"></section>
   <section class="section_prod-hero">
     <div data-gallery=""><div data-product-viewer="ancolie-blanc"><img data-gallery-main="" src="https://x.test/vue.webp" alt="Vue A"></div>
       <ul><li><button type="button" data-gallery-thumb="" aria-pressed="true" data-alt="Vue A"><img src="https://x.test/vue.webp" alt=""></button></li>
@@ -139,6 +139,11 @@ plusB.click(); plusB.click(); plusB.click();
 assert.equal(qty.value, '3', 'quantité bornée au maximum');
 assert.ok(plusB.disabled, '+ désactivé au maximum');
 assert.equal(addB.dataset.quantity, '3', 'quantité transmise au bouton panier');
+
+// Marquee pilotable
+const track = document.querySelector('.atelier_marquee');
+assert.ok(track.classList.contains('is-draggable'), 'marquee pris en main par le JS');
+assert.equal(track.querySelector('img').draggable, false, 'images non glissables nativement');
 
 // Personnaliseur
 const fmt = (t) => t.replace(/\s/g, ' ');

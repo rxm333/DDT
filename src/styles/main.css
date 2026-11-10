@@ -163,7 +163,31 @@ html.lenis.lenis-smooth {
   }
 }
 
-/* ---------- Marquee : pause hors écran (classe posée par le JS) ---------- */
+/* ---------- Marquee pilotable (classes posées par modules/marquee.js) ---------- */
+/* Le JS prend la main : l'animation CSS de l'embed sert seulement de repli sans JS */
+.atelier_marquee.is-draggable {
+  cursor: grab;
+  touch-action: pan-y; /* le défilement vertical de la page reste au navigateur */
+  user-select: none;
+  -webkit-user-select: none;
+}
+.atelier_marquee.is-draggable .atelier_marquee-list {
+  animation: none;
+  will-change: transform;
+}
+.atelier_marquee.is-draggable img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.atelier_marquee.is-dragging {
+  cursor: grabbing;
+}
+.atelier_marquee.is-draggable .atelier_marquee-item {
+  transition: scale 0.5s var(--dds-ease-out);
+}
+.atelier_marquee.is-dragging .atelier_marquee-item {
+  scale: 0.97;
+}
 .section_atelier.is-offscreen .atelier_marquee-list {
   animation-play-state: paused;
 }

@@ -16,7 +16,7 @@ import { initProduct } from './modules/product.js';
 import { initButtons } from './modules/buttons.js';
 import { initCustomizer } from './modules/customizer.js';
 
-const VERSION = '1.5.0';
+const VERSION = '1.6.0';
 
 function safe(name, fn) {
   try {

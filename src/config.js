@@ -17,7 +17,9 @@ export const SELECTORS = {
   roll: ['.product-card_button', '.navbar_link', '.button', '.prod-buy_add', '.cfg_order'],
   marquee: {
     section: '.section_atelier',
+    track: '.atelier_marquee',
     list: '.atelier_marquee-list',
+    pause: '.atelier_pause-input',
   },
 };
 
@@ -46,8 +48,12 @@ export const NAVBAR = {
 };
 
 export const MARQUEE = {
-  velocityBoost: true, // accélère le défilement selon la vitesse de scroll
-  maxBoost: 3, // vitesse max = 1 + maxBoost
+  duration: 40, // secondes pour faire défiler une liste complète (vitesse de croisière)
+  friction: 2.2, // retour à la vitesse de croisière après un lancer (plus grand = plus rapide)
+  maxFling: 4000, // élan maximal au lâcher, px/s
+  velocityBoost: true, // accélère un peu le défilement pendant le scroll de la page
+  boostFactor: 6,
+  maxBoost: 3, // accélération max = 3 × la vitesse de croisière
 };
 
 /** Boutons : variantes de remplissage et attraction magnétique (voir modules/buttons.js). */
