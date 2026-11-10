@@ -20,7 +20,7 @@ import { loadHero3d } from './modules/hero3d-loader.js';
 import { initModelViewers } from './modules/model-viewer.js';
 import { initSwipers } from './modules/swiper.js';
 
-const VERSION = '1.9.3';
+const VERSION = '1.9.4';
 
 function safe(name, fn) {
   try {

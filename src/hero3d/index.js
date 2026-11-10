@@ -175,6 +175,8 @@ const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeOutQuint = (t) => 1 - (1 - t) ** 5;
 const easeOutQuart = (t) => 1 - (1 - t) ** 4;
+const easeInOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
+const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 // ---------- Modèles de l'atelier (glTF, compression meshopt) ----------
 const MODELS = (() => {
@@ -233,7 +235,7 @@ async function loadReal() {
     geos[PIECE_FILES[i]] = [{ geometry, matrix, height: bb.max.y - bb.min.y }];
   });
   const materials = {
-    white: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1, 0.853, 0.803), roughness: 0.22, metalness: 0.05, clearcoat: 0.4, clearcoatRoughness: 0.25 }),
+    white: new THREE.MeshPhysicalMaterial({ color: '#d9cfc2', roughness: 0.32, metalness: 0.02, clearcoat: 0.25, clearcoatRoughness: 0.3 }), // ivoire, pas blanc pur
     black: new THREE.MeshPhysicalMaterial({ color: '#0a0a0c', roughness: 0.2, metalness: 0.25, clearcoat: 0.6, clearcoatRoughness: 0.2 }),
   };
   return { board, geos, materials, full, bottom };
@@ -255,7 +257,8 @@ export async function mount(container) {
   const mobile = window.matchMedia('(max-width: 767px)').matches;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.95;
+  const EXPOSURE = 0.78;
+  renderer.toneMappingExposure = EXPOSURE;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   const canvas = renderer.domElement;
@@ -265,12 +268,12 @@ export async function mount(container) {
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55;
+  scene.environmentIntensity = 0.38;
 
   const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 100);
 
   // Lumières : clé chaude en haut à gauche, contre-jour lilas discret
-  const key = new THREE.DirectionalLight('#fff4e8', 2.4);
+  const key = new THREE.DirectionalLight('#ffeedd', 1.9);
   key.position.set(-6, 11, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
@@ -278,10 +281,10 @@ export async function mount(container) {
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
   scene.add(key);
-  const rim = new THREE.DirectionalLight('#c9a3ff', 0.9);
+  const rim = new THREE.DirectionalLight('#c9a3ff', 0.7);
   rim.position.set(7, 4, -9);
   scene.add(rim);
-  scene.add(new THREE.HemisphereLight('#bfbcc8', '#141217', 0.35));
+  scene.add(new THREE.HemisphereLight('#bfbcc8', '#141217', 0.28));
 
   // Ombre portée du plateau sur un sol invisible
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.35 }));
@@ -364,7 +367,7 @@ export async function mount(container) {
   //    ordre de mise en place : rois et dames d'abord, puis vers les tours, puis les pions ;
   // 3. puis le texte du héros apparaît (classes posées sur la section, transitions en CSS).
   const still = reduceMotion();
-  const T = { board: 1.4, start: 0.5, file: 0.11, pawns: 0.5, piece: 1.05, camera: 3.4 };
+  const T = { board: 1.6, start: 0.75, file: 0.11, pawns: 0.5, piece: 1.05, camera: 3.6 };
   pieces.forEach((p) => {
     const u = p.userData;
     const fromCentre = Math.floor(Math.abs(u.file - 3.5)); // 0 (roi, dame) → 3 (tours)
@@ -377,41 +380,16 @@ export async function mount(container) {
   const introEnd = Math.max(...pieces.map((p) => p.userData.t0)) + T.piece;
   const TEXT_AT = T.start + T.pawns + 0.2;
 
-  // Halo de case : un seul dégradé radial, un petit disque additif par pièce, masqué après l'intro
-  const haloTex = (() => {
-    const c = document.createElement('canvas');
-    c.width = c.height = 128;
-    const x = c.getContext('2d');
-    const grd = x.createRadialGradient(64, 64, 0, 64, 64, 64);
-    grd.addColorStop(0, 'rgba(255,240,225,0.9)');
-    grd.addColorStop(0.35, 'rgba(230,205,255,0.35)');
-    grd.addColorStop(1, 'rgba(230,205,255,0)');
-    x.fillStyle = grd;
-    x.fillRect(0, 0, 128, 128);
-    const t = new THREE.CanvasTexture(c);
-    t.colorSpace = THREE.SRGBColorSpace;
-    return t;
-  })();
-  const haloGeo = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
-  const halos = still
-    ? []
-    : pieces.map((p) => {
-        const m = new THREE.Mesh(haloGeo, new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
-        m.position.set(p.userData.home.x, 0.004, p.userData.home.z);
-        m.renderOrder = 2;
-        m.visible = false;
-        p.userData.halo = m;
-        world.add(m);
-        return m;
-      });
+  const halos = [];
 
   const X = new THREE.Vector3(1, 0, 0);
   const tiltQ = new THREE.Quaternion();
   let introDone = false;
-  const LAND = 0.8; // part de la durée consacrée au trajet, le reste au tassement
+  const LAND = 1; // la pièce arrive à vitesse nulle au moment du contact
   const pose = (t) => {
-    const b = easeOutQuint(clamp01(t / T.board));
-    board.position.y = -0.22 * (1 - b);
+    // Entrée du plateau : la lumière se lève sur lui (exposition 0 → normale), sans le déplacer
+    const b = easeInOutSine(clamp01(t / T.board));
+    renderer.toneMappingExposure = EXPOSURE * b;
     ground.material.opacity = 0.35 * b;
     pieces.forEach((p) => {
       const u = p.userData;
@@ -421,13 +399,11 @@ export async function mount(container) {
       const a = clamp01(k / LAND); // trajet de la main
       const go = 1 - easeOutCubic(a); // 1 → 0, ralentit fort avant le contact
       const down = 1 - easeOutQuart(a);
-      p.position.set(u.home.x, u.home.y + board.position.y + 1.35 * down, u.home.z + 0.7 * u.side * go);
+      p.position.set(u.home.x, u.home.y + 1.35 * down, u.home.z + 0.7 * u.side * go);
       // inclinaison de la pièce tenue entre les doigts, qui se redresse avant de toucher
       tiltQ.setFromAxisAngle(X, 0.26 * u.side * go * go);
       p.quaternion.copy(tiltQ).multiply(u.baseQ);
-      // tassement à peine perceptible au contact
-      const s2 = k > LAND ? Math.sin(Math.PI * clamp01((k - LAND) / (1 - LAND))) : 0;
-      p.scale.set(u.baseScale * (1 + 0.012 * s2), u.baseScale * (1 - 0.025 * s2), u.baseScale * (1 + 0.012 * s2));
+      p.scale.setScalar(u.baseScale); // aucun rebond ni tassement : la pièce se pose, c'est tout
       // apparition en fondu bref, tant que la pièce est encore haute
       const o = easeOutCubic(clamp01(a / 0.3));
       const fading = o < 1;
@@ -436,11 +412,6 @@ export async function mount(container) {
         u.mat.needsUpdate = true;
       }
       u.mat.opacity = o;
-      if (u.halo) {
-        u.halo.visible = s2 > 0.001;
-        u.halo.material.opacity = 0.3 * s2;
-        u.halo.scale.setScalar(0.7 + 0.45 * clamp01((k - LAND) / (1 - LAND)));
-      }
     });
     if (!introDone && t >= introEnd) {
       introDone = true;
@@ -569,12 +540,11 @@ export async function mount(container) {
     pointer.sx += (pointer.x - pointer.sx) * Math.min(dt * 3, 1);
     pointer.sy += (pointer.y - pointer.sy) * Math.min(dt * 3, 1);
     if (elapsed >= TEXT_AT) showText();
-    const settle = still ? 1 : easeOutQuint(clamp01(elapsed / T.camera));
+    const settle = still ? 1 : easeInOutCubic(clamp01(elapsed / T.camera));
     const idle = still ? 0 : Math.sin(Math.max(elapsed - T.camera, 0) * 0.45) * 0.03 * easeOutCubic(clamp01((elapsed - T.camera) / 2));
-    const az = view.azimuth + idle + pointer.sx * 0.06 * settle - 0.16 * (1 - settle);
-    const el = view.elevation + pointer.sy * 0.025 * settle + 0.07 * (1 - settle);
-    camera.zoom = 1 - 0.08 * (1 - settle); // léger travelling avant
-    camera.updateProjectionMatrix();
+    // Lent mouvement de caméra en arc pendant l'entrée, qui se pose en douceur (pas de zoom)
+    const az = view.azimuth + idle + pointer.sx * 0.06 * settle - 0.2 * (1 - settle);
+    const el = view.elevation + pointer.sy * 0.025 * settle + 0.05 * (1 - settle);
     // Élan après un lancer, puis l'inclinaison revient doucement
     if (!spin.drag) {
       spin.yaw += spin.v * dt;
