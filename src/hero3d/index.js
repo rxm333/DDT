@@ -516,10 +516,12 @@ export async function mount(container) {
 
   // Résolution adaptative : si l'image n'arrive plus à suivre (machine modeste, écran très dense),
   // on baisse un peu la définition plutôt que de laisser l'animation saccader.
-  const dpr = { max: Math.min(window.devicePixelRatio || 1, 1.5), cur: 0, avg: 1 / 60, n: 0, jank: [] };
-  dpr.cur = dpr.max;
+  const dpr = { max: Math.min(window.devicePixelRatio || 1, 1.5), cur: 0, avg: 1 / 60, n: 0, jank: [], raised: false };
+  // L'intro démarre en définition prudente ; si tout est fluide ensuite, on remonte d'un cran (une fois)
+  dpr.cur = Math.min(dpr.max, 1.25);
   renderer.setPixelRatio(dpr.cur);
   const lower = () => {
+    dpr.raised = true; // on ne remonte plus après avoir dû baisser
     if (dpr.cur <= 1) return;
     dpr.cur = Math.max(1, Math.round((dpr.cur - 0.25) * 4) / 4);
     renderer.setPixelRatio(dpr.cur);
@@ -537,7 +539,14 @@ export async function mount(container) {
       if (dpr.jank.length >= 3) return lower();
     }
     dpr.avg += (Math.min(raw, 0.1) - dpr.avg) * 0.05;
-    if (++dpr.n >= 90 && dpr.avg > 1 / 45) lower(); // cadence moyenne sous 45 i/s
+    if (++dpr.n >= 90 && dpr.avg > 1 / 45) return lower(); // cadence moyenne sous 45 i/s
+    if (introDone && !dpr.raised && dpr.cur < dpr.max && dpr.n >= 240 && dpr.avg < 1 / 57 && !dpr.jank.length) {
+      dpr.raised = true;
+      dpr.cur = Math.min(dpr.max, dpr.cur + 0.25);
+      renderer.setPixelRatio(dpr.cur);
+      fit();
+      dpr.n = 0;
+    }
   };
 
   const frame = () => {
