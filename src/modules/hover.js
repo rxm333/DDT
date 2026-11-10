@@ -9,8 +9,12 @@ import { SELECTORS } from '../config.js';
  *  2. Boutons magnétiques (icônes de la navbar) : souris uniquement, via gsap.quickTo.
  * Les soulignements animés et le zoom des images sont en CSS pur (voir styles/main.css).
  */
+export function initRoll(root = document) {
+  $$(SELECTORS.roll.join(','), root).forEach(enhanceRoll);
+}
+
 export function initHover() {
-  $$(SELECTORS.roll.join(',')).forEach(enhanceRoll);
+  initRoll();
 
   const mm = gsap.matchMedia();
   mm.add(`${MQ.finePointer} and ${MQ.motionOK}`, () => {

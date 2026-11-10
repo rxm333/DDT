@@ -10,6 +10,8 @@ const SRC = (() => {
   return s ? s.replace(/[^/]*$/, 'hero-3d.min.js') : '';
 })();
 
+let injected = null;
+
 export function loadHero3d() {
   const slot = $('[data-hero-viewer]');
   const viewer = $('[data-model-viewer] [data-viewer-stage], [data-model-viewer] .col-viewer_stage');
@@ -17,11 +19,15 @@ export function loadHero3d() {
   const section = slot?.closest('.section_hero');
   const reveal = () => section?.classList.add('is-hero-in'); // le texte du héros s'affiche quoi qu'il arrive
   if (!SRC || navigator.connection?.saveData) return reveal(), null;
+  // Bundle déjà chargé (navigation sans rechargement) : on relance simplement
+  if (window.DDS3D) return window.DDS3D.boot(), injected;
+  if (injected) return injected; // en cours de chargement : il démarrera seul
   const s = document.createElement('script');
   s.onerror = reveal;
   s.src = SRC;
   s.async = true;
   s.crossOrigin = 'anonymous';
   document.head.append(s);
+  injected = s;
   return s;
 }

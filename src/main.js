@@ -9,7 +9,7 @@ import './styles/customizer.css';
 import { ScrollTrigger } from './core/gsap.js';
 import { initSmoothScroll, scrollToTarget, stopScroll, startScroll } from './modules/smooth-scroll.js';
 import { initNavbar } from './modules/navbar.js';
-import { initHover } from './modules/hover.js';
+import { initHover, initRoll } from './modules/hover.js';
 import { initReveal } from './modules/reveal.js';
 import { initMarquee } from './modules/marquee.js';
 import { initProduct } from './modules/product.js';
@@ -21,8 +21,9 @@ import { initModelViewers } from './modules/model-viewer.js';
 import { initSwipers } from './modules/swiper.js';
 import { initAnnounce } from './modules/announce.js';
 import { initForms } from './modules/forms.js';
+import { initTransitions } from './modules/transitions.js';
 
-const VERSION = '1.11.1';
+const VERSION = '1.12.0';
 
 function safe(name, fn) {
   try {
@@ -33,23 +34,47 @@ function safe(name, fn) {
   }
 }
 
-function boot() {
-  if (window.DDS?.version) return; // déjà initialisé
+// --- Modules propres au contenu de la page (réinitialisés à chaque transition Barba) ---
+let cleanups = [];
+let lenis = null;
+const api = {};
 
-  const lenis = safe('smooth-scroll', initSmoothScroll);
-  safe('announce', initAnnounce);
-  const navbar = safe('navbar', () => initNavbar({ lenis }));
-  safe('hover', initHover);
+function initPage() {
+  const c = [];
+  safe('roll', () => initRoll());
   safe('buttons', initButtons);
-  safe('reveal', initReveal);
-  safe('marquee', () => initMarquee({ lenis }));
+  const reveal = safe('reveal', initReveal);
+  if (reveal) c.push(() => reveal.revert());
+  const marquees = safe('marquee', () => initMarquee({ lenis }));
+  (marquees || []).forEach((m) => c.push(() => m?.destroy?.()));
   safe('product', initProduct);
   safe('accordions', initAccordions);
   safe('hero3d', loadHero3d);
+  c.push(() => window.DDS3D?.destroy());
   safe('model-viewer', initModelViewers);
   safe('swiper', initSwipers);
   safe('forms', initForms);
-  const customizer = safe('customizer', initCustomizer);
+  api.customizer = safe('customizer', initCustomizer);
+  cleanups = c;
+}
+
+function destroyPage() {
+  cleanups.splice(0).forEach((fn) => safe('nettoyage', fn));
+  // Filet de sécurité : plus aucun déclencheur de scroll de l'ancienne page
+  ScrollTrigger.getAll().forEach((st) => st.kill());
+}
+
+function boot() {
+  if (window.DDS?.version) return; // déjà initialisé
+
+  // --- Éléments persistants (hors conteneur Barba) : une seule fois ---
+  lenis = safe('smooth-scroll', initSmoothScroll);
+  safe('announce', initAnnounce);
+  const navbar = safe('navbar', () => initNavbar({ lenis }));
+  safe('hover', initHover); // texte qui roule (navbar, footer) + boutons magnétiques
+
+  initPage();
+  const barba = safe('transitions', () => initTransitions({ lenis, navbar, destroyPage, initPage }));
 
   // Les positions changent quand images et polices arrivent
   window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
@@ -62,7 +87,10 @@ function boot() {
     version: VERSION,
     lenis,
     navbar,
-    customizer,
+    barba,
+    get customizer() {
+      return api.customizer;
+    },
     scrollTo: scrollToTarget,
     stopScroll,
     startScroll,

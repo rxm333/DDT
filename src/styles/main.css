@@ -507,3 +507,8 @@ html.lenis.lenis-smooth {
     transition: none;
   }
 }
+
+/* Transitions de page : le titre reçoit le focus (annonce), sans contour à la souris */
+[data-barba="container"] [tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}

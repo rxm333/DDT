@@ -127,8 +127,9 @@ export function initNavbar({ lenis } = {}) {
 
   // --- Masquage au scroll vers le bas, réapparition au scroll vers le haut ---
   let barHidden = false;
+  let locked = false; // pendant une transition de page, la barre reste en place
   function hideBar() {
-    if (barHidden || isOpen || root.contains(document.activeElement)) return;
+    if (locked || barHidden || isOpen || root.contains(document.activeElement)) return;
     barHidden = true;
     gsap.to(wrapper, { yPercent: -160, duration: prefersReducedMotion() ? 0 : 0.6, ease: 'power3.out', overwrite: true });
   }
@@ -169,5 +170,17 @@ export function initNavbar({ lenis } = {}) {
   }
 
 
-  return { open, close, toggle: toggleMenu, get isOpen() { return isOpen; } };
+  return {
+    open,
+    close,
+    toggle: toggleMenu,
+    show: showBar,
+    lock(value) {
+      locked = !!value;
+      if (locked) showBar();
+    },
+    get isOpen() {
+      return isOpen;
+    },
+  };
 }

@@ -133,9 +133,7 @@ export async function mountViewer(viewer) {
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, touch: e.pointerType !== 'mouse' };
     orbit.v = 0;
   });
-  window.addEventListener(
-    'pointermove',
-    (e) => {
+  const onMove = (e) => {
       if (!drag || e.pointerId !== drag.id) return;
       const dx = e.clientX - drag.x;
       const dy = e.clientY - drag.y;
@@ -159,9 +157,8 @@ export async function mountViewer(viewer) {
       drag.t = now;
       lastInput = now;
       play();
-    },
-    { passive: true },
-  );
+  };
+  window.addEventListener('pointermove', onMove, { passive: true });
   const up = () => {
     if (!drag) return;
     if (performance.now() - drag.t > 120 || still) orbit.v = 0;
@@ -310,14 +307,37 @@ export async function mountViewer(viewer) {
   lastInput = performance.now();
   play();
 
-  return { scene, camera, renderer, get model() { return current; } };
+  return {
+    scene,
+    camera,
+    renderer,
+    get model() {
+      return current;
+    },
+    destroy() {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      ro.disconnect();
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      document.removeEventListener('visibilitychange', play);
+      renderer.dispose();
+      renderer.forceContextLoss();
+      canvas.remove();
+      stage.classList.remove('is-ready', 'is-loading', 'is-dragging');
+      viewer.classList.remove('is-3d');
+      delete viewer.dataset.viewer3d;
+    },
+  };
 }
 
+const pending = [];
 export function bootViewers() {
   const viewers = [...document.querySelectorAll('[data-model-viewer]')].filter((v) => v.querySelector('[data-viewer-stage], .col-viewer_stage'));
-  if (!viewers.length) return;
-  window.DDSViewer3D = { instances: [] };
+  window.DDSViewer3D ||= { instances: [] };
   viewers.forEach((v) => {
+    if (v.dataset.viewer3d) return;
     // Démarre quand le visualiseur approche de l'écran
     const io = new IntersectionObserver(
       async ([entry]) => {
@@ -329,5 +349,10 @@ export function bootViewers() {
       { rootMargin: '300px' },
     );
     io.observe(v);
+    pending.push(io);
   });
+}
+export function destroyViewers() {
+  pending.splice(0).forEach((io) => io.disconnect());
+  (window.DDSViewer3D?.instances || []).splice(0).forEach((api) => api.destroy());
 }

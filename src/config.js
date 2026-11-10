@@ -68,3 +68,14 @@ export const BUTTONS = {
     ghost: ['.button.is-secondary', '.product-card_button'],
   },
 };
+
+/** Transitions de page (Barba). La navbar et le footer restent hors du conteneur : ils ne bougent pas. */
+export const TRANSITIONS = {
+  wrapper: '[data-barba="wrapper"]',
+  container: '[data-barba="container"]',
+  persistent: ['.footer_component', 'footer'], // estompés pendant l'échange pour éviter un saut visuel
+  // Pages chargées normalement (formulaires Webflow protégés : la vérification anti-spam doit se charger)
+  reload: ['/contact'],
+  leave: { duration: 0.35, y: -10 },
+  enter: { duration: 0.65, y: 14 },
+};

@@ -667,6 +667,7 @@ export async function mount(container) {
       window.removeEventListener('pointercancel', onUp);
       document.removeEventListener('visibilitychange', play);
       renderer.dispose();
+      renderer.forceContextLoss(); // libère le contexte WebGL (navigation sans rechargement)
       canvas.remove();
       section.classList.remove('has-hero-3d');
       delete container.dataset.hero3d;
@@ -674,12 +675,14 @@ export async function mount(container) {
   };
 }
 
-// Démarrage automatique (seulement si la page a un héros 3D)
-const boot = async () => {
+// Démarrage (seulement si la page a un héros 3D) — rappelé après chaque transition de page
+export async function bootHero() {
   const el = document.querySelector('[data-hero-viewer]');
-  if (!el) return;
-  window.DDSHero3D = { mount, instance: null };
+  window.DDSHero3D ||= { mount, instance: null };
+  if (!el || el.dataset.hero3d) return;
   window.DDSHero3D.instance = await mount(el);
-};
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
-else boot();
+}
+export function destroyHero() {
+  window.DDSHero3D?.instance?.destroy();
+  if (window.DDSHero3D) window.DDSHero3D.instance = null;
+}
