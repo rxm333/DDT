@@ -336,3 +336,76 @@ html.lenis.lenis-smooth {
     filter: none;
   }
 }
+
+/* ---------- Carrousel mobile (actualités) : défilement natif + scroll-snap ---------- */
+.dds-swiper__dots[hidden] {
+  display: none;
+}
+@media (max-width: 767px) {
+  .dds-swiper.is-swiper {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* pleine largeur d'écran, les cartes restent alignées sur la marge du site */
+    margin-inline: calc(50% - 50vw);
+    padding-inline: calc(50vw - 50%);
+    scroll-padding-inline: calc(50vw - 50%);
+    padding-block: 0.25rem; /* laisse respirer l'anneau de focus */
+  }
+  .dds-swiper.is-swiper::-webkit-scrollbar {
+    display: none;
+  }
+  .dds-swiper.is-swiper > * {
+    flex: 0 0 84%;
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .dds-swiper__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-top: 1rem;
+  }
+  .dds-swiper__dot {
+    position: relative;
+    width: 1.5rem; /* cible tactile de 24 px minimum */
+    height: 1.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .dds-swiper__dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 1rem;
+    background: var(--_theme---text--subtle, #8a8594);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s var(--dds-ease-out), background-color 0.4s var(--dds-ease-out);
+  }
+  .dds-swiper__dot[aria-current='true']::before {
+    width: 1.25rem;
+    background: var(--_theme---accent--default, #b69cff);
+  }
+  .dds-swiper__dot:focus-visible {
+    outline: 2px solid var(--_theme---system--focus-state, #fff);
+    outline-offset: 0;
+    border-radius: 0.5rem;
+  }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .dds-swiper__dot::before {
+    transition: none;
+  }
+}

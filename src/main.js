@@ -18,8 +18,9 @@ import { initCustomizer } from './modules/customizer.js';
 import { initAccordions } from './modules/accordion.js';
 import { loadHero3d } from './modules/hero3d-loader.js';
 import { initModelViewers } from './modules/model-viewer.js';
+import { initSwipers } from './modules/swiper.js';
 
-const VERSION = '1.8.0';
+const VERSION = '1.9.0';
 
 function safe(name, fn) {
   try {
@@ -43,6 +44,7 @@ function boot() {
   safe('accordions', initAccordions);
   safe('hero3d', loadHero3d);
   safe('model-viewer', initModelViewers);
+  safe('swiper', initSwipers);
   const customizer = safe('customizer', initCustomizer);
 
   // Les positions changent quand images et polices arrivent

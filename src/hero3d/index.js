@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
-import { toCreasedNormals } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { createGeometries, decorate } from './pieces.js';
 
 /**
@@ -89,8 +88,8 @@ function boardTexture(size) {
 // ---------- Scène ----------
 function buildBoard(maxTex) {
   const g = new THREE.Group();
-  const top = new THREE.MeshStandardMaterial({ map: boardTexture(maxTex), roughness: 0.55, metalness: 0.05, transparent: true, opacity: 0 });
-  const side = new THREE.MeshStandardMaterial({ color: COLORS.frame, roughness: 0.6, transparent: true, opacity: 0 });
+  const top = new THREE.MeshStandardMaterial({ map: boardTexture(maxTex), roughness: 0.55, metalness: 0.05 });
+  const side = new THREE.MeshStandardMaterial({ color: COLORS.frame, roughness: 0.6 });
   const body = new THREE.Mesh(new THREE.BoxGeometry(FULL, THICK, FULL), [side, side, top, side, side, side]);
   body.position.y = -THICK / 2;
   body.receiveShadow = true;
@@ -98,8 +97,8 @@ function buildBoard(maxTex) {
   g.add(body);
 
   // Coins sombres et clous ornementaux
-  const cornerMat = new THREE.MeshStandardMaterial({ color: '#0f0f12', roughness: 0.35, metalness: 0.2, transparent: true, opacity: 0 });
-  const studMat = new THREE.MeshStandardMaterial({ color: COLORS.stud, roughness: 0.3, metalness: 0.9, transparent: true, opacity: 0 });
+  const cornerMat = new THREE.MeshStandardMaterial({ color: '#0f0f12', roughness: 0.35, metalness: 0.2 });
+  const studMat = new THREE.MeshStandardMaterial({ color: COLORS.stud, roughness: 0.3, metalness: 0.9 });
   g.userData.mats = [top, side, cornerMat, studMat];
   const corner = new THREE.BoxGeometry(FRAME * 0.92, THICK + 0.05, FRAME * 0.92);
   const stud = new THREE.CylinderGeometry(0.06, 0.06, 0.03, 16);
@@ -134,10 +133,14 @@ function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } 
   const pieces = [];
   const make = (type, color, file, rank) => {
     const g = new THREE.Group();
-    const mat = mats[color].clone(); // une matière par pièce : fondu d'apparition individuel
+    const mat = mats[color]; // matière partagée : pas de transparence à l'apparition, donc rien à recompiler
     geos[type].forEach((part) => {
       const geometry = part.geometry || part;
       const m = new THREE.Mesh(geometry, mat);
+      if (part.matrix) {
+        m.matrixAutoUpdate = false;
+        m.matrix.copy(part.matrix);
+      }
       if (part.y) m.position.y = part.y;
       m.castShadow = true;
       m.receiveShadow = true;
@@ -150,7 +153,8 @@ function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } 
     }
     g.position.set(file - 3.5, 0, rank - 3.5);
     if (type === 'knight') g.rotation.y = color === 'white' ? 0 : Math.PI;
-    g.userData = { type, color, file, rank, home: g.position.clone(), mat, baseScale: scale };
+    const height = geos[type].reduce((h, part) => Math.max(h, part.height || 0), 0) * scale || 1.6;
+    g.userData = { type, color, file, rank, home: g.position.clone(), mat, baseScale: scale, height };
     pieces.push(g);
   };
   for (let f = 0; f < 8; f++) {
@@ -205,14 +209,7 @@ async function loadReal() {
     if (!o.isMesh) return;
     o.castShadow = true;
     o.receiveShadow = true;
-    [].concat(o.material).forEach((m) => {
-      if (mats.includes(m)) return;
-      m.userData.wasTransparent = m.transparent;
-      m.userData.baseOpacity = m.opacity;
-      m.transparent = true;
-      m.opacity = 0;
-      mats.push(m);
-    });
+    [].concat(o.material).forEach((m) => !mats.includes(m) && mats.push(m));
   });
   board.userData.mats = mats;
   const full = box.max.x - box.min.x;
@@ -223,20 +220,16 @@ async function loadReal() {
   pieceGltfs.forEach((g, i) => {
     let mesh = null;
     g.scene.traverse((o) => (o.isMesh && !mesh ? (mesh = o) : null));
-    // Positions quantifiées (KHR_mesh_quantization) : on applique la matrice du nœud en flottants
+    // Géométrie quantifiée gardée telle quelle (normales précalculées) : on reporte la matrice
+    // du nœud et on recentre le pivot (base de la pièce en y = 0) sans toucher aux sommets.
     g.scene.updateMatrixWorld(true);
-    const src = mesh.geometry.attributes.position;
-    const pos = new Float32Array(src.count * 3);
-    const v = new THREE.Vector3();
-    for (let k = 0; k < src.count; k++) v.fromBufferAttribute(src, k).applyMatrix4(mesh.matrixWorld).toArray(pos, k * 3);
-    let geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    if (mesh.geometry.index) geo.setIndex(Array.from(mesh.geometry.index.array));
-    geo = toCreasedNormals(geo, THREE.MathUtils.degToRad(32));
-    geo.computeBoundingBox();
-    const bb = geo.boundingBox;
-    geo.translate(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
-    geos[PIECE_FILES[i]] = [geo];
+    const geometry = mesh.geometry;
+    geometry.computeBoundingBox();
+    const bb = geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld);
+    const matrix = new THREE.Matrix4()
+      .makeTranslation(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2)
+      .multiply(mesh.matrixWorld);
+    geos[PIECE_FILES[i]] = [{ geometry, matrix, height: bb.max.y - bb.min.y }];
   });
   const materials = {
     white: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1, 0.853, 0.803), roughness: 0.22, metalness: 0.05, clearcoat: 0.4, clearcoatRoughness: 0.25 }),
@@ -259,7 +252,6 @@ export async function mount(container) {
   section.classList.add('has-hero-3d');
 
   const mobile = window.matchMedia('(max-width: 767px)').matches;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.95;
@@ -364,43 +356,91 @@ export async function mount(container) {
   fit();
 
   // ---------- Intro ----------
-  // 1. le plateau apparaît en douceur pendant que la caméra s'approche ;
-  // 2. les pièces se posent en vague (petite descente + fondu, sans rebond) ;
+  // 1. la toile s'éclaire en fondu, le plateau monte à peine pendant que la caméra s'approche ;
+  // 2. chaque pièce sort de sa case, comme poussée depuis l'intérieur du plateau (découpe au ras
+  //    du damier, aucune transparence), avec un halo très doux qui s'éteint sur la case ;
+  //    ordre de mise en place : rois et dames d'abord, puis vers les tours, puis les pions ;
   // 3. puis le texte du héros apparaît (classes posées sur la section, transitions en CSS).
   const still = reduceMotion();
-  const T = { board: 1.8, start: 0.7, stagger: 0.034, piece: 0.95, camera: 3.2 };
-  const introEnd = T.start + pieces.length * T.stagger + T.piece;
-  const TEXT_AT = T.start + pieces.length * T.stagger * 0.75;
-  pieces.forEach((p, i) => (p.userData.t0 = T.start + i * T.stagger));
+  const T = { board: 1.6, start: 0.55, file: 0.085, pawns: 0.42, piece: 1.25, camera: 3.4 };
+  pieces.forEach((p) => {
+    const u = p.userData;
+    const fromCentre = Math.floor(Math.abs(u.file - 3.5)); // 0 (roi, dame) → 3 (tours)
+    const pawn = u.type === 'pawn';
+    u.t0 = T.start + (pawn ? T.pawns : 0) + fromCentre * T.file * (pawn ? 0.8 : 1) + (u.color === 'black' ? 0.04 : 0);
+  });
+  const introEnd = Math.max(...pieces.map((p) => p.userData.t0)) + T.piece;
+  const TEXT_AT = T.start + T.pawns + 0.15;
 
+  // Découpe au ras du damier : la partie encore « dans » le plateau n'est pas dessinée (ombres comprises)
+  renderer.localClippingEnabled = true;
+  const clip = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0.0005);
+  new Set(pieces.map((p) => p.userData.mat)).forEach((m) => {
+    m.clippingPlanes = [clip];
+    m.clipShadows = true;
+  });
+
+  // Halo de case : un seul dégradé radial, un petit disque additif par pièce, masqué après l'intro
+  const haloTex = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const x = c.getContext('2d');
+    const grd = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grd.addColorStop(0, 'rgba(255,240,225,0.9)');
+    grd.addColorStop(0.35, 'rgba(230,205,255,0.35)');
+    grd.addColorStop(1, 'rgba(230,205,255,0)');
+    x.fillStyle = grd;
+    x.fillRect(0, 0, 128, 128);
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  })();
+  const haloGeo = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
+  const halos = still
+    ? []
+    : pieces.map((p) => {
+        const m = new THREE.Mesh(haloGeo, new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+        m.position.set(p.userData.home.x, 0.004, p.userData.home.z);
+        m.renderOrder = 2;
+        m.visible = false;
+        p.userData.halo = m;
+        world.add(m);
+        return m;
+      });
+
+  // Courbe de sortie : départ franc, longue arrivée très douce, sans rebond
+  const rise = (k) => {
+    const soft = k * k * (3 - 2 * k) * 0.4 + k * 0.6; // démarrage adouci (pas d'apparition « en pop »)
+    return 1 - (1 - soft) ** 3.4;
+  };
+  let introDone = false;
   const pose = (t) => {
     const b = easeOutQuint(clamp01(t / T.board));
-    board.position.y = -0.35 * (1 - b);
+    board.position.y = -0.22 * (1 - b);
     ground.material.opacity = 0.35 * b;
-    boardMats.forEach((m) => (m.opacity = b * (m.userData.baseOpacity ?? 1)));
-    if (b >= 1 && !board.userData.opaque) {
-      board.userData.opaque = true;
-      boardMats.forEach((m) => ((m.transparent = !!m.userData.wasTransparent), (m.needsUpdate = true)));
-    }
     pieces.forEach((p) => {
       const u = p.userData;
       const k = clamp01((t - u.t0) / T.piece);
       p.visible = k > 0;
-      const e = easeOutQuint(k);
-      p.position.y = u.home.y + 0.45 * (1 - e);
-      p.scale.setScalar(u.baseScale * (0.97 + 0.03 * e));
-      const fading = k < 1;
-      if (u.mat.transparent !== fading) {
-        u.mat.transparent = fading;
-        u.mat.needsUpdate = true;
-      }
-      u.mat.opacity = easeOutCubic(k);
-      const shadow = k > 0.35;
-      if (u.shadow !== shadow) {
-        u.shadow = shadow;
-        p.traverse((o) => (o.castShadow = shadow));
+      const e = rise(k);
+      p.position.y = u.home.y + board.position.y - u.height * 1.02 * (1 - e);
+      p.rotation.y = (u.type === 'knight' && u.color === 'black' ? Math.PI : 0) + 0.5 * (1 - easeOutCubic(k));
+      p.scale.setScalar(u.baseScale);
+      if (u.halo) {
+        const h = Math.sin(Math.PI * clamp01(k * 1.35)); // monte puis s'éteint avant l'arrivée
+        u.halo.visible = h > 0.001;
+        u.halo.material.opacity = 0.45 * h;
+        u.halo.scale.setScalar(0.55 + 0.6 * easeOutCubic(k));
       }
     });
+    clip.constant = 0.0005 - board.position.y; // la découpe suit le damier pendant sa montée
+    if (!introDone && t >= introEnd) {
+      introDone = true;
+      halos.forEach((m) => world.remove(m));
+      // Plus rien ne bouge dans la scène (seule la caméra se déplace) : l'ombre est figée
+      renderer.shadowMap.autoUpdate = false;
+      renderer.shadowMap.needsUpdate = true;
+    }
   };
 
   let textShown = false;
@@ -474,10 +514,30 @@ export async function mount(container) {
   const clock = new THREE.Timer();
   let elapsed = still ? introEnd : 0;
 
+  // Résolution adaptative : si l'image n'arrive plus à suivre (machine modeste, écran très dense),
+  // on baisse un peu la définition plutôt que de laisser l'animation saccader.
+  const dpr = { max: Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.75), cur: 0, avg: 1 / 60, n: 0 };
+  dpr.cur = dpr.max;
+  renderer.setPixelRatio(dpr.cur);
+  const adapt = (raw) => {
+    if (raw > 0.25) return; // onglet repris, chargement… : on ignore
+    dpr.avg += (raw - dpr.avg) * 0.05;
+    if (++dpr.n < 90) return;
+    if (dpr.avg > 1 / 42 && dpr.cur > 1) {
+      dpr.cur = Math.max(1, dpr.cur - 0.25);
+      renderer.setPixelRatio(dpr.cur);
+      fit();
+      dpr.n = 0;
+    }
+  };
+
   const frame = () => {
     raf = 0;
     clock.update();
-    const dt = Math.min(clock.getDelta(), 0.1);
+    const raw = clock.getDelta();
+    // Pendant l'intro, un à-coup ponctuel ne fait pas sauter l'animation : le temps ralentit un instant
+    const dt = Math.min(raw, introDone ? 0.1 : 1 / 30);
+    adapt(raw);
     elapsed += dt;
     pose(still ? introEnd : elapsed);
     pointer.sx += (pointer.x - pointer.sx) * Math.min(dt * 3, 1);
@@ -495,8 +555,8 @@ export async function mount(container) {
       spin.v *= Math.exp(-dt * 3.2);
       if (!spin.drag) spin.tilt *= Math.exp(-dt * 1.5);
     }
-    world.rotation.y = THREE.MathUtils.degToRad(WORLD_YAW) + spin.yaw;
-    place(az, el + spin.tilt);
+    // On tourne la caméra autour du plateau (et non le plateau) : la scène reste immobile et l'ombre n'est pas recalculée
+    place(az - spin.yaw, el + spin.tilt);
     renderer.render(scene, camera);
     const moving = spin.drag || Math.abs(spin.v) > 0.002 || Math.abs(spin.tilt) > 0.002;
     if ((!still || moving) && visible && !document.hidden) raf = requestAnimationFrame(frame);
@@ -520,7 +580,24 @@ export async function mount(container) {
   });
   ro.observe(container);
 
+  // Préchauffage, toile encore invisible : shaders compilés en parallèle (sans bloquer la page),
+  // textures envoyées à la carte graphique, puis une image de rodage avec toutes les pièces visibles
+  // (ombres comprises). L'intro démarre ensuite sans à-coup de compilation.
   canvas.style.opacity = '0';
+  pose(introEnd - 0.001);
+  halos.forEach((m) => ((m.visible = true), (m.material.opacity = 0.001)));
+  place(view.azimuth, view.elevation);
+  try {
+    board.traverse((o) => o.isMesh && [].concat(o.material).forEach((m) => Object.values(m).forEach((v) => v?.isTexture && renderer.initTexture(v))));
+    await renderer.compileAsync(scene, camera);
+  } catch {
+    /* compilation à la volée au premier rendu */
+  }
+  renderer.render(scene, camera);
+  introDone = false;
+  renderer.shadowMap.autoUpdate = true;
+  clock.update();
+  elapsed = still ? introEnd : 0;
   requestAnimationFrame(() => {
     canvas.style.opacity = '1';
     frame();
@@ -532,8 +609,20 @@ export async function mount(container) {
     camera,
     renderer,
     pieces,
+    // Positionne l'intro à un instant donné (contrôle visuel, tests)
+    seek(t) {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      elapsed = t;
+      clock.update();
+      pose(t);
+      renderer.render(scene, camera);
+    },
     replay() {
       elapsed = 0;
+      introDone = false;
+      renderer.shadowMap.autoUpdate = true;
+      halos.forEach((m) => world.add(m));
       play();
     },
     destroy() {
