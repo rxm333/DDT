@@ -135,6 +135,41 @@ html.lenis.lenis-smooth {
 }
 
 /* ---------- Cartes produit ---------- */
+/* Carte entièrement cliquable : le lien du titre s'étend sur toute la carte (« stretched link »).
+   Un seul lien par carte au clavier et au lecteur d'écran ; « Voir le produit » est un repère visuel. */
+.product-card_component {
+  position: relative;
+  cursor: pointer;
+}
+.product-card_link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.product-card_link:focus-visible {
+  outline: none;
+}
+.product-card_component:has(.product-card_link:focus-visible) {
+  outline: 2px solid var(--_theme---system--focus-state);
+  outline-offset: 6px;
+  border-radius: 1.25rem;
+}
+.product-card_button {
+  pointer-events: none; /* le clic traverse vers le lien étendu */
+}
+@media (hover: hover) and (pointer: fine) {
+  .product-card_component:hover .product-card_button.dds-btn {
+    scale: 1.03;
+    border-color: var(--_theme---text--muted);
+  }
+  .product-card_component:hover [data-dds-roll] .dds-roll__char {
+    transform: translateY(calc(-1 * var(--dds-roll-h)));
+  }
+}
+.product-card_component:has(.product-card_link:focus-visible) [data-dds-roll] .dds-roll__char {
+  transform: translateY(calc(-1 * var(--dds-roll-h)));
+}
 .product-card_image {
   transition: transform var(--dds-slow) var(--dds-ease-out);
 }
@@ -217,5 +252,16 @@ html.lenis.lenis-smooth {
   .footer_social-link:hover,
   .footer_social-link:focus-visible {
     animation: none;
+  }
+}
+
+/* Mouvement réduit : la carte cliquable ne bouge pas au survol */
+@media (prefers-reduced-motion: reduce) {
+  .product-card_component:hover .product-card_button.dds-btn {
+    scale: none;
+  }
+  .product-card_component:hover [data-dds-roll] .dds-roll__char,
+  .product-card_component:has(.product-card_link:focus-visible) [data-dds-roll] .dds-roll__char {
+    transform: none;
   }
 }

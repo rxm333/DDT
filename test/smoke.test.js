@@ -28,7 +28,7 @@ const html = `<!doctype html><html><head></head><body>
 </header>
 <main class="main-wrapper">
   <section class="section_collection" id="collection"><h2 class="collection_heading">Collection Ancolie</h2>
-    <article class="product-card_component"><button type="button" class="product-card_button" aria-label="Ajouter au panier : Blanc"><span>Ajouter au panier</span></button></article>
+    <article class="product-card_component"><h3><a class="product-card_link" href="/ancolie-blanc">Blanc</a></h3><span class="product-card_button" aria-hidden="true"><span>Voir le produit</span></span></article>
   </section>
   <section class="section_atelier"><div class="atelier_marquee"><ul class="atelier_marquee-list" aria-label="Photos"><li class="atelier_marquee-item"><img src="https://x.test/a.webp" alt="A"></li></ul><ul class="atelier_marquee-list" aria-hidden="true"><li class="atelier_marquee-item"><img src="https://x.test/a.webp" alt=""></li></ul></div><input type="checkbox" class="atelier_pause-input"></section>
   <section class="section_prod-hero">
@@ -84,12 +84,12 @@ assert.ok(document.documentElement.classList.contains('lenis'), 'classe .lenis s
 // Texte qui roule
 const btn = document.querySelector('.product-card_button');
 assert.ok(btn.hasAttribute('data-dds-roll'), 'bouton préparé pour le roll');
-assert.equal(btn.querySelector('.dds-roll__text').dataset.text, 'Ajouter au panier');
-assert.equal(btn.getAttribute('aria-label'), 'Ajouter au panier : Blanc', 'aria-label conservé');
+assert.equal(btn.querySelector('.dds-roll__text').dataset.text, 'Voir le produit');
+assert.equal(btn.getAttribute('aria-hidden'), 'true', 'repère visuel masqué (le lien du titre porte l’accessibilité)');
 assert.ok(btn.classList.contains('dds-btn') && btn.classList.contains('dds-btn--ghost'), 'bouton contour amélioré');
-assert.equal(btn.querySelector('.dds-sr').textContent, 'Ajouter au panier', 'libellé lisible d’un seul tenant');
+assert.equal(btn.querySelector('.dds-sr').textContent, 'Voir le produit', 'libellé lisible d’un seul tenant');
 assert.equal(btn.querySelector('.dds-roll').getAttribute('aria-hidden'), 'true', 'lettres décoratives masquées');
-assert.equal(btn.querySelectorAll('.dds-roll__char').length, 'Ajouter au panier'.length, 'une lettre par span');
+assert.equal(btn.querySelectorAll('.dds-roll__char').length, 'Voir le produit'.length, 'une lettre par span');
 const addSolid = document.querySelector('[data-cart="add"][data-product="blanc"]');
 assert.ok(addSolid.classList.contains('dds-btn--solid'), 'bouton plein amélioré');
 
