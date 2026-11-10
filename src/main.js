@@ -20,8 +20,9 @@ import { loadHero3d } from './modules/hero3d-loader.js';
 import { initModelViewers } from './modules/model-viewer.js';
 import { initSwipers } from './modules/swiper.js';
 import { initAnnounce } from './modules/announce.js';
+import { initForms } from './modules/forms.js';
 
-const VERSION = '1.11.0';
+const VERSION = '1.11.1';
 
 function safe(name, fn) {
   try {
@@ -47,6 +48,7 @@ function boot() {
   safe('hero3d', loadHero3d);
   safe('model-viewer', initModelViewers);
   safe('swiper', initSwipers);
+  safe('forms', initForms);
   const customizer = safe('customizer', initCustomizer);
 
   // Les positions changent quand images et polices arrivent
