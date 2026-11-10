@@ -168,40 +168,6 @@ export function initNavbar({ lenis } = {}) {
     root.addEventListener('focusin', showBar);
   }
 
-  initEmblemSpin(root, lenis);
 
   return { open, close, toggle: toggleMenu, get isOpen() { return isOpen; } };
-}
-
-/**
- * Emblème du logo : rotation sur lui-même liée à la position de scroll
- * (sens horaire en descendant, antihoraire en remontant). Désactivé si
- * l'utilisateur préfère réduire les animations.
- */
-function initEmblemSpin(root, lenis) {
-  const emblem = $(SELECTORS.navbar.emblem, root);
-  if (!emblem || prefersReducedMotion()) return;
-
-  gsap.set(emblem, { svgOrigin: '17 17' }); // centre du cercle (viewBox 34 × 34)
-  const rotateTo = gsap.quickTo(emblem, 'rotation', { duration: NAVBAR.emblemSmoothing, ease: 'power3.out' });
-  const update = (y) => rotateTo(y * NAVBAR.emblemDegPerPx);
-
-  if (lenis) {
-    lenis.on('scroll', ({ scroll }) => update(scroll));
-  } else {
-    let ticking = false;
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          update(window.scrollY);
-          ticking = false;
-        });
-      },
-      { passive: true }
-    );
-  }
-  update(window.scrollY);
 }

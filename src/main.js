@@ -10,7 +10,7 @@ import { initHover } from './modules/hover.js';
 import { initReveal } from './modules/reveal.js';
 import { initMarquee } from './modules/marquee.js';
 
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 
 function safe(name, fn) {
   try {
