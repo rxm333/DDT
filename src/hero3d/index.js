@@ -176,7 +176,6 @@ const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeOutQuint = (t) => 1 - (1 - t) ** 5;
 const easeOutQuart = (t) => 1 - (1 - t) ** 4;
-const easeInOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 // ---------- Modèles de l'atelier (glTF, compression meshopt) ----------
@@ -379,6 +378,9 @@ export async function mount(container) {
     const b = project();
     // Décale l'image (sans changer la perspective) pour poser le plateau à la bonne hauteur
     const shift = ((b.top + b.bottom) / 2 - (FRAME_BOX.top + FRAME_BOX.bottom) / 2) * h;
+    view.shift = shift;
+    view.w = w;
+    view.h = h;
     camera.setViewOffset(w, h, 0, shift, w, h);
     camera.updateProjectionMatrix();
   };
@@ -392,7 +394,7 @@ export async function mount(container) {
   //    ordre de mise en place : rois et dames d'abord, puis vers les tours, puis les pions ;
   // 3. puis le texte du héros apparaît (classes posées sur la section, transitions en CSS).
   const still = reduceMotion();
-  const T = { board: 1.6, start: 0.75, file: 0.11, pawns: 0.5, piece: 1.05, camera: 3.6 };
+  const T = { board: 1.8, start: 1.05, file: 0.11, pawns: 0.5, piece: 1.05, camera: 3.6 };
   pieces.forEach((p) => {
     const u = p.userData;
     const fromCentre = Math.floor(Math.abs(u.file - 3.5)); // 0 (roi, dame) → 3 (tours)
@@ -412,10 +414,6 @@ export async function mount(container) {
   let introDone = false;
   const LAND = 1; // la pièce arrive à vitesse nulle au moment du contact
   const pose = (t) => {
-    // Entrée du plateau : la lumière se lève sur lui (exposition 0 → normale), sans le déplacer
-    const b = easeInOutSine(clamp01(t / T.board));
-    renderer.toneMappingExposure = EXPOSURE * b;
-    ground.material.opacity = 0.35 * b;
     pieces.forEach((p) => {
       const u = p.userData;
       const k = clamp01((t - u.t0) / T.piece);
@@ -568,8 +566,13 @@ export async function mount(container) {
     const settle = still ? 1 : easeInOutCubic(clamp01(elapsed / T.camera));
     const idle = still ? 0 : Math.sin(Math.max(elapsed - T.camera, 0) * 0.45) * 0.03 * easeOutCubic(clamp01((elapsed - T.camera) / 2));
     // Lent mouvement de caméra en arc pendant l'entrée, qui se pose en douceur (pas de zoom)
-    const az = view.azimuth + idle + pointer.sx * 0.06 * settle - 0.2 * (1 - settle);
-    const el = view.elevation + pointer.sy * 0.025 * settle + 0.05 * (1 - settle);
+    // Entrée du plateau : il monte depuis le bas du cadre en pivotant légèrement, sans fondu
+    // ni changement de lumière ; il ralentit longuement avant de se poser à sa place.
+    const enter = still ? 1 : easeOutQuint(clamp01(elapsed / T.board));
+    camera.setViewOffset(view.w, view.h, 0, view.shift - (1 - enter) * view.h * 0.85, view.w, view.h);
+    camera.updateProjectionMatrix();
+    const az = view.azimuth + idle + pointer.sx * 0.06 * settle - 0.45 * (1 - enter);
+    const el = view.elevation + pointer.sy * 0.025 * settle + 0.06 * (1 - enter);
     // Élan après un lancer, puis l'inclinaison revient doucement
     if (!spin.drag) {
       spin.yaw += spin.v * dt;
@@ -627,6 +630,7 @@ export async function mount(container) {
   clock.update();
   elapsed = still ? introEnd : 0;
   requestAnimationFrame(() => {
+    canvas.style.transition = 'none'; // pas de fondu : le plateau entre par le mouvement
     canvas.style.opacity = '1';
     frame();
     play();
