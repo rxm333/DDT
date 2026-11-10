@@ -1,17 +1,18 @@
 {
   "name": "dame-de-tours-js",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "private": true,
   "description": "Scripts externes du site Dame de Tours (Webflow) : smooth scroll, navbar, survols, apparitions au scroll.",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build",
+    "build": "vite build && vite build -c vite.hero.config.js",
     "test": "node test/smoke.test.js"
   },
   "dependencies": {
     "gsap": "^3.15.1",
-    "lenis": "^1.3.27"
+    "lenis": "^1.3.27",
+    "three": "^0.187.0"
   },
   "devDependencies": {
     "jsdom": "^26.1.0",

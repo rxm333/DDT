@@ -16,8 +16,9 @@ import { initProduct } from './modules/product.js';
 import { initButtons } from './modules/buttons.js';
 import { initCustomizer } from './modules/customizer.js';
 import { initAccordions } from './modules/accordion.js';
+import { loadHero3d } from './modules/hero3d-loader.js';
 
-const VERSION = '1.6.1';
+const VERSION = '1.7.0';
 
 function safe(name, fn) {
   try {
@@ -39,6 +40,7 @@ function boot() {
   safe('marquee', () => initMarquee({ lenis }));
   safe('product', initProduct);
   safe('accordions', initAccordions);
+  safe('hero3d', loadHero3d);
   const customizer = safe('customizer', initCustomizer);
 
   // Les positions changent quand images et polices arrivent

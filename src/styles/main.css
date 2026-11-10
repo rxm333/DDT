@@ -265,3 +265,32 @@ html.lenis.lenis-smooth {
     transform: none;
   }
 }
+
+/* ---------- Héros 3D de l'accueil (bundle hero-3d.min.js) ---------- */
+/* Le canvas couvre tout le héros : sous les boutons et la carte, au-dessus du logotype (comme la maquette) */
+.section_hero.has-hero-3d .hero_viewer {
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  transform: none;
+  z-index: 2;
+  pointer-events: none;
+}
+.section_hero.has-hero-3d .hero_component {
+  z-index: auto;
+}
+.section_hero.has-hero-3d .hero_heading {
+  position: relative;
+  z-index: 1;
+}
+.section_hero.has-hero-3d .hero_bottom {
+  position: relative;
+  z-index: 3;
+}
+.hero_canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1.2s var(--dds-ease-out);
+}
