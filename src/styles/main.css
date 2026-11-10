@@ -275,7 +275,7 @@ html.lenis.lenis-smooth {
   max-width: none;
   transform: none;
   z-index: 2;
-  pointer-events: none;
+  pointer-events: auto; /* on peut faire tourner le plateau */
 }
 .section_hero.has-hero-3d .hero_component {
   z-index: auto;
@@ -290,7 +290,12 @@ html.lenis.lenis-smooth {
 }
 .hero_canvas {
   display: block;
+  cursor: grab;
+  touch-action: pan-y; /* au doigt : glisser horizontal = tourner, vertical = faire défiler la page */
   width: 100%;
   height: 100%;
   transition: opacity 1.2s var(--dds-ease-out);
+}
+.hero_viewer.is-dragging .hero_canvas {
+  cursor: grabbing;
 }

@@ -118,7 +118,7 @@ function buildBoard(maxTex) {
 }
 
 const WORLD_YAW = 45;
-const PIECE_SCALE = 1.22;
+const PIECE_SCALE = 1.32;
 const BACK = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'];
 
 function buildPieces(geos) {
@@ -224,27 +224,45 @@ export function mount(container) {
   world.rotation.y = THREE.MathUtils.degToRad(WORLD_YAW); // blancs au fond à gauche, noirs devant à droite
   scene.add(world);
 
-  // ---------- Cadrage ----------
-  const target = new THREE.Vector3(0, 0.3, 0);
+  // ---------- Cadrage (calé sur la maquette) ----------
+  // Le plateau, coins compris, doit tenir dans une boîte exprimée en fractions du héros :
+  // coin du fond vers 22 % de la hauteur, coin avant vers 88 %, toute la largeur au plus.
+  const FRAME_BOX = mobile ? { top: 0.3, bottom: 0.74, maxW: 1.08 } : { top: 0.22, bottom: 0.88, maxW: 0.98 };
+  const target = new THREE.Vector3(0, 0, 0);
   const view = { azimuth: 0, elevation: THREE.MathUtils.degToRad(31), dist: 20 };
+  const place = (az, el) => {
+    const d = view.dist;
+    camera.position.set(Math.sin(az) * Math.cos(el) * d, Math.sin(el) * d + target.y, Math.cos(az) * Math.cos(el) * d);
+    camera.lookAt(target);
+  };
+  const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([x, z]) => new THREE.Vector3((x * FULL) / 2, 0, (z * FULL) / 2));
+  const project = () => {
+    const rot = new THREE.Matrix4().makeRotationY(THREE.MathUtils.degToRad(WORLD_YAW));
+    camera.updateMatrixWorld();
+    const pts = corners.map((c) => c.clone().applyMatrix4(rot).project(camera));
+    const xs = pts.map((p) => (p.x + 1) / 2);
+    const ys = pts.map((p) => (1 - p.y) / 2);
+    return { w: Math.max(...xs) - Math.min(...xs), top: Math.min(...ys), bottom: Math.max(...ys) };
+  };
   const fit = () => {
     const w = container.clientWidth || 1;
     const h = container.clientHeight || 1;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // Le plateau (diagonale ≈ FULL·√2) occupe ~92 % de la largeur sur desktop, plus sur mobile
-    const span = FULL * Math.SQRT2 * (mobile ? 1.06 : 1.27);
-    const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect);
-    const byWidth = span / 2 / Math.tan(hfov / 2);
-    const byHeight = (FULL * 0.95) / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    view.dist = Math.max(byWidth, byHeight) * (mobile ? 1.05 : 1);
-    target.y = mobile ? 0.6 : -0.35;
+    camera.clearViewOffset();
     camera.updateProjectionMatrix();
-  };
-  const place = (az, el) => {
-    const d = view.dist;
-    camera.position.set(Math.sin(az) * Math.cos(el) * d, Math.sin(el) * d + target.y, Math.cos(az) * Math.cos(el) * d);
-    camera.lookAt(target);
+    const wantH = FRAME_BOX.bottom - FRAME_BOX.top;
+    for (let i = 0; i < 5; i++) {
+      place(view.azimuth, view.elevation);
+      const b = project();
+      view.dist *= Math.max(b.w / FRAME_BOX.maxW, (b.bottom - b.top) / wantH);
+    }
+    place(view.azimuth, view.elevation);
+    const b = project();
+    // Décale l'image (sans changer la perspective) pour poser le plateau à la bonne hauteur
+    const shift = ((b.top + b.bottom) / 2 - (FRAME_BOX.top + FRAME_BOX.bottom) / 2) * h;
+    camera.setViewOffset(w, h, 0, shift, w, h);
+    camera.updateProjectionMatrix();
   };
   fit();
 
@@ -281,6 +299,54 @@ export function mount(container) {
   };
   if (fine && !still) window.addEventListener('pointermove', onPointer, { passive: true });
 
+  // ---------- Rotation du plateau au glisser (clic maintenu / doigt) ----------
+  const spin = { yaw: 0, tilt: 0, v: 0, drag: null };
+  const onDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    spin.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false };
+    spin.v = 0;
+  };
+  const onMove = (e) => {
+    const d = spin.drag;
+    if (!d || e.pointerId !== d.id) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+    if (!d.moved) {
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6 && e.pointerType !== 'mouse') {
+        spin.drag = null; // geste vertical au doigt : la page défile
+        return;
+      }
+      if (Math.hypot(dx, dy) < 3) return;
+      d.moved = true;
+      container.classList.add('is-dragging');
+      try {
+        canvas.setPointerCapture(e.pointerId);
+      } catch {
+        /* déjà relâché */
+      }
+    }
+    const now = performance.now();
+    const k = 0.0065;
+    spin.yaw += dx * k;
+    spin.tilt = THREE.MathUtils.clamp(spin.tilt + dy * 0.003, -0.18, 0.22);
+    spin.v = (dx * k) / Math.max((now - d.t) / 1000, 0.008);
+    d.x = e.clientX;
+    d.y = e.clientY;
+    d.t = now;
+    play();
+  };
+  const onUp = () => {
+    if (!spin.drag) return;
+    if (performance.now() - spin.drag.t > 120 || still) spin.v = 0;
+    spin.drag = null;
+    container.classList.remove('is-dragging');
+    play();
+  };
+  canvas.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointermove', onMove, { passive: true });
+  window.addEventListener('pointerup', onUp);
+  window.addEventListener('pointercancel', onUp);
+
   let visible = true;
   let raf = 0;
   const clock = new THREE.Timer();
@@ -298,9 +364,17 @@ export function mount(container) {
     const idle = still ? 0 : Math.sin(elapsed * 0.45) * 0.035 * settle;
     const az = view.azimuth + idle + pointer.sx * 0.07 * settle - 0.12 * (1 - settle);
     const el = view.elevation + pointer.sy * 0.03 * settle + 0.08 * (1 - settle);
-    place(az, el);
+    // Élan après un lancer, puis l'inclinaison revient doucement
+    if (!spin.drag) {
+      spin.yaw += spin.v * dt;
+      spin.v *= Math.exp(-dt * 3.2);
+      if (!spin.drag) spin.tilt *= Math.exp(-dt * 1.5);
+    }
+    world.rotation.y = THREE.MathUtils.degToRad(WORLD_YAW) + spin.yaw;
+    place(az, el + spin.tilt);
     renderer.render(scene, camera);
-    if (!still && visible && !document.hidden) raf = requestAnimationFrame(frame);
+    const moving = spin.drag || Math.abs(spin.v) > 0.002 || Math.abs(spin.tilt) > 0.002;
+    if ((!still || moving) && visible && !document.hidden) raf = requestAnimationFrame(frame);
   };
   const play = () => {
     if (!raf && visible && !document.hidden) {
@@ -342,6 +416,9 @@ export function mount(container) {
       io.disconnect();
       ro.disconnect();
       window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
       document.removeEventListener('visibilitychange', play);
       renderer.dispose();
       canvas.remove();
