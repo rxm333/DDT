@@ -51,8 +51,8 @@ npm run dev     # rebuild automatique à chaque modification
 Dépôt : https://github.com/rxm333/DDT (public, dossier `dist/` versionné).
 
 URLs actuelles, **figées sur le commit du build v1.0.0** :
-- `https://cdn.jsdelivr.net/gh/rxm333/DDT@ab2d9967089feaf2c99253455030b21d93ca8a85/dist/dame-de-tours.min.css`
-- `https://cdn.jsdelivr.net/gh/rxm333/DDT@ab2d9967089feaf2c99253455030b21d93ca8a85/dist/dame-de-tours.min.js`
+- `https://cdn.jsdelivr.net/gh/rxm333/DDT@fd484cefb411e99f23c72bf4a3d22b9ca700679e/dist/dame-de-tours.min.css`
+- `https://cdn.jsdelivr.net/gh/rxm333/DDT@fd484cefb411e99f23c72bf4a3d22b9ca700679e/dist/dame-de-tours.min.js`
 
 Ne jamais pointer vers `@main` : avec un commit (ou un tag de release), le cache CDN est permanent
 et rien ne change en production sans mise à jour volontaire de l'URL dans Webflow.
@@ -65,12 +65,12 @@ dans les deux URLs Webflow (ou créer une release `vX.Y.Z` sur GitHub et utilise
 **Site settings → Custom code → Head code**
 ```html
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rxm333/DDT@ab2d9967089feaf2c99253455030b21d93ca8a85/dist/dame-de-tours.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rxm333/DDT@fd484cefb411e99f23c72bf4a3d22b9ca700679e/dist/dame-de-tours.min.css">
 ```
 
 **Site settings → Custom code → Footer code**
 ```html
-<script defer src="https://cdn.jsdelivr.net/gh/rxm333/DDT@ab2d9967089feaf2c99253455030b21d93ca8a85/dist/dame-de-tours.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/gh/rxm333/DDT@fd484cefb411e99f23c72bf4a3d22b9ca700679e/dist/dame-de-tours.min.js"></script>
 ```
 
 Le script ne tourne que sur le site publié / la prévisualisation, pas dans le canvas du Designer.
