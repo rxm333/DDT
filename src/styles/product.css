@@ -13,7 +13,14 @@
 /* Accordéon natif (details/summary) */
 .prod-acc_summary::-webkit-details-marker { display: none; }
 .prod-acc_summary::marker { content: ""; }
-.prod-acc_item[open] > .prod-acc_summary .prod-acc_icon path:last-child { display: none; }
+.prod-acc_icon path { transform-origin: 50% 50%; transition: transform 0.45s var(--dds-ease-out), opacity 0.3s var(--dds-ease-out); }
+.prod-acc_icon { transition: transform 0.45s var(--dds-ease-out); }
+/* Le « + » devient « − » : la barre verticale pivote et s'efface, l'icône fait un quart de tour */
+.prod-acc_item[open] > .prod-acc_summary .prod-acc_icon { transform: rotate(180deg); }
+.prod-acc_item[open] > .prod-acc_summary .prod-acc_icon path:last-child { transform: rotate(90deg); opacity: 0; }
+.prod-acc_item.is-closing > .prod-acc_summary .prod-acc_icon { transform: none; }
+.prod-acc_item.is-closing > .prod-acc_summary .prod-acc_icon path:last-child { transform: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .prod-acc_icon, .prod-acc_icon path { transition: none; } }
 .prod-acc_list-item::before { content: ""; position: absolute; left: 0; top: 0.5625rem; width: 5px; height: 5px; border-radius: 50%; background-color: var(--_theme---accent--default); }
 .prod-acc_link:hover { color: var(--_theme---accent--hover); }
 /* Carte « Créez le vôtre » */

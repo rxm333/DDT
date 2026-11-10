@@ -40,14 +40,14 @@ const html = `<!doctype html><html><head></head><body>
   </section>
   <section class="section_cfg"><div class="cfg_component" data-customizer="">
     <div class="cfg_panel"><div class="cfg_steps">
-      <details class="cfg_step" data-cfg-step="plateau" open="open"><summary><span data-cfg-summary="plateau"></span></summary><div>
+      <details class="cfg_step" name="cfg" data-cfg-step="plateau" open="open"><summary><span data-cfg-summary="plateau"></span></summary><div>
         <fieldset><legend>Revêtement</legend>
           <label class="cfg_choice"><input type="radio" name="plateau" value="couleur-unie" checked="checked"><span class="cfg_choice-name">Couleur unie</span></label>
           <label class="cfg_choice"><input type="radio" name="plateau" value="votre-image" data-price="20"><span class="cfg_choice-name">Votre image</span></label></fieldset>
         <fieldset><legend><span>Teinte du cuir</span><span data-cfg-label="cuir"></span></legend>
           <input class="cfg_swatch" type="radio" name="cuir" value="noir" aria-label="Noir">
           <input class="cfg_swatch" type="radio" name="cuir" value="blanc-os" aria-label="Blanc os" checked="checked"></fieldset></div></details>
-      <details class="cfg_step" data-cfg-step="inscription"><summary><span data-cfg-summary="inscription"></span></summary><div>
+      <details class="cfg_step" name="cfg" data-cfg-step="inscription"><summary><span data-cfg-summary="inscription"></span></summary><div>
         <label for="z1">Zone 1</label><input type="text" id="z1" name="inscription-1" maxlength="40" data-cfg-zone="inscription" data-price="6">
         <label for="z2">Zone 2</label><input type="text" id="z2" name="inscription-2" maxlength="40" data-cfg-zone="inscription" data-price="6"></div></details>
     </div><div class="cfg_total"><span data-cfg-total="">249,00 €</span>
@@ -144,6 +144,15 @@ assert.equal(addB.dataset.quantity, '3', 'quantité transmise au bouton panier')
 const track = document.querySelector('.atelier_marquee');
 assert.ok(track.classList.contains('is-draggable'), 'marquee pris en main par le JS');
 assert.equal(track.querySelector('img').draggable, false, 'images non glissables nativement');
+
+// Accordéons animés (exclusifs dans le personnaliseur)
+const stepPlateau = document.querySelector('[data-cfg-step="plateau"]');
+const stepInscr = document.querySelector('[data-cfg-step="inscription"]');
+stepInscr.querySelector('summary').click();
+assert.ok(stepInscr.open, 'étape ouverte au clic');
+assert.ok(!stepPlateau.open, 'les autres étapes du groupe se ferment');
+stepInscr.querySelector('summary').click();
+assert.ok(!stepInscr.open, 'étape refermée au second clic');
 
 // Personnaliseur
 const fmt = (t) => t.replace(/\s/g, ' ');

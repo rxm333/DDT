@@ -15,8 +15,9 @@ import { initMarquee } from './modules/marquee.js';
 import { initProduct } from './modules/product.js';
 import { initButtons } from './modules/buttons.js';
 import { initCustomizer } from './modules/customizer.js';
+import { initAccordions } from './modules/accordion.js';
 
-const VERSION = '1.6.0';
+const VERSION = '1.6.1';
 
 function safe(name, fn) {
   try {
@@ -37,6 +38,7 @@ function boot() {
   safe('reveal', initReveal);
   safe('marquee', () => initMarquee({ lenis }));
   safe('product', initProduct);
+  safe('accordions', initAccordions);
   const customizer = safe('customizer', initCustomizer);
 
   // Les positions changent quand images et polices arrivent

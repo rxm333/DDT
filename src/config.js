@@ -47,6 +47,9 @@ export const NAVBAR = {
   autoHideThreshold: 120, // px avant de commencer à masquer (si autoHide)
 };
 
+/** Accordéons <details> animés. */
+SELECTORS.accordion = ['.prod-acc_item', '.cfg_step'];
+
 export const MARQUEE = {
   duration: 40, // secondes pour faire défiler une liste complète (vitesse de croisière)
   friction: 2.2, // retour à la vitesse de croisière après un lancer (plus grand = plus rapide)
