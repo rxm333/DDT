@@ -9,8 +9,9 @@ import { initNavbar } from './modules/navbar.js';
 import { initHover } from './modules/hover.js';
 import { initReveal } from './modules/reveal.js';
 import { initMarquee } from './modules/marquee.js';
+import { initProduct } from './modules/product.js';
 
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
 
 function safe(name, fn) {
   try {
@@ -29,6 +30,7 @@ function boot() {
   safe('hover', initHover);
   safe('reveal', initReveal);
   safe('marquee', () => initMarquee({ lenis }));
+  safe('product', initProduct);
 
   // Les positions changent quand images et polices arrivent
   window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });

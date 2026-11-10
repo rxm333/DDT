@@ -31,6 +31,13 @@ const html = `<!doctype html><html><head></head><body>
     <article class="product-card_component"><button type="button" class="product-card_button" aria-label="Ajouter au panier : Blanc"><span>Ajouter au panier</span></button></article>
   </section>
   <section class="section_atelier"><div class="atelier_marquee"><ul class="atelier_marquee-list"></ul></div></section>
+  <section class="section_prod-hero">
+    <div data-gallery=""><div data-product-viewer="ancolie-blanc"><img data-gallery-main="" src="https://x.test/vue.webp" alt="Vue A"></div>
+      <ul><li><button type="button" data-gallery-thumb="" aria-pressed="true" data-alt="Vue A"><img src="https://x.test/vue.webp" alt=""></button></li>
+      <li><button type="button" data-gallery-thumb="" aria-pressed="false" data-alt="Vue B"><img src="https://x.test/b.webp" alt=""></button></li></ul></div>
+    <div data-qty="blanc"><button type="button" data-qty-minus="">−</button><input type="number" value="1" min="1" max="3" data-qty-input=""><button type="button" data-qty-plus="">+</button></div>
+    <button type="button" data-cart="add" data-product="blanc" data-quantity="1"><span>Ajouter au panier</span></button>
+  </section>
 </main>
 </body></html>`;
 
@@ -91,6 +98,26 @@ assert.equal(toggle.getAttribute('aria-expanded'), 'false', 'clic extérieur fer
 document.querySelector('a[href="#collection"]').click();
 assert.equal(window.location.hash, '#collection');
 
+// Fiche produit : galerie
+const thumbs = document.querySelectorAll('[data-gallery-thumb]');
+const mainImg = document.querySelector('[data-gallery-main]');
+thumbs[1].click();
+assert.equal(mainImg.getAttribute('src'), 'https://x.test/b.webp', 'image principale changée');
+assert.equal(mainImg.alt, 'Vue B', 'alt de l’image principale mis à jour');
+assert.equal(thumbs[0].getAttribute('aria-pressed'), 'false');
+assert.equal(thumbs[1].getAttribute('aria-pressed'), 'true');
+
+// Fiche produit : quantité
+const qty = document.querySelector('[data-qty-input]');
+const minusB = document.querySelector('[data-qty-minus]');
+const plusB = document.querySelector('[data-qty-plus]');
+const addB = document.querySelector('[data-cart="add"][data-product="blanc"]');
+assert.ok(minusB.disabled, '− désactivé au minimum');
+plusB.click(); plusB.click(); plusB.click();
+assert.equal(qty.value, '3', 'quantité bornée au maximum');
+assert.ok(plusB.disabled, '+ désactivé au maximum');
+assert.equal(addB.dataset.quantity, '3', 'quantité transmise au bouton panier');
+
 assert.equal(errors.length, 0, `Erreurs : ${errors.join(' | ')}`);
-console.log('✓ Test de fumée OK — init, roll, navbar (aria, Échap, focus, clic extérieur), ancres');
+console.log('✓ Test de fumée OK — init, roll, navbar (aria, Échap, focus, clic extérieur), ancres, fiche produit (galerie, quantité)');
 window.close();
