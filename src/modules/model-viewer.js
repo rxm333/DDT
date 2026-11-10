@@ -9,7 +9,7 @@ import { $, $$ } from '../core/env.js';
 export function initModelViewers(root = document) {
   return $$('[data-model-viewer]', root).map((viewer) => {
     const title = $('[data-viewer-title]', viewer);
-    const image = $('[data-viewer-image]', viewer);
+    const image = $('[data-viewer-image], .col-viewer_image', viewer);
     const buttons = $$('[data-viewer-model]', viewer);
 
     const select = (btn) => {

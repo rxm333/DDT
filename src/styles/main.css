@@ -306,7 +306,7 @@ html.lenis.lenis-smooth {
   .section_hero:has(.hero_viewer) :is(.hero_heading, .hero_content, .hero-card_component) {
     opacity: 0;
     transform: translateY(18px);
-    animation: dds-hero-failsafe 0.8s var(--dds-ease-out) 4s forwards;
+    animation: dds-hero-failsafe 0.8s var(--dds-ease-out) 7s forwards;
   }
   .section_hero:has(.hero_viewer) .hero_heading {
     filter: blur(10px);

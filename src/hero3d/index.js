@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
+import { toCreasedNormals } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { createGeometries, decorate } from './pieces.js';
 
 /**
@@ -18,7 +21,8 @@ import { createGeometries, decorate } from './pieces.js';
 
 const BOARD = 8; // cases
 const FRAME = 0.78; // largeur du cadre
-const FULL = BOARD + FRAME * 2;
+const FULL_DEFAULT = BOARD + FRAME * 2;
+const FULL = FULL_DEFAULT; // plateau provisoire
 const THICK = 0.34;
 const COLORS = {
   light: '#aeaba5',
@@ -122,8 +126,8 @@ const WORLD_YAW = 45;
 const PIECE_SCALE = 1.32;
 const BACK = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'];
 
-function buildPieces(geos) {
-  const mats = {
+function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } = {}) {
+  const mats = materials || {
     white: new THREE.MeshPhysicalMaterial({ color: COLORS.white, roughness: 0.5, clearcoat: 0.3, clearcoatRoughness: 0.4 }),
     black: new THREE.MeshPhysicalMaterial({ color: COLORS.black, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.25 }),
   };
@@ -139,12 +143,14 @@ function buildPieces(geos) {
       m.receiveShadow = true;
       g.add(m);
     });
-    const deco = decorate(type, mat);
-    deco.traverse((o) => (o.castShadow = true));
-    g.add(deco);
+    if (ornaments) {
+      const deco = decorate(type, mat);
+      deco.traverse((o) => (o.castShadow = true));
+      g.add(deco);
+    }
     g.position.set(file - 3.5, 0, rank - 3.5);
     if (type === 'knight') g.rotation.y = color === 'white' ? 0 : Math.PI;
-    g.userData = { type, color, file, rank, home: g.position.clone(), mat };
+    g.userData = { type, color, file, rank, home: g.position.clone(), mat, baseScale: scale };
     pieces.push(g);
   };
   for (let f = 0; f < 8; f++) {
@@ -165,7 +171,81 @@ const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeOutQuint = (t) => 1 - (1 - t) ** 5;
 
-export function mount(container) {
+// ---------- Modèles de l'atelier (glTF, compression meshopt) ----------
+const MODELS = (() => {
+  const src = document.currentScript?.src || document.querySelector('script[src*="hero-3d.min.js"]')?.src || '';
+  return src ? src.replace(/dist\/[^/]*$/, 'models/') : '';
+})();
+const MODEL_SCALE = 0.25; // modèles en centimètres : case de 4 cm → 1 unité
+const PIECE_FILES = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
+
+async function loadReal() {
+  if (!MODELS) return null;
+  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+  const load = (f) => loader.loadAsync(MODELS + f);
+  const [boardGltf, ...pieceGltfs] = await Promise.all([load('plateau-la-chute-des-anges.glb'), ...PIECE_FILES.map((t) => load(`piece-${t}.glb`))]);
+
+  // Plateau : mis à l'échelle, centré, dessus du damier en y = 0
+  const board = new THREE.Group();
+  const model = boardGltf.scene;
+  model.scale.setScalar(MODEL_SCALE);
+  board.add(model);
+  model.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(model);
+  const c = box.getCenter(new THREE.Vector3());
+  model.position.x -= c.x;
+  model.position.z -= c.z;
+  model.updateMatrixWorld(true);
+  const ray = new THREE.Raycaster(new THREE.Vector3(0.5, 50, 0.5), new THREE.Vector3(0, -1, 0));
+  const hit = ray.intersectObject(model, true)[0];
+  const top = hit ? hit.point.y : box.max.y;
+  model.position.y -= top;
+  const mats = [];
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    o.castShadow = true;
+    o.receiveShadow = true;
+    [].concat(o.material).forEach((m) => {
+      if (mats.includes(m)) return;
+      m.userData.wasTransparent = m.transparent;
+      m.userData.baseOpacity = m.opacity;
+      m.transparent = true;
+      m.opacity = 0;
+      mats.push(m);
+    });
+  });
+  board.userData.mats = mats;
+  const full = box.max.x - box.min.x;
+  const bottom = (box.min.y - top);
+
+  // Pièces : géométrie unique par type, normales recalculées (angle de pli), base en y = 0
+  const geos = {};
+  pieceGltfs.forEach((g, i) => {
+    let mesh = null;
+    g.scene.traverse((o) => (o.isMesh && !mesh ? (mesh = o) : null));
+    // Positions quantifiées (KHR_mesh_quantization) : on applique la matrice du nœud en flottants
+    g.scene.updateMatrixWorld(true);
+    const src = mesh.geometry.attributes.position;
+    const pos = new Float32Array(src.count * 3);
+    const v = new THREE.Vector3();
+    for (let k = 0; k < src.count; k++) v.fromBufferAttribute(src, k).applyMatrix4(mesh.matrixWorld).toArray(pos, k * 3);
+    let geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    if (mesh.geometry.index) geo.setIndex(Array.from(mesh.geometry.index.array));
+    geo = toCreasedNormals(geo, THREE.MathUtils.degToRad(32));
+    geo.computeBoundingBox();
+    const bb = geo.boundingBox;
+    geo.translate(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
+    geos[PIECE_FILES[i]] = [geo];
+  });
+  const materials = {
+    white: new THREE.MeshPhysicalMaterial({ color: new THREE.Color(1, 0.853, 0.803), roughness: 0.22, metalness: 0.05, clearcoat: 0.4, clearcoatRoughness: 0.25 }),
+    black: new THREE.MeshPhysicalMaterial({ color: '#0a0a0c', roughness: 0.2, metalness: 0.25, clearcoat: 0.6, clearcoatRoughness: 0.2 }),
+  };
+  return { board, geos, materials, full, bottom };
+}
+
+export async function mount(container) {
   if (!container || container.dataset.hero3d) return null;
   let renderer;
   try {
@@ -217,8 +297,24 @@ export function mount(container) {
   ground.receiveShadow = true;
 
   const world = new THREE.Group();
-  const board = buildBoard(Math.min(renderer.capabilities.maxTextureSize, mobile ? 1024 : 2048));
-  const pieces = buildPieces(createGeometries());
+  let real = null;
+  try {
+    real = await loadReal();
+  } catch (err) {
+    console.warn('[DDS] Modèles 3D indisponibles, échiquier provisoire :', err);
+  }
+  let FULL = FULL_DEFAULT;
+  let board;
+  let pieces;
+  if (real) {
+    board = real.board;
+    FULL = real.full;
+    ground.position.y = real.bottom - 0.001;
+    pieces = buildPieces(real.geos, { materials: real.materials, scale: MODEL_SCALE, ornaments: false });
+  } else {
+    board = buildBoard(Math.min(renderer.capabilities.maxTextureSize, mobile ? 1024 : 2048));
+    pieces = buildPieces(createGeometries());
+  }
   const boardMats = board.userData.mats;
   world.add(ground, board, ...pieces);
   world.rotation.y = THREE.MathUtils.degToRad(WORLD_YAW); // blancs au fond à gauche, noirs devant à droite
@@ -281,15 +377,18 @@ export function mount(container) {
     const b = easeOutQuint(clamp01(t / T.board));
     board.position.y = -0.35 * (1 - b);
     ground.material.opacity = 0.35 * b;
-    boardMats.forEach((m) => (m.opacity = b));
-    if (b >= 1 && boardMats[0].transparent) boardMats.forEach((m) => ((m.transparent = false), (m.needsUpdate = true)));
+    boardMats.forEach((m) => (m.opacity = b * (m.userData.baseOpacity ?? 1)));
+    if (b >= 1 && !board.userData.opaque) {
+      board.userData.opaque = true;
+      boardMats.forEach((m) => ((m.transparent = !!m.userData.wasTransparent), (m.needsUpdate = true)));
+    }
     pieces.forEach((p) => {
       const u = p.userData;
       const k = clamp01((t - u.t0) / T.piece);
       p.visible = k > 0;
       const e = easeOutQuint(k);
       p.position.y = u.home.y + 0.45 * (1 - e);
-      p.scale.setScalar(PIECE_SCALE * (0.97 + 0.03 * e));
+      p.scale.setScalar(u.baseScale * (0.97 + 0.03 * e));
       const fading = k < 1;
       if (u.mat.transparent !== fading) {
         u.mat.transparent = fading;
@@ -455,10 +554,10 @@ export function mount(container) {
 }
 
 // Démarrage automatique
-const boot = () => {
+const boot = async () => {
   const el = document.querySelector('[data-hero-viewer]');
-  const api = mount(el);
-  window.DDSHero3D = { mount, instance: api };
+  window.DDSHero3D = { mount, instance: null };
+  window.DDSHero3D.instance = await mount(el);
 };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
 else boot();

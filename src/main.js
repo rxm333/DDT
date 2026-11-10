@@ -19,7 +19,7 @@ import { initAccordions } from './modules/accordion.js';
 import { loadHero3d } from './modules/hero3d-loader.js';
 import { initModelViewers } from './modules/model-viewer.js';
 
-const VERSION = '1.7.3';
+const VERSION = '1.8.0';
 
 function safe(name, fn) {
   try {
