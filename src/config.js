@@ -12,6 +12,8 @@ export const SELECTORS = {
     // Éléments du menu qui apparaissent en cascade à l'ouverture
     menuItems: '.navbar_link-list > li, .navbar_menu-content > .navbar_divider, .navbar_info-col',
     magnetic: '.navbar_button',
+    // Emblème (groupe SVG du logo) qui tourne sur lui-même au scroll
+    emblem: '[data-navbar="emblem"]',
   },
   // Survol « texte qui roule »
   roll: ['.product-card_button', '.navbar_link'],
@@ -41,8 +43,10 @@ export const SMOOTH_SCROLL = {
 };
 
 export const NAVBAR = {
-  autoHide: true,
-  autoHideThreshold: 120, // px avant de commencer à masquer
+  autoHide: false, // la barre reste toujours visible
+  autoHideThreshold: 120, // px avant de commencer à masquer (si autoHide)
+  emblemDegPerPx: 0.36, // rotation de l'emblème : 360° tous les 1000 px de scroll
+  emblemSmoothing: 0.35, // inertie du suivi (s)
 };
 
 export const MARQUEE = {
