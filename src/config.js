@@ -14,7 +14,7 @@ export const SELECTORS = {
     magnetic: '.navbar_button',
   },
   // Survol « texte qui roule »
-  roll: ['.product-card_button', '.navbar_link'],
+  roll: ['.product-card_button', '.navbar_link', '.button', '.prod-buy_add'],
   marquee: {
     section: '.section_atelier',
     list: '.atelier_marquee-list',
@@ -48,4 +48,16 @@ export const NAVBAR = {
 export const MARQUEE = {
   velocityBoost: true, // accélère le défilement selon la vitesse de scroll
   maxBoost: 3, // vitesse max = 1 + maxBoost
+};
+
+/** Boutons : variantes de remplissage et attraction magnétique (voir modules/buttons.js). */
+export const BUTTONS = {
+  variants: {
+    // Fond lilas : remplissage lilas clair + reflet
+    solid: ['.button:not(.is-secondary)', '.prod-buy_add'],
+    // Contour : remplissage lilas plein, texte qui passe en encre
+    ghost: ['.button.is-secondary', '.product-card_button'],
+  },
+  magnetic: ['.button', '.prod-buy_add'],
+  magneticStrength: 0.16,
 };

@@ -36,7 +36,7 @@ const html = `<!doctype html><html><head></head><body>
       <ul><li><button type="button" data-gallery-thumb="" aria-pressed="true" data-alt="Vue A"><img src="https://x.test/vue.webp" alt=""></button></li>
       <li><button type="button" data-gallery-thumb="" aria-pressed="false" data-alt="Vue B"><img src="https://x.test/b.webp" alt=""></button></li></ul></div>
     <div data-qty="blanc"><button type="button" data-qty-minus="">−</button><input type="number" value="1" min="1" max="3" data-qty-input=""><button type="button" data-qty-plus="">+</button></div>
-    <button type="button" data-cart="add" data-product="blanc" data-quantity="1"><span>Ajouter au panier</span></button>
+    <button type="button" class="prod-buy_add" data-cart="add" data-product="blanc" data-quantity="1"><span>Ajouter au panier</span></button>
   </section>
 </main>
 </body></html>`;
@@ -70,6 +70,12 @@ const btn = document.querySelector('.product-card_button');
 assert.ok(btn.hasAttribute('data-dds-roll'), 'bouton préparé pour le roll');
 assert.equal(btn.querySelector('.dds-roll__text').dataset.text, 'Ajouter au panier');
 assert.equal(btn.getAttribute('aria-label'), 'Ajouter au panier : Blanc', 'aria-label conservé');
+assert.ok(btn.classList.contains('dds-btn') && btn.classList.contains('dds-btn--ghost'), 'bouton contour amélioré');
+const fill = btn.firstElementChild;
+assert.ok(fill.classList.contains('dds-btn__fill') && fill.getAttribute('aria-hidden') === 'true', 'calque de remplissage décoratif');
+assert.equal(btn.textContent.trim(), 'Ajouter au panier', 'libellé intact');
+const addSolid = document.querySelector('[data-cart="add"][data-product="blanc"]');
+assert.ok(addSolid.classList.contains('dds-btn--solid'), 'bouton plein amélioré');
 
 // Navbar
 const toggle = document.querySelector('[data-navbar="toggle"]');

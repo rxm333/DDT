@@ -69,16 +69,7 @@ html.lenis.lenis-smooth {
   transform: translateY(calc(-100% - 0.16em));
 }
 
-/* ---------- Boutons ---------- */
-.product-card_button {
-  transition:
-    background-color var(--dds-fast) var(--dds-ease-out),
-    color var(--dds-fast) var(--dds-ease-out),
-    box-shadow var(--dds-fast) var(--dds-ease-out);
-}
-.product-card_button:active {
-  transform: scale(0.98);
-}
+/* ---------- Boutons : voir styles/buttons.css ---------- */
 
 /* ---------- Liens : soulignement animé ---------- */
 /* Liens sans soulignement au repos : le trait se dessine au survol, part vers la droite à la sortie */

@@ -4,6 +4,7 @@
  */
 import './styles/main.css';
 import './styles/product.css';
+import './styles/buttons.css';
 import { ScrollTrigger } from './core/gsap.js';
 import { initSmoothScroll, scrollToTarget, stopScroll, startScroll } from './modules/smooth-scroll.js';
 import { initNavbar } from './modules/navbar.js';
@@ -11,8 +12,9 @@ import { initHover } from './modules/hover.js';
 import { initReveal } from './modules/reveal.js';
 import { initMarquee } from './modules/marquee.js';
 import { initProduct } from './modules/product.js';
+import { initButtons } from './modules/buttons.js';
 
-const VERSION = '1.3.0';
+const VERSION = '1.4.0';
 
 function safe(name, fn) {
   try {
@@ -29,6 +31,7 @@ function boot() {
   const lenis = safe('smooth-scroll', initSmoothScroll);
   const navbar = safe('navbar', () => initNavbar({ lenis }));
   safe('hover', initHover);
+  safe('buttons', initButtons); // après le roll : il prépend le calque de remplissage
   safe('reveal', initReveal);
   safe('marquee', () => initMarquee({ lenis }));
   safe('product', initProduct);

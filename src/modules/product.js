@@ -7,7 +7,7 @@ import { $, $$ } from '../core/env.js';
  */
 
 function initGallery(gallery) {
-  const main = $('[data-gallery-main]', gallery);
+  const main = $('[data-gallery-main]', gallery) || $('[data-product-viewer] img', gallery);
   const thumbs = $$('[data-gallery-thumb]', gallery);
   if (!main || !thumbs.length) return;
 
