@@ -1,0 +1,195 @@
+/* =========================================================================
+   Dame de Tours — styles externes (chargés après le CSS Webflow)
+   Uniquement des transitions sur transform / opacity / couleurs : compositor-friendly.
+   ========================================================================= */
+
+:root {
+  --dds-ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* easeOutQuint */
+  --dds-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dds-fast: 0.3s;
+  --dds-base: 0.5s;
+  --dds-slow: 0.9s;
+}
+
+/* ---------- Lenis ---------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ---------- Navbar ---------- */
+/* Le menu ouvert ne dépasse jamais l'écran : il défile seul si besoin (mobile paysage) */
+.navbar_menu {
+  max-height: calc(100dvh - 7rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+/* ---------- Texte qui roule (préparé par le JS) ---------- */
+.dds-roll {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* marge de sécurité pour les jambages (g, p, ç) */
+  padding-block: 0.08em;
+  margin-block: -0.08em;
+}
+.dds-roll__text {
+  position: relative;
+  display: inline-block;
+  transition: transform var(--dds-base) var(--dds-ease-out);
+}
+.dds-roll__text::after {
+  content: attr(data-text);
+  content: attr(data-text) / ''; /* copie décorative, ignorée par les lecteurs d'écran */
+  position: absolute;
+  top: calc(100% + 0.16em);
+  left: 0;
+  width: 100%;
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-dds-roll]:hover .dds-roll__text {
+    transform: translateY(calc(-100% - 0.16em));
+  }
+}
+[data-dds-roll]:focus-visible .dds-roll__text {
+  transform: translateY(calc(-100% - 0.16em));
+}
+
+/* ---------- Boutons ---------- */
+.product-card_button {
+  transition:
+    background-color var(--dds-fast) var(--dds-ease-out),
+    color var(--dds-fast) var(--dds-ease-out),
+    box-shadow var(--dds-fast) var(--dds-ease-out);
+}
+.product-card_button:active {
+  transform: scale(0.98);
+}
+
+/* ---------- Liens : soulignement animé ---------- */
+/* Liens sans soulignement au repos : le trait se dessine au survol, part vers la droite à la sortie */
+.footer_link,
+.navbar_info-link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: 0% 1px;
+  transition:
+    background-size var(--dds-base) var(--dds-ease-out),
+    color var(--dds-fast) var(--dds-ease-out);
+}
+.footer_link:hover,
+.footer_link:focus-visible,
+.navbar_info-link:hover,
+.navbar_info-link:focus-visible {
+  background-position: 0% 100%;
+  background-size: 100% 1px;
+}
+
+/* Liens soulignés au repos : le trait sort à droite puis revient par la gauche */
+.atelier_link,
+.footer_social-link {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  background-size: 100% 1px;
+  transition: color var(--dds-fast) var(--dds-ease-out);
+}
+.atelier_link {
+  background-origin: content-box;
+  background-clip: content-box;
+}
+.atelier_link:hover,
+.atelier_link:focus-visible,
+.footer_social-link:hover,
+.footer_social-link:focus-visible {
+  animation: dds-underline var(--dds-slow) var(--dds-ease-in-out);
+}
+@keyframes dds-underline {
+  0% { background-position: 100% 100%; background-size: 100% 1px; }
+  45% { background-position: 100% 100%; background-size: 0% 1px; }
+  46% { background-position: 0% 100%; background-size: 0% 1px; }
+  100% { background-position: 0% 100%; background-size: 100% 1px; }
+}
+
+.navbar_link,
+.product-card_link {
+  transition: color var(--dds-fast) var(--dds-ease-out);
+}
+
+/* ---------- Cartes produit ---------- */
+.product-card_image {
+  transition: transform var(--dds-slow) var(--dds-ease-out);
+}
+.product-card_media,
+.product-card_media-link {
+  transition: box-shadow var(--dds-base) var(--dds-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  /* Survol de toute la carte (état « Survol » de Figma), impossible en classes Webflow seules */
+  .product-card_component:hover .product-card_image {
+    transform: scale(1.035);
+  }
+  .product-card_component:hover .product-card_media {
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.11),
+      inset 0 -1px 6px 0 rgba(0, 0, 0, 0.22),
+      0 2px 4px 0 rgba(0, 0, 0, 0.24),
+      0 12px 28px 0 rgba(0, 0, 0, 0.18),
+      0 36px 64px 0 rgba(0, 0, 0, 0.1);
+  }
+  .product-card_component:hover .product-card_media-link {
+    box-shadow:
+      inset 0 0 0 1px #b26bff,
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      inset 0 -2px 8px 0 rgba(0, 0, 0, 0.24);
+  }
+}
+
+/* ---------- Marquee : pause hors écran (classe posée par le JS) ---------- */
+.section_atelier.is-offscreen .atelier_marquee-list {
+  animation-play-state: paused;
+}
+
+/* ---------- Titres découpés (SplitText) ---------- */
+.dds-line {
+  will-change: transform;
+}
+
+/* ---------- Mouvement réduit : aucune transition décorative ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .dds-roll__text,
+  .product-card_image,
+  .product-card_media,
+  .product-card_media-link,
+  .footer_link,
+  .navbar_info-link {
+    transition: none;
+  }
+  [data-dds-roll]:hover .dds-roll__text,
+  [data-dds-roll]:focus-visible .dds-roll__text,
+  .product-card_component:hover .product-card_image {
+    transform: none;
+  }
+  .atelier_link:hover,
+  .atelier_link:focus-visible,
+  .footer_social-link:hover,
+  .footer_social-link:focus-visible {
+    animation: none;
+  }
+}
