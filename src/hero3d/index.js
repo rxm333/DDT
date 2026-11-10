@@ -680,7 +680,9 @@ export async function bootHero() {
   const el = document.querySelector('[data-hero-viewer]');
   window.DDSHero3D ||= { mount, instance: null };
   if (!el || el.dataset.hero3d) return;
-  window.DDSHero3D.instance = await mount(el);
+  const api = await mount(el);
+  if (api && !el.isConnected) return api.destroy(); // page quittée pendant le chargement
+  window.DDSHero3D.instance = api;
 }
 export function destroyHero() {
   window.DDSHero3D?.instance?.destroy();

@@ -126,10 +126,12 @@ function updateCurrentLinks(href) {
   const path = new URL(href, location.href).pathname.replace(/\/$/, '') || '/';
   $$('a[href]').forEach((a) => {
     if (a.closest(T.container)) return; // les liens du contenu viennent déjà à jour de Webflow
+    const raw = a.getAttribute('href');
+    if (!raw || raw.startsWith('#') || /^(mailto|tel|javascript):/i.test(raw)) return;
     let p;
     try {
-      const u = new URL(a.getAttribute('href'), location.href);
-      if (u.origin !== location.origin || (u.hash && u.pathname === location.pathname && a.getAttribute('href').startsWith('#'))) return;
+      const u = new URL(raw, location.href);
+      if (u.origin !== location.origin) return;
       p = u.pathname.replace(/\/$/, '') || '/';
     } catch {
       return;

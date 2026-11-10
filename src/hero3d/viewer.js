@@ -344,7 +344,9 @@ export function bootViewers() {
         if (!entry.isIntersecting) return;
         io.disconnect();
         const api = await mountViewer(v);
-        if (api) window.DDSViewer3D.instances.push(api);
+        if (!api) return;
+        if (!v.isConnected) return api.destroy(); // page quittée pendant le chargement
+        window.DDSViewer3D.instances.push(api);
       },
       { rootMargin: '300px' },
     );
