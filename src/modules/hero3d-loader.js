@@ -12,8 +12,9 @@ const SRC = (() => {
 
 export function loadHero3d() {
   const slot = $('[data-hero-viewer]');
-  if (!slot) return null;
-  const section = slot.closest('.section_hero');
+  const viewer = $('[data-model-viewer] [data-viewer-stage], [data-model-viewer] .col-viewer_stage');
+  if (!slot && !viewer) return null;
+  const section = slot?.closest('.section_hero');
   const reveal = () => section?.classList.add('is-hero-in'); // le texte du héros s'affiche quoi qu'il arrive
   if (!SRC || navigator.connection?.saveData) return reveal(), null;
   const s = document.createElement('script');

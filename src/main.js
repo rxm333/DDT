@@ -19,8 +19,9 @@ import { initAccordions } from './modules/accordion.js';
 import { loadHero3d } from './modules/hero3d-loader.js';
 import { initModelViewers } from './modules/model-viewer.js';
 import { initSwipers } from './modules/swiper.js';
+import { initAnnounce } from './modules/announce.js';
 
-const VERSION = '1.9.4';
+const VERSION = '1.10.0';
 
 function safe(name, fn) {
   try {
@@ -35,6 +36,7 @@ function boot() {
   if (window.DDS?.version) return; // déjà initialisé
 
   const lenis = safe('smooth-scroll', initSmoothScroll);
+  safe('announce', initAnnounce);
   const navbar = safe('navbar', () => initNavbar({ lenis }));
   safe('hover', initHover);
   safe('buttons', initButtons);

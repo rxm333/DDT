@@ -33,7 +33,7 @@ const COLORS = {
   black: '#17161a',
   stud: '#8a6a43',
 };
-const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+export const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ---------- Textures procédurales (marbre léger) ----------
 function marble(ctx, x, y, w, h, base, vein, density) {
@@ -125,7 +125,7 @@ const WORLD_YAW = 45;
 const PIECE_SCALE = 1.32;
 const BACK = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'];
 
-function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } = {}) {
+export function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } = {}) {
   const mats = materials || {
     white: new THREE.MeshPhysicalMaterial({ color: COLORS.white, roughness: 0.5, clearcoat: 0.3, clearcoatRoughness: 0.4 }),
     black: new THREE.MeshPhysicalMaterial({ color: COLORS.black, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.25 }),
@@ -152,6 +152,7 @@ function buildPieces(geos, { materials, scale = PIECE_SCALE, ornaments = true } 
       g.add(deco);
     }
     g.position.set(file - 3.5, 0, rank - 3.5);
+    g.scale.setScalar(scale);
     if (type === 'knight') g.rotation.y = color === 'white' ? 0 : Math.PI;
     const height = geos[type].reduce((h, part) => Math.max(h, part.height || 0), 0) * scale || 1.6;
     g.userData = { type, color, file, rank, home: g.position.clone(), mat, baseScale: scale, height };
@@ -183,62 +184,86 @@ const MODELS = (() => {
   const src = document.currentScript?.src || document.querySelector('script[src*="hero-3d.min.js"]')?.src || '';
   return src ? src.replace(/dist\/[^/]*$/, 'models/') : '';
 })();
-const MODEL_SCALE = 0.25; // modèles en centimètres : case de 4 cm → 1 unité
+export const MODEL_SCALE = 0.25; // modèles en centimètres : case de 4 cm → 1 unité
 const PIECE_FILES = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
+
+let gltfLoader = null;
+const loadGltf = (file) => {
+  gltfLoader ||= new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+  return gltfLoader.loadAsync(MODELS + file);
+};
+const boardCache = new Map();
+let piecesPromise = null;
+
+/** Plateau de l'atelier : mis à l'échelle, centré, dessus du damier en y = 0 (résultat mis en cache). */
+export function loadBoard(name) {
+  if (!MODELS) return Promise.reject(new Error('dossier des modèles introuvable'));
+  if (!boardCache.has(name)) {
+    boardCache.set(
+      name,
+      loadGltf(`plateau-${name}.glb`).then((gltf) => {
+        const board = new THREE.Group();
+        const model = gltf.scene;
+        model.scale.setScalar(MODEL_SCALE);
+        board.add(model);
+        model.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(model);
+        const c = box.getCenter(new THREE.Vector3());
+        model.position.x -= c.x;
+        model.position.z -= c.z;
+        model.updateMatrixWorld(true);
+        const ray = new THREE.Raycaster(new THREE.Vector3(0.5, 50, 0.5), new THREE.Vector3(0, -1, 0));
+        const hit = ray.intersectObject(model, true)[0];
+        const top = hit ? hit.point.y : box.max.y;
+        model.position.y -= top;
+        const mats = [];
+        model.traverse((o) => {
+          if (!o.isMesh) return;
+          o.castShadow = true;
+          o.receiveShadow = true;
+          [].concat(o.material).forEach((m) => !mats.includes(m) && mats.push(m));
+        });
+        board.userData.mats = mats;
+        return { board, full: box.max.x - box.min.x, bottom: box.min.y - top, height: box.max.y - top };
+      }),
+    );
+  }
+  return boardCache.get(name);
+}
+
+/** Géométries des six pièces (base en y = 0, pivot centré) et matières ivoire / noir. */
+export function loadPieces() {
+  if (!MODELS) return Promise.reject(new Error('dossier des modèles introuvable'));
+  piecesPromise ||= Promise.all(PIECE_FILES.map((t) => loadGltf(`piece-${t}.glb`))).then((pieceGltfs) => {
+    const geos = {};
+    pieceGltfs.forEach((g, i) => {
+      let mesh = null;
+      g.scene.traverse((o) => (o.isMesh && !mesh ? (mesh = o) : null));
+      // Géométrie quantifiée gardée telle quelle (normales précalculées) : on reporte la matrice
+      // du nœud et on recentre le pivot (base de la pièce en y = 0) sans toucher aux sommets.
+      g.scene.updateMatrixWorld(true);
+      const geometry = mesh.geometry;
+      geometry.computeBoundingBox();
+      const bb = geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld);
+      const matrix = new THREE.Matrix4()
+        .makeTranslation(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2)
+        .multiply(mesh.matrixWorld);
+      geos[PIECE_FILES[i]] = [{ geometry, matrix, height: bb.max.y - bb.min.y }];
+    });
+    return { geos, materials: pieceMaterials() };
+  });
+  return piecesPromise;
+}
+
+export const pieceMaterials = () => ({
+  white: new THREE.MeshPhysicalMaterial({ color: '#d9cfc2', roughness: 0.32, metalness: 0.02, clearcoat: 0.25, clearcoatRoughness: 0.3 }), // ivoire, pas blanc pur
+  black: new THREE.MeshPhysicalMaterial({ color: '#0a0a0c', roughness: 0.2, metalness: 0.25, clearcoat: 0.6, clearcoatRoughness: 0.2 }),
+});
 
 async function loadReal() {
   if (!MODELS) return null;
-  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  const load = (f) => loader.loadAsync(MODELS + f);
-  const [boardGltf, ...pieceGltfs] = await Promise.all([load('plateau-la-chute-des-anges.glb'), ...PIECE_FILES.map((t) => load(`piece-${t}.glb`))]);
-
-  // Plateau : mis à l'échelle, centré, dessus du damier en y = 0
-  const board = new THREE.Group();
-  const model = boardGltf.scene;
-  model.scale.setScalar(MODEL_SCALE);
-  board.add(model);
-  model.updateMatrixWorld(true);
-  const box = new THREE.Box3().setFromObject(model);
-  const c = box.getCenter(new THREE.Vector3());
-  model.position.x -= c.x;
-  model.position.z -= c.z;
-  model.updateMatrixWorld(true);
-  const ray = new THREE.Raycaster(new THREE.Vector3(0.5, 50, 0.5), new THREE.Vector3(0, -1, 0));
-  const hit = ray.intersectObject(model, true)[0];
-  const top = hit ? hit.point.y : box.max.y;
-  model.position.y -= top;
-  const mats = [];
-  model.traverse((o) => {
-    if (!o.isMesh) return;
-    o.castShadow = true;
-    o.receiveShadow = true;
-    [].concat(o.material).forEach((m) => !mats.includes(m) && mats.push(m));
-  });
-  board.userData.mats = mats;
-  const full = box.max.x - box.min.x;
-  const bottom = (box.min.y - top);
-
-  // Pièces : géométrie unique par type, normales recalculées (angle de pli), base en y = 0
-  const geos = {};
-  pieceGltfs.forEach((g, i) => {
-    let mesh = null;
-    g.scene.traverse((o) => (o.isMesh && !mesh ? (mesh = o) : null));
-    // Géométrie quantifiée gardée telle quelle (normales précalculées) : on reporte la matrice
-    // du nœud et on recentre le pivot (base de la pièce en y = 0) sans toucher aux sommets.
-    g.scene.updateMatrixWorld(true);
-    const geometry = mesh.geometry;
-    geometry.computeBoundingBox();
-    const bb = geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld);
-    const matrix = new THREE.Matrix4()
-      .makeTranslation(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2)
-      .multiply(mesh.matrixWorld);
-    geos[PIECE_FILES[i]] = [{ geometry, matrix, height: bb.max.y - bb.min.y }];
-  });
-  const materials = {
-    white: new THREE.MeshPhysicalMaterial({ color: '#d9cfc2', roughness: 0.32, metalness: 0.02, clearcoat: 0.25, clearcoatRoughness: 0.3 }), // ivoire, pas blanc pur
-    black: new THREE.MeshPhysicalMaterial({ color: '#0a0a0c', roughness: 0.2, metalness: 0.25, clearcoat: 0.6, clearcoatRoughness: 0.2 }),
-  };
-  return { board, geos, materials, full, bottom };
+  const [b, p] = await Promise.all([loadBoard('la-chute-des-anges'), loadPieces()]);
+  return { ...b, ...p };
 }
 
 export async function mount(container) {
@@ -645,9 +670,10 @@ export async function mount(container) {
   };
 }
 
-// Démarrage automatique
+// Démarrage automatique (seulement si la page a un héros 3D)
 const boot = async () => {
   const el = document.querySelector('[data-hero-viewer]');
+  if (!el) return;
   window.DDSHero3D = { mount, instance: null };
   window.DDSHero3D.instance = await mount(el);
 };

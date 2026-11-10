@@ -408,3 +408,61 @@ html.lenis.lenis-smooth {
     transition: none;
   }
 }
+
+/* ---------- Bandeau d'annonce (au-dessus de la barre de navigation flottante) ---------- */
+.announce_component[hidden] {
+  display: none;
+}
+.navbar_wrapper:has(> .announce_component:not([hidden])) {
+  top: 0;
+  flex-direction: column;
+  align-items: center;
+}
+.navbar_wrapper > .announce_component {
+  position: relative;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  margin-bottom: var(--dds-nav-top, 1.5rem);
+}
+.announce_link {
+  transition: color 0.2s var(--dds-ease-out);
+}
+.announce_link:hover {
+  color: #e3d4fb;
+}
+.announce_link:focus-visible,
+.announce_close:focus-visible {
+  outline: 2px solid var(--_theme---system--focus-state, #fff);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.announce_close {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  width: 2rem; /* cible de 32 px */
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  color: #b9a6d6;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: color 0.2s var(--dds-ease-out), background-color 0.2s var(--dds-ease-out);
+}
+.announce_close:hover {
+  color: #f1e9ff;
+  background-color: rgba(178, 107, 255, 0.14);
+}
+@media (max-width: 479px) {
+  .announce_component {
+    padding-left: 1rem;
+    padding-right: 2.75rem;
+  }
+  .announce_text {
+    font-size: 0.75rem;
+  }
+}

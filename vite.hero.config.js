@@ -7,7 +7,7 @@ export default defineConfig({
     sourcemap: true,
     emptyOutDir: false,
     lib: {
-      entry: 'src/hero3d/index.js',
+      entry: 'src/hero3d/entry.js',
       name: 'DDSHero3DBundle',
       formats: ['iife'],
       fileName: () => 'hero-3d.min.js',
