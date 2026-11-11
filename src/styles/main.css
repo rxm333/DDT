@@ -563,6 +563,10 @@ html.lenis.lenis-smooth {
 @media (prefers-reduced-motion: reduce) { .hero-card_image { transition: none; } }
 
 /* ---------- Page article (modèle CMS « Actualités ») ---------- */
+/* Blocs facultatifs masqués par le JS quand le champ CMS est vide (l'attribut hidden doit gagner sur display: flex). */
+.article-product_component[hidden], .article-body_cta[hidden], .article-aside_toc[hidden], .article-aside_divider[hidden], .section_article-next[hidden] { display: none !important; }
+/* Sans JS ou avant son passage : pas de carte produit vide. */
+.article-product_component:has(.article-product_link:empty) { display: none; }
 /* Contenu riche : rythme de lecture de la maquette (colonne de 720 px, corps 18 px / 1,7). */
 .article-body_richtext > :first-child { margin-top: 0; }
 .article-body_richtext > :last-child { margin-bottom: 0; }
@@ -610,8 +614,8 @@ html.lenis.lenis-smooth {
 .article-body_richtext ol { margin: 0 0 1.75rem; padding-left: 1.25rem; }
 .article-body_richtext li + li { margin-top: 0.5rem; }
 /* Photos : coins arrondis et relief des cartes ; deux photos qui se suivent forment une paire. */
-.article-body_richtext figure { margin: 2.5rem 0; max-width: 100%; }
-.article-body_richtext figure > div { width: 100%; }
+.article-body_richtext figure { display: block; width: 100%; max-width: 100% !important; margin: 2.5rem 0; }
+.article-body_richtext figure > div { display: block; width: 100%; }
 .article-body_richtext figure img {
   display: block;
   width: 100%;
@@ -622,7 +626,7 @@ html.lenis.lenis-smooth {
 }
 .article-body_richtext figcaption { margin-top: 0.75rem; font-size: 0.875rem; line-height: 1.5; color: var(--_theme---text--subtle); text-align: left; }
 .article-figure-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
-.article-figure-pair figure { margin: 0; }
+.article-figure-pair figure { margin: 0; min-width: 0; }
 .article-figure-pair figure img { height: 27.5rem; object-fit: cover; }
 /* Citation mise en avant, entre deux filets. */
 .article-body_richtext blockquote {
