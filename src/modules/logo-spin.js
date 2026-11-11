@@ -39,7 +39,6 @@ export function initLogoSpin() {
   if (!ctx) return null;
 
   const sprite = new Image();
-  sprite.decoding = 'async';
 
   let frame = 0;
   let drawn = -1;
@@ -117,7 +116,8 @@ export function initLogoSpin() {
     window.addEventListener('scroll', wake, { passive: true });
   };
 
-  sprite.onload = () => (sprite.decode ? sprite.decode().catch(() => {}) : Promise.resolve()).then(start);
+  // Pas de sprite.decode() : dans un onglet en arrière-plan, la promesse peut rester en attente indéfiniment.
+  sprite.onload = () => !ro && start();
   // La planche n'est pas utile au premier affichage : on la charge une fois la page prête.
   const load = () => {
     sprite.src = SPRITE;
