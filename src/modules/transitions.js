@@ -58,7 +58,10 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage, runDefer
           ]);
           destroyPage();
         },
-        beforeEnter({ next }) {
+        beforeEnter({ current, next }) {
+          // Barba garde l'ancien conteneur dans la page jusqu'à la fin de l'entrée : invisible mais
+          // toujours dans le flux, il repoussait la nouvelle page sous l'écran (entrée jamais visible).
+          if (current?.container) current.container.style.display = 'none';
           syncHead(next.html);
           updateCurrentLinks(next.url?.href || location.href);
           window.scrollTo(0, 0);
