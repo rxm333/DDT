@@ -83,7 +83,11 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
         async enter({ next }) {
           lenis?.resize();
           ScrollTrigger.refresh();
+          reinitWebflow();
           gsap.set(persistent(), { autoAlpha: 1, clearProps: 'opacity,visibility' });
+          // Tout le travail lourd (modules, mise en page, premières images) se fait pendant que le
+          // rideau couvre l'écran : on laisse le navigateur peindre la nouvelle page avant de l'ouvrir.
+          await settle();
           if (reduce()) {
             await gsap.to(next.container, { autoAlpha: 1, duration: 0.25, clearProps: 'opacity,visibility' });
             return;
@@ -99,7 +103,6 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
         after({ next }) {
           lenis?.start();
           navbar?.lock?.(false);
-          reinitWebflow();
           ScrollTrigger.refresh();
           // Lien vers une ancre d'une autre page (/page#section)
           if (location.hash.length > 1) {
@@ -113,6 +116,22 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
   });
 
   return barba;
+}
+
+// Attend que le navigateur ait peint deux images de suite sans à-coup (ou 600 ms au plus)
+function settle() {
+  return new Promise((resolve) => {
+    const start = performance.now();
+    let last = start;
+    let calm = 0;
+    const step = (now) => {
+      calm = now - last < 34 ? calm + 1 : 0;
+      last = now;
+      if (calm >= 2 || now - start > 600) resolve();
+      else requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
 }
 
 // --- Rideau de transition (hors du conteneur, sous la navbar) ---
