@@ -23,8 +23,9 @@ import { initAnnounce } from './modules/announce.js';
 import { initForms } from './modules/forms.js';
 import { initTransitions } from './modules/transitions.js';
 import { initLogoSpin } from './modules/logo-spin.js';
+import { initArticle } from './modules/article.js';
 
-const VERSION = '1.14.3';
+const VERSION = '1.15.0';
 
 function safe(name, fn) {
   try {
@@ -58,6 +59,9 @@ function initPage({ defer = false } = {}) {
   else safe('hero3d', loadHero3d);
   c.push(() => window.DDS3D?.destroy());
   safe('model-viewer', initModelViewers);
+  // Avant le swiper : la page article retire l'article en cours de « À lire ensuite ».
+  const article = safe('article', initArticle);
+  if (article) c.push(() => article.destroy());
   safe('swiper', initSwipers);
   safe('forms', initForms);
   api.customizer = safe('customizer', initCustomizer);
