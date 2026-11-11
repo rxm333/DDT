@@ -25,7 +25,9 @@ function formatDate(el) {
   const raw = el.textContent.trim();
   const date = new Date(raw);
   if (!raw || Number.isNaN(date.getTime())) return;
-  el.setAttribute('datetime', date.toISOString().slice(0, 10));
+  const pad = (n) => String(n).padStart(2, '0');
+  // Date locale (et non UTC) : « July 30, 2026 » ne doit pas devenir le 29 selon le fuseau.
+  el.setAttribute('datetime', `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`);
   el.textContent = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
 }
 
@@ -178,6 +180,12 @@ function trimRelated(root) {
   const list = $('[data-article-related]', root);
   if (!list) return;
   const here = location.pathname.replace(/\/$/, '');
+  const base = here.replace(/\/[^/]*$/, '') || '/actualites';
+  // Filet de sécurité : si le lien ne mène pas à l'article, on le reconstruit depuis le slug.
+  $$('[data-article-slug]', list).forEach((a) => {
+    const slug = a.getAttribute('data-article-slug');
+    if (slug && !new URL(a.href, location.href).pathname.endsWith(`/${slug}`)) a.setAttribute('href', `${base}/${slug}`);
+  });
   $$('.news_item', list).forEach((item) => {
     const link = $('a[href]', item);
     if (link && new URL(link.href, location.href).pathname.replace(/\/$/, '') === here) item.remove();

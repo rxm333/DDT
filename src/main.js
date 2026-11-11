@@ -25,7 +25,7 @@ import { initTransitions } from './modules/transitions.js';
 import { initLogoSpin } from './modules/logo-spin.js';
 import { initArticle } from './modules/article.js';
 
-const VERSION = '1.15.0';
+const VERSION = '1.15.1';
 
 function safe(name, fn) {
   try {
