@@ -23,7 +23,7 @@ import { initAnnounce } from './modules/announce.js';
 import { initForms } from './modules/forms.js';
 import { initTransitions } from './modules/transitions.js';
 
-const VERSION = '1.13.4';
+const VERSION = '1.13.5';
 
 function safe(name, fn) {
   try {

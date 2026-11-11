@@ -85,8 +85,9 @@ export async function mountViewer(viewer) {
     let set;
     [set, first] = await Promise.all([loadPieces(), loadBoard(BOARD_OF[current] || 'la-chute-des-anges')]);
     scene.add(...buildPieces(set.geos, { materials: set.materials, scale: MODEL_SCALE, ornaments: false }));
+    if (!viewer.isConnected) throw new Error('page quittée pendant le chargement');
   } catch (err) {
-    console.warn('[DDS] Visualiseur 3D indisponible :', err);
+    if (viewer.isConnected) console.warn('[DDS] Visualiseur 3D indisponible :', err);
     canvas.remove();
     renderer.dispose();
     stage.classList.remove('is-loading');

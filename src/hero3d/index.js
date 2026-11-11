@@ -194,8 +194,21 @@ const loadGltf = (file) => {
 const boardCache = new Map();
 let piecesPromise = null;
 
-/** Plateau de l'atelier : mis à l'échelle, centré, dessus du damier en y = 0 (résultat mis en cache). */
+/**
+ * Plateau de l'atelier : mis à l'échelle, centré, dessus du damier en y = 0.
+ * Le modèle chargé est mis en cache ; chaque appel renvoie une copie indépendante (géométries et
+ * matières partagées). Un même objet ne peut appartenir qu'à une scène : sans copie, un visualiseur
+ * qui finit de charger après une navigation « volait » le plateau du héros (pièces sans plateau).
+ */
 export function loadBoard(name) {
+  return loadBoardSource(name).then((b) => {
+    const board = b.board.clone();
+    board.userData = { ...b.board.userData };
+    return { ...b, board };
+  });
+}
+
+function loadBoardSource(name) {
   if (!MODELS) return Promise.reject(new Error('dossier des modèles introuvable'));
   if (!boardCache.has(name)) {
     boardCache.set(
