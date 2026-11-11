@@ -112,3 +112,20 @@
   .section_col-hero .col-viewer_stage { flex: 1 1 0; min-height: 0; }
   .section_col-hero .col-viewer_image { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; }
 }
+
+/* Fiche produit — sur ordinateur, la galerie (image + miniatures) tient dans l'écran :
+   l'image prend la hauteur visible sous la navbar (sans dépasser un carré) et la galerie
+   reste collée pendant qu'on lit la colonne d'achat. */
+@media (min-width: 992px) {
+  .prod-hero_gallery { --th: clamp(3.5rem, 10svh, 6.5rem); container-type: inline-size; position: sticky; top: 7.5rem; align-self: flex-start; }
+  .prod-hero_stage {
+    flex: none;
+    aspect-ratio: auto;
+    height: max(16rem, min(calc(100vh - 10.25rem - var(--th)), 100cqw));
+    height: max(16rem, min(calc(100svh - 10.25rem - var(--th)), 100cqw));
+    background-color: #080511;
+  }
+  .prod-hero_stage-image { inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .prod-hero_thumb { max-height: var(--th); }
+  .prod-hero_thumb img { width: 100%; height: 100%; object-fit: cover; }
+}
