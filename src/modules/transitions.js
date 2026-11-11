@@ -48,7 +48,10 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
           navbar?.close?.();
           navbar?.lock?.(true);
           lenis?.stop();
-          const label = trigger && trigger !== 'popstate' && trigger !== 'barba' ? (trigger.getAttribute?.('aria-label') || trigger.textContent || '').trim() : '';
+          const label =
+            trigger && typeof trigger === 'object'
+              ? (trigger.getAttribute('aria-label') || trigger.querySelector('.dds-sr')?.textContent || trigger.textContent || '').replace(/\s+/g, ' ').trim()
+              : '';
           if (reduce()) {
             await gsap.to(current.container, { autoAlpha: 0, duration: 0.2 });
             gsap.set(persistent(), { autoAlpha: 0 });
@@ -123,6 +126,7 @@ function createCurtain() {
   line.className = 'dds-curtain__line';
   el.append(label, line);
   document.body.append(el);
+  gsap.set(el, { yPercent: 101 }); // position gérée uniquement par GSAP
   return { el, label, line };
 }
 

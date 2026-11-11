@@ -553,7 +553,6 @@ html.lenis.lenis-smooth {
   background: var(--_theme---bg--page, #17171b);
   border-top: 1px solid color-mix(in srgb, var(--_theme---accent--default, #b26bff) 55%, transparent);
   box-shadow: 0 -40px 80px rgba(0, 0, 0, 0.45);
-  transform: translateY(101%);
   pointer-events: none;
   visibility: hidden;
 }
