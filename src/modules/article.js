@@ -194,7 +194,11 @@ function trimRelated(root) {
   if (!$('.news_item', list)) list.closest('section')?.setAttribute('hidden', '');
 }
 
-export function initArticle(root = document) {
+export function initArticle() {
+  // Pendant une transition Barba, l'ancienne page est encore dans le DOM (avant la nouvelle) :
+  // on travaille toujours dans le conteneur le plus récent.
+  const containers = $$('[data-barba="container"]');
+  const root = containers[containers.length - 1] || document;
   const body = $('[data-article-body]', root);
   if (!body) return null;
   const cleanups = [];
