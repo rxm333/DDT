@@ -5,12 +5,12 @@ import { TRANSITIONS as T } from '../config.js';
 
 /**
  * Transitions de page avec Barba : seul le contenu (<main data-barba="container">) change.
- * La navbar, hors du conteneur, ne bouge jamais : un rideau plein écran passe sous elle.
+ * La navbar, hors du conteneur, ne bouge jamais ; le footer est estompé pendant l'échange.
  *
  * À chaque navigation :
- *  - sortie : le rideau monte et recouvre la page (titre du lien au centre), le contenu recule ;
+ *  - sortie : fondu, léger recul et flou du contenu, menu mobile refermé ;
  *  - échange : <title>, métadonnées SEO, data-wf-page, liens actifs (navbar + footer), retour en haut ;
- *  - entrée : les modules sont réinitialisés, le rideau se retire vers le haut, le contenu remonte ;
+ *  - entrée : modules réinitialisés, puis le contenu remonte en se précisant (flou → net) ;
  *  - accessibilité : le focus est placé sur le titre principal (annoncé par les lecteurs d'écran) ;
  *  - Webflow (formulaires…) est réinitialisé.
  * Sans conteneur Barba sur la page, ou en cas d'erreur, la navigation reste classique.
@@ -20,7 +20,6 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
   const reduce = () => prefersReducedMotion();
-  const curtain = createCurtain();
   const persistent = () => $$(T.persistent.join(',')).filter((el) => !el.closest(T.container));
   const samePageHash = (url) => url.pathname === location.pathname && url.search === location.search;
 
@@ -43,32 +42,24 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
     },
     transitions: [
       {
-        name: 'dds-curtain',
-        async leave({ current, trigger }) {
+        name: 'dds-fade',
+        async leave({ current }) {
           navbar?.close?.();
           navbar?.lock?.(true);
           lenis?.stop();
-          const label =
-            trigger && typeof trigger === 'object'
-              ? (trigger.getAttribute('aria-label') || trigger.querySelector('.dds-sr')?.textContent || trigger.textContent || '').replace(/\s+/g, ' ').trim()
-              : '';
-          if (reduce()) {
-            await gsap.to(current.container, { autoAlpha: 0, duration: 0.2 });
-            gsap.set(persistent(), { autoAlpha: 0 });
-            return destroyPage();
-          }
-          curtain.label.textContent = label.length > 2 && label.length < 40 ? label : '';
-          const C = T.curtain;
-          const tl = gsap.timeline();
-          tl.set(curtain.el, { yPercent: 101, autoAlpha: 1 })
-            .set(curtain.label, { autoAlpha: 0, yPercent: 40 })
-            .set(curtain.line, { scaleX: 0 })
-            .to(curtain.el, { yPercent: 0, duration: C.cover, ease: 'power4.inOut' }, 0)
-            .to(current.container, { y: -C.contentShift, scale: 0.985, autoAlpha: 0.35, duration: C.cover, ease: 'power3.in' }, 0)
-            .to(curtain.label, { autoAlpha: 1, yPercent: 0, duration: 0.5, ease: 'expo.out' }, C.cover * 0.6)
-            .to(curtain.line, { scaleX: 1, duration: 0.6, ease: 'expo.out' }, C.cover * 0.65);
-          await tl;
-          gsap.set(persistent(), { autoAlpha: 0 });
+          const L = T.leave;
+          const r = reduce();
+          await Promise.all([
+            gsap.to(current.container, {
+              autoAlpha: 0,
+              y: r ? 0 : L.y,
+              scale: r ? 1 : L.scale,
+              filter: r ? 'none' : `blur(${L.blur}px)`,
+              duration: r ? 0.15 : L.duration,
+              ease: 'power2.in',
+            }),
+            gsap.to(persistent(), { autoAlpha: 0, duration: r ? 0.15 : L.duration, ease: 'power2.in' }),
+          ]);
           destroyPage();
         },
         beforeEnter({ next }) {
@@ -76,29 +67,24 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
           updateCurrentLinks(next.url?.href || location.href);
           window.scrollTo(0, 0);
           lenis?.scrollTo(0, { immediate: true, force: true });
-          if (!reduce()) gsap.set(next.container, { y: T.curtain.contentShift * 1.2 });
-          else gsap.set(next.container, { autoAlpha: 0 });
+          const E = T.enter;
+          const r = reduce();
+          gsap.set(next.container, { autoAlpha: 0, y: r ? 0 : E.y, scale: r ? 1 : E.scale, filter: r ? 'none' : `blur(${E.blur}px)` });
           initPage(next.container);
         },
         async enter({ next }) {
           lenis?.resize();
           ScrollTrigger.refresh();
           reinitWebflow();
-          gsap.set(persistent(), { autoAlpha: 1, clearProps: 'opacity,visibility' });
-          // Tout le travail lourd (modules, mise en page, premières images) se fait pendant que le
-          // rideau couvre l'écran : on laisse le navigateur peindre la nouvelle page avant de l'ouvrir.
+          // Le travail lourd (modules, mise en page) se fait pendant que la page est invisible :
+          // on laisse le navigateur peindre avant d'animer, pour une entrée sans à-coup.
           await settle();
-          if (reduce()) {
-            await gsap.to(next.container, { autoAlpha: 1, duration: 0.25, clearProps: 'opacity,visibility' });
-            return;
-          }
-          const C = T.curtain;
-          const tl = gsap.timeline();
-          tl.to([curtain.label, curtain.line], { autoAlpha: 0, yPercent: -30, duration: 0.35, ease: 'power2.in' }, 0)
-            .to(curtain.el, { yPercent: -101, duration: C.reveal, ease: 'power4.inOut' }, 0.15)
-            .to(next.container, { y: 0, duration: C.reveal + 0.35, ease: 'expo.out', clearProps: 'transform' }, 0.3)
-            .set(curtain.el, { autoAlpha: 0, yPercent: 101 });
-          await tl;
+          const E = T.enter;
+          const d = reduce() ? 0.2 : E.duration;
+          await Promise.all([
+            gsap.to(next.container, { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: d, ease: 'expo.out', clearProps: 'transform,opacity,visibility,filter' }),
+            gsap.to(persistent(), { autoAlpha: 1, duration: d, ease: 'power2.out', clearProps: 'opacity,visibility' }),
+          ]);
         },
         after({ next }) {
           lenis?.start();
@@ -132,21 +118,6 @@ function settle() {
     };
     requestAnimationFrame(step);
   });
-}
-
-// --- Rideau de transition (hors du conteneur, sous la navbar) ---
-function createCurtain() {
-  const el = document.createElement('div');
-  el.className = 'dds-curtain';
-  el.setAttribute('aria-hidden', 'true');
-  const label = document.createElement('span');
-  label.className = 'dds-curtain__label';
-  const line = document.createElement('span');
-  line.className = 'dds-curtain__line';
-  el.append(label, line);
-  document.body.append(el);
-  gsap.set(el, { yPercent: 101 }); // position gérée uniquement par GSAP
-  return { el, label, line };
 }
 
 // --- <head> : titre et métadonnées de la nouvelle page ---

@@ -73,9 +73,9 @@ export const BUTTONS = {
 export const TRANSITIONS = {
   wrapper: '[data-barba="wrapper"]',
   container: '[data-barba="container"]',
-  persistent: ['.footer_component', 'footer'], // cachés derrière le rideau pendant l'échange
+  persistent: ['.footer_component', 'footer'], // estompés pendant l'échange pour éviter un saut visuel
   // Pages chargées normalement (formulaires Webflow protégés : la vérification anti-spam doit se charger)
   reload: ['/contact'],
-  // Rideau plein écran (sous la navbar) qui monte, puis se retire vers le haut sur la nouvelle page
-  curtain: { cover: 0.75, reveal: 0.9, contentShift: 70 },
+  leave: { duration: 0.45, y: -24, scale: 0.985, blur: 6 },
+  enter: { duration: 0.85, y: 36, scale: 1.01, blur: 8 },
 };
