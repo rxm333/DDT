@@ -23,7 +23,7 @@ import { initAnnounce } from './modules/announce.js';
 import { initForms } from './modules/forms.js';
 import { initTransitions } from './modules/transitions.js';
 
-const VERSION = '1.13.3';
+const VERSION = '1.13.4';
 
 function safe(name, fn) {
   try {
@@ -36,10 +36,12 @@ function safe(name, fn) {
 
 // --- Modules propres au contenu de la page (réinitialisés à chaque transition Barba) ---
 let cleanups = [];
+const deferred = [];
+const runDeferred = () => deferred.splice(0).forEach((fn) => fn());
 let lenis = null;
 const api = {};
 
-function initPage() {
+function initPage({ defer = false } = {}) {
   const c = [];
   safe('roll', () => initRoll());
   safe('buttons', initButtons);
@@ -49,7 +51,10 @@ function initPage() {
   (marquees || []).forEach((m) => c.push(() => m?.destroy?.()));
   safe('product', initProduct);
   safe('accordions', initAccordions);
-  safe('hero3d', loadHero3d);
+  // La 3D (chargement, compilation des shaders) est lourde : pendant une transition, on la lance
+  // seulement une fois la nouvelle page affichée, pour ne pas saccader l'animation d'entrée.
+  if (defer) deferred.push(() => safe('hero3d', loadHero3d));
+  else safe('hero3d', loadHero3d);
   c.push(() => window.DDS3D?.destroy());
   safe('model-viewer', initModelViewers);
   safe('swiper', initSwipers);
@@ -74,7 +79,7 @@ function boot() {
   safe('hover', initHover); // texte qui roule (navbar, footer) + boutons magnétiques
 
   initPage();
-  const barba = safe('transitions', () => initTransitions({ lenis, navbar, destroyPage, initPage }));
+  const barba = safe('transitions', () => initTransitions({ lenis, navbar, destroyPage, initPage: () => initPage({ defer: true }), runDeferred }));
 
   // Les positions changent quand images et polices arrivent
   window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });

@@ -8,14 +8,14 @@ import { TRANSITIONS as T } from '../config.js';
  * La navbar, hors du conteneur, ne bouge jamais ; le footer est estompé pendant l'échange.
  *
  * À chaque navigation :
- *  - sortie : fondu, léger recul et flou du contenu, menu mobile refermé ;
+ *  - sortie : fondu et léger glissement vers le haut, menu mobile refermé ;
  *  - échange : <title>, métadonnées SEO, data-wf-page, liens actifs (navbar + footer), retour en haut ;
- *  - entrée : modules réinitialisés, puis le contenu remonte en se précisant (flou → net) ;
+ *  - entrée : modules réinitialisés, puis fondu et remontée douce ; la 3D démarre ensuite ;
  *  - accessibilité : le focus est placé sur le titre principal (annoncé par les lecteurs d'écran) ;
  *  - Webflow (formulaires…) est réinitialisé.
  * Sans conteneur Barba sur la page, ou en cas d'erreur, la navigation reste classique.
  */
-export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
+export function initTransitions({ lenis, navbar, destroyPage, initPage, runDeferred = () => {} }) {
   if (!$(T.wrapper) || !$(T.container)) return null;
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
@@ -43,22 +43,18 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
     transitions: [
       {
         name: 'dds-fade',
+        // Uniquement opacité + translation (accélérées par la carte graphique) : pas de flou ni d'échelle,
+        // qui obligent le navigateur à repeindre toute la page à chaque image.
         async leave({ current }) {
           navbar?.close?.();
           navbar?.lock?.(true);
           lenis?.stop();
           const L = T.leave;
           const r = reduce();
+          gsap.set(current.container, { willChange: 'transform, opacity' });
           await Promise.all([
-            gsap.to(current.container, {
-              autoAlpha: 0,
-              y: r ? 0 : L.y,
-              scale: r ? 1 : L.scale,
-              filter: r ? 'none' : `blur(${L.blur}px)`,
-              duration: r ? 0.15 : L.duration,
-              ease: 'power2.in',
-            }),
-            gsap.to(persistent(), { autoAlpha: 0, duration: r ? 0.15 : L.duration, ease: 'power2.in' }),
+            gsap.to(current.container, { autoAlpha: 0, y: r ? 0 : L.y, duration: r ? 0.15 : L.duration, ease: 'power2.inOut', force3D: true }),
+            gsap.to(persistent(), { autoAlpha: 0, duration: r ? 0.15 : L.duration, ease: 'power2.inOut' }),
           ]);
           destroyPage();
         },
@@ -67,9 +63,7 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
           updateCurrentLinks(next.url?.href || location.href);
           window.scrollTo(0, 0);
           lenis?.scrollTo(0, { immediate: true, force: true });
-          const E = T.enter;
-          const r = reduce();
-          gsap.set(next.container, { autoAlpha: 0, y: r ? 0 : E.y, scale: r ? 1 : E.scale, filter: r ? 'none' : `blur(${E.blur}px)` });
+          gsap.set(next.container, { autoAlpha: 0, y: reduce() ? 0 : T.enter.y, willChange: 'transform, opacity', force3D: true });
           initPage(next.container);
         },
         async enter({ next }) {
@@ -82,7 +76,7 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
           const E = T.enter;
           const d = reduce() ? 0.2 : E.duration;
           await Promise.all([
-            gsap.to(next.container, { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: d, ease: 'expo.out', clearProps: 'transform,opacity,visibility,filter' }),
+            gsap.to(next.container, { autoAlpha: 1, y: 0, duration: d, ease: 'power3.out', force3D: true, clearProps: 'transform,opacity,visibility,willChange' }),
             gsap.to(persistent(), { autoAlpha: 1, duration: d, ease: 'power2.out', clearProps: 'opacity,visibility' }),
           ]);
         },
@@ -96,6 +90,7 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage }) {
             if (target) window.DDS?.scrollTo?.(target, { immediate: true });
           }
           focusPage(next.container);
+          runDeferred(); // 3D, une fois l'animation terminée
         },
       },
     ],

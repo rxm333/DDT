@@ -76,6 +76,6 @@ export const TRANSITIONS = {
   persistent: ['.footer_component', 'footer'], // estompés pendant l'échange pour éviter un saut visuel
   // Pages chargées normalement (formulaires Webflow protégés : la vérification anti-spam doit se charger)
   reload: ['/contact'],
-  leave: { duration: 0.45, y: -24, scale: 0.985, blur: 6 },
-  enter: { duration: 0.85, y: 36, scale: 1.01, blur: 8 },
+  leave: { duration: 0.4, y: -20 },
+  enter: { duration: 0.7, y: 28 },
 };
