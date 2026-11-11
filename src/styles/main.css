@@ -542,3 +542,9 @@ html.lenis.lenis-smooth {
 .atelier-hero_image {
   background-color: var(--_theme---bg--well);
 }
+
+/* Navbar — emblème 3D qui tourne au scroll (module logo-spin) : la vue 3D remplace le dessin
+   de l'emblème ; l'anneau et le nom restent en SVG. */
+.navbar_logo-link { position: relative; }
+.navbar_logo-spin { position: absolute; pointer-events: none; }
+.navbar_logo-link.is-spin .navbar_logo > g > path:not(:first-child) { opacity: 0; }

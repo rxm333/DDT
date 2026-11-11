@@ -22,8 +22,9 @@ import { initSwipers } from './modules/swiper.js';
 import { initAnnounce } from './modules/announce.js';
 import { initForms } from './modules/forms.js';
 import { initTransitions } from './modules/transitions.js';
+import { initLogoSpin } from './modules/logo-spin.js';
 
-const VERSION = '1.13.8';
+const VERSION = '1.14.0';
 
 function safe(name, fn) {
   try {
@@ -76,6 +77,7 @@ function boot() {
   lenis = safe('smooth-scroll', initSmoothScroll);
   safe('announce', initAnnounce);
   const navbar = safe('navbar', () => initNavbar({ lenis }));
+  safe('logo-spin', initLogoSpin);
   safe('hover', initHover); // texte qui roule (navbar, footer) + boutons magnétiques
 
   initPage();
