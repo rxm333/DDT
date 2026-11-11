@@ -548,3 +548,16 @@ html.lenis.lenis-smooth {
 .navbar_logo-link { position: relative; }
 .navbar_logo-spin { position: absolute; pointer-events: none; }
 .navbar_logo-link.is-spin .navbar_logo > g > path:not(:first-child) { opacity: 0; }
+
+/* Card produit du hero : toute la card mène à la fiche (le lien du titre s'étend sur la card),
+   le bouton panier reste un lien distinct au-dessus. */
+.hero-card_component { position: relative; cursor: pointer; }
+.hero-card_link::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: 1; }
+.hero-card_link:focus-visible { outline: none; }
+.hero-card_component:has(.hero-card_link:focus-visible) { outline: 2px solid var(--_theme---system--focus-state); outline-offset: 3px; }
+.hero-card_button { position: relative; z-index: 2; }
+@media (hover: hover) {
+  .hero-card_image { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+  .hero-card_component:hover .hero-card_image { transform: scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-card_image { transition: none; } }
