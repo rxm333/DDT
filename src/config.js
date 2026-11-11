@@ -26,9 +26,9 @@ export const SELECTORS = {
 /** Apparitions au scroll. Les éléments déjà visibles au chargement ne sont pas animés. */
 export const REVEALS = {
   // Titres découpés en lignes, qui montent depuis un masque
-  splitHeadings: ['.collection_heading', '.atelier_heading'],
+  splitHeadings: ['.collection_heading', '.atelier_heading', '.atelier-manifesto_quote'],
   // Éléments simples (montée + fondu)
-  fadeUp: ['.collection_intro', '.atelier_text', '.atelier_link', '.atelier_marquee', '.atelier_controls', '.footer_panel'],
+  fadeUp: ['.collection_intro', '.atelier_text', '.atelier_link', '.atelier_marquee', '.atelier_controls', '.footer_panel', '.atelier-wide_figure', '.atelier-step', '.atelier-manifesto_text', '.atelier-meet_content', '.atelier-meet_figure', '.atelier-cta_component'],
   // Groupes animés en cascade
   stagger: ['.collection_item'],
   // Parallaxe douce (scrub) — lié au scroll
@@ -73,9 +73,9 @@ export const BUTTONS = {
 export const TRANSITIONS = {
   wrapper: '[data-barba="wrapper"]',
   container: '[data-barba="container"]',
-  persistent: ['.footer_component', 'footer'], // estompés pendant l'échange pour éviter un saut visuel
+  persistent: ['.footer_component', 'footer'], // cachés derrière le rideau pendant l'échange
   // Pages chargées normalement (formulaires Webflow protégés : la vérification anti-spam doit se charger)
   reload: ['/contact'],
-  leave: { duration: 0.35, y: -10 },
-  enter: { duration: 0.65, y: 14 },
+  // Rideau plein écran (sous la navbar) qui monte, puis se retire vers le haut sur la nouvelle page
+  curtain: { cover: 0.75, reveal: 0.9, contentShift: 70 },
 };
