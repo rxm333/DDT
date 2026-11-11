@@ -179,18 +179,13 @@ function hideEmpty(root) {
 function trimRelated(root) {
   const list = $('[data-article-related]', root);
   if (!list) return;
-  const here = location.pathname.replace(/\/$/, '');
-  const base = here.replace(/\/[^/]*$/, '') || '/actualites';
-  // Filet de sécurité : si le lien ne mène pas à l'article, on le reconstruit depuis le slug.
-  $$('[data-article-slug]', list).forEach((a) => {
-    const slug = a.getAttribute('data-article-slug');
-    if (slug && !new URL(a.href, location.href).pathname.endsWith(`/${slug}`)) a.setAttribute('href', `${base}/${slug}`);
-  });
+  // Retire l'article en cours (repéré par son slug) ; le tri et la limite à 3 sont faits par news.js.
+  const current = location.pathname.replace(/\/$/, '').split('/').pop();
   $$('.news_item', list).forEach((item) => {
-    const link = $('a[href]', item);
-    if (link && new URL(link.href, location.href).pathname.replace(/\/$/, '') === here) item.remove();
+    const link = $('[data-article-slug]', item) || $('a[href]', item);
+    const slug = link?.getAttribute('data-article-slug') || new URL(link?.href || location.href, location.href).pathname.split('/').pop();
+    if (slug === current) item.remove();
   });
-  $$('.news_item', list).slice(3).forEach((item) => item.remove());
   if (!$('.news_item', list)) list.closest('section')?.setAttribute('hidden', '');
 }
 

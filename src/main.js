@@ -24,8 +24,9 @@ import { initForms } from './modules/forms.js';
 import { initTransitions } from './modules/transitions.js';
 import { initLogoSpin } from './modules/logo-spin.js';
 import { initArticle } from './modules/article.js';
+import { initNewsLists } from './modules/news.js';
 
-const VERSION = '1.15.3';
+const VERSION = '1.16.0';
 
 function safe(name, fn) {
   try {
@@ -62,6 +63,7 @@ function initPage({ defer = false } = {}) {
   // Avant le swiper : la page article retire l'article en cours de « À lire ensuite ».
   const article = safe('article', initArticle);
   if (article) c.push(() => article.destroy());
+  safe('news', initNewsLists);
   safe('swiper', initSwipers);
   safe('forms', initForms);
   api.customizer = safe('customizer', initCustomizer);
