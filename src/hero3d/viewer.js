@@ -334,7 +334,9 @@ export async function mountViewer(viewer) {
 }
 
 const pending = [];
+let generation = 0; // incrémenté à chaque destruction : un chargement en cours d'une page quittée est annulé
 export function bootViewers() {
+  const gen = generation;
   const viewers = [...document.querySelectorAll('[data-model-viewer]')].filter((v) => v.querySelector('[data-viewer-stage], .col-viewer_stage'));
   window.DDSViewer3D ||= { instances: [] };
   viewers.forEach((v) => {
@@ -346,7 +348,7 @@ export function bootViewers() {
         io.disconnect();
         const api = await mountViewer(v);
         if (!api) return;
-        if (!v.isConnected) return api.destroy(); // page quittée pendant le chargement
+        if (!v.isConnected || gen !== generation) return api.destroy(); // page quittée pendant le chargement
         window.DDSViewer3D.instances.push(api);
       },
       { rootMargin: '300px' },
@@ -356,6 +358,7 @@ export function bootViewers() {
   });
 }
 export function destroyViewers() {
+  generation++;
   pending.splice(0).forEach((io) => io.disconnect());
   (window.DDSViewer3D?.instances || []).splice(0).forEach((api) => api.destroy());
 }

@@ -689,15 +689,18 @@ export async function mount(container) {
 }
 
 // Démarrage (seulement si la page a un héros 3D) — rappelé après chaque transition de page
+let heroGeneration = 0;
 export async function bootHero() {
   const el = document.querySelector('[data-hero-viewer]');
   window.DDSHero3D ||= { mount, instance: null };
   if (!el || el.dataset.hero3d) return;
+  const gen = heroGeneration;
   const api = await mount(el);
-  if (api && !el.isConnected) return api.destroy(); // page quittée pendant le chargement
+  if (api && (!el.isConnected || gen !== heroGeneration)) return api.destroy(); // page quittée pendant le chargement
   window.DDSHero3D.instance = api;
 }
 export function destroyHero() {
+  heroGeneration++;
   window.DDSHero3D?.instance?.destroy();
   if (window.DDSHero3D) window.DDSHero3D.instance = null;
 }
