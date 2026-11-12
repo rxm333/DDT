@@ -1,0 +1,65 @@
+# Envoie automatiquement le site (dossier site/) sur preprod.damedetours.com
+# à chaque modification de la branche main.
+#
+# Réglages à faire une seule fois dans GitHub → Settings → Secrets and variables → Actions :
+#   FTP_SERVER    adresse FTP donnée par Hostinger (ex. ftp.damedetours.com)
+#   FTP_USERNAME  identifiant du compte FTP dédié, limité au dossier public_html/preprod
+#   FTP_PASSWORD  mot de passe de ce compte FTP
+# Tant que ces réglages sont absents, rien n'est envoyé.
+
+name: Mise en ligne preprod
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'deploy/**'
+      - '.github/workflows/deploy-preprod.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-preprod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vérifier les réglages FTP
+        id: config
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        run: |
+          if [ -z "$FTP_SERVER" ]; then
+            echo "Réglages FTP absents : rien n'est envoyé." >> "$GITHUB_STEP_SUMMARY"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.config.outputs.ready == 'true'
+
+      - name: Préparer les fichiers du site de test
+        if: steps.config.outputs.ready == 'true'
+        run: |
+          mkdir -p out
+          cp -r site/. out/
+          rm -f out/README.md out/robots-preprod.txt
+          cp site/robots-preprod.txt out/robots.txt
+          cp deploy/preprod.htaccess out/.htaccess
+
+      - name: Envoyer sur Hostinger
+        if: steps.config.outputs.ready == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./out/
+          server-dir: ./
