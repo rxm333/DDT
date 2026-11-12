@@ -1,7 +1,6 @@
 # Dame de Tours — scripts du site (JS & CSS externes)
 
-Scripts du site Webflow **Dame de Tours**, hébergés hors de Webflow (GitHub + jsDelivr).
-Aucune interaction Webflow ni webflow.js n'est utilisée pour les animations.
+Scripts du site **Dame de Tours** (pages dans [`../site/`](../site/)), servis par jsDelivr depuis GitHub.
 
 | Fichier | Poids | gzip |
 |---|---|---|
@@ -58,30 +57,28 @@ Les fichiers sont servis depuis `site-scripts/` :
 - la 3D (`dist/hero-3d.min.js`) et les modèles (`models/`) sont chargés par le script, à côté de lui.
 
 Ne jamais pointer vers `@main` : avec un identifiant de commit, le cache CDN est permanent
-et rien ne change en production sans mise à jour volontaire de l'URL dans Webflow.
+et rien ne change en production sans mise à jour volontaire de l'URL dans les pages.
 
 **Publier une nouvelle version**
 1. `npm run build` puis `npm test` (dans `site-scripts/`) ;
 2. incrémenter `VERSION` dans `src/main.js` (lisible dans la console : `DDS.version`) ;
 3. commit + push ;
-4. dans Webflow, *Site settings → Custom code*, remplacer l'identifiant de commit dans les deux URLs, puis publier.
+4. remplacer l'identifiant de commit dans toutes les pages de `site/` (commande dans `site/README.md`).
 
 > Les anciens commits restent servis : un site publié avec une ancienne URL continue de fonctionner.
 
-## Intégration Webflow
+## Chargement dans les pages
 
-**Head code** (en plus du favicon, de `og:site_name` et de la vérification Google)
+Dans le `<head>` de chaque page de `site/` :
 ```html
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rxm333/DDT@<commit>/site-scripts/dist/dame-de-tours.min.css">
 ```
-
-**Footer code**
+Avant `</body>` :
 ```html
 <script defer src="https://cdn.jsdelivr.net/gh/rxm333/DDT@<commit>/site-scripts/dist/dame-de-tours.min.js"></script>
 ```
-
-Le script ne tourne que sur le site publié / la prévisualisation, pas dans le canvas du Designer.
+La planche de l'emblème (`assets/logo-sprite-112-10x12.webp`) et les modèles 3D (`models/`) sont chargés à côté du script.
 
 ### Modules (v1.16)
 | Module | Rôle |
@@ -95,7 +92,7 @@ Le script ne tourne que sur le site publié / la prévisualisation, pas dans le 
 
 ---
 
-## Contrat avec le markup Webflow
+## Contrat avec le markup des pages
 
 | Élément | Sélecteur attendu |
 |---|---|
