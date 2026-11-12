@@ -1,4 +1,4 @@
-# Site de test nouveau.damedetours.com
+# Site de test preprod.damedetours.com
 # 1. Ne pas apparaître dans Google pendant les essais
 <IfModule mod_headers.c>
   Header set X-Robots-Tag "noindex, nofollow"
