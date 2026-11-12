@@ -1,2 +1,20 @@
+# Dépendances
 node_modules/
+
+# Secrets : ne jamais versionner (clés Shopify, base de données, sessions…)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Système / éditeurs
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Builds du personnaliseur (le dossier site-scripts/dist, lui, DOIT rester versionné pour jsDelivr)
+customizer/**/dist/
+customizer/**/.next/
+customizer/**/build/
