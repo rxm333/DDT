@@ -1,0 +1,51 @@
+# Hostinger : ce dépôt GitHub est déployé tel quel (branche main).
+# Le site visible est le dossier site/ : cette règle le sert à la racine de l'adresse.
+# Sur preprod.damedetours.com, le site est en plus masqué à Google.
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Toujours en HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Repère l'adresse de test (preprod.)
+  RewriteCond %{HTTP_HOST} ^preprod\. [NC]
+  RewriteRule ^ - [E=DDT_PREPROD:1]
+
+  # Fichiers internes du dépôt : jamais servis
+  RewriteRule (^|/)\.git(/|$) - [R=404,L]
+  RewriteRule ^(site/)?README\.md$ - [R=404,L]
+
+  # Site de test : robots.txt qui interdit l'indexation
+  RewriteCond %{HTTP_HOST} ^preprod\. [NC]
+  RewriteRule ^robots\.txt$ site/robots-preprod.txt [L]
+
+  # Une ancienne adresse /site/… redirige vers l'adresse propre
+  RewriteCond %{THE_REQUEST} \s/site/(\S*)\s
+  RewriteRule ^ /%1 [R=301,L]
+
+  # Tout le reste est servi depuis le dossier site/
+  RewriteCond %{REQUEST_URI} !^/site/
+  RewriteRule ^(.*)$ site/$1 [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow" env=DDT_PREPROD
+  Header set X-Robots-Tag "noindex, nofollow" env=REDIRECT_DDT_PREPROD
+</IfModule>
+
+# Mise en cache des images et polices (les pages restent toujours à jour)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
