@@ -1,0 +1,3 @@
+# Site de test : ne pas indexer (le vrai site sera sur damedetours.com)
+User-agent: *
+Disallow: /
