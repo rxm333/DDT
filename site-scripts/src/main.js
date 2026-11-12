@@ -26,7 +26,7 @@ import { initLogoSpin } from './modules/logo-spin.js';
 import { initArticle } from './modules/article.js';
 import { initNewsLists } from './modules/news.js';
 
-const VERSION = '1.17.0';
+const VERSION = '1.18.0';
 
 function safe(name, fn) {
   try {

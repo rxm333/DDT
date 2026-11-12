@@ -9,7 +9,12 @@ import { $, prefersReducedMotion } from '../core/env.js';
  * Avec « réduire les animations », rien ne change : le logo vectoriel reste tel quel.
  */
 
-const SPRITE = 'https://cdn.prod.website-files.com/6af31f817b16f50a57d74331/6af4520c7d140d5067cbc59c_logo-sprite-112-10x12.webp';
+// Planche d'images de l'emblème, servie avec les scripts (site-scripts/assets), à côté de dist/.
+const SPRITE_FILE = 'logo-sprite-112-10x12.webp';
+function spriteUrl() {
+  const src = document.querySelector('script[src*="dame-de-tours.min.js"]')?.src || '';
+  return src ? src.replace(/dist\/[^/]*$/, 'assets/' + SPRITE_FILE) : 'site-scripts/assets/' + SPRITE_FILE;
+}
 const COLS = 10;
 const FRAMES = 120;
 const CELL = 112; // px d'une vue dans la planche
@@ -152,7 +157,7 @@ export function initLogoSpin() {
   sprite.onload = () => !ro && start();
   // La planche n'est pas utile au premier affichage : on la charge une fois la page prête.
   const load = () => {
-    sprite.src = SPRITE;
+    sprite.src = spriteUrl();
   };
   const idle = () => (window.requestIdleCallback ? requestIdleCallback(load, { timeout: 2500 }) : setTimeout(load, 600));
   if (document.readyState === 'complete') idle();

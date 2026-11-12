@@ -27,7 +27,9 @@ function initList(list) {
   // Liens vers l'article
   $$('[data-article-slug]', list).forEach((a) => {
     const slug = a.getAttribute('data-article-slug');
-    if (slug && !new URL(a.href, location.href).pathname.endsWith(`/${slug}`)) a.setAttribute('href', `${BASE}/${slug}`);
+    // Lien déjà correct (« /actualites/slug » ou fichier « actualites/slug.html ») : on n'y touche pas.
+    const path = new URL(a.href, location.href).pathname;
+    if (slug && !path.endsWith(`/${slug}`) && !path.endsWith(`/${slug}.html`)) a.setAttribute('href', `${BASE}/${slug}`);
   });
   // Dates visibles en français (on garde la valeur d'origine pour le tri)
   $$('[data-news-date]', list).forEach((el) => {

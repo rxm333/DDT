@@ -180,10 +180,10 @@ function trimRelated(root) {
   const list = $('[data-article-related]', root);
   if (!list) return;
   // Retire l'article en cours (repéré par son slug) ; le tri et la limite à 3 sont faits par news.js.
-  const current = location.pathname.replace(/\/$/, '').split('/').pop();
+  const current = location.pathname.replace(/\/$/, '').split('/').pop().replace(/\.html$/, '');
   $$('.news_item', list).forEach((item) => {
     const link = $('[data-article-slug]', item) || $('a[href]', item);
-    const slug = link?.getAttribute('data-article-slug') || new URL(link?.href || location.href, location.href).pathname.split('/').pop();
+    const slug = link?.getAttribute('data-article-slug') || new URL(link?.href || location.href, location.href).pathname.split('/').pop().replace(/\.html$/, '');
     if (slug === current) item.remove();
   });
   if (!$('.news_item', list)) list.closest('section')?.setAttribute('hidden', '');
