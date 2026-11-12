@@ -23,6 +23,15 @@ export function initTransitions({ lenis, navbar, destroyPage, initPage, runDefer
   const persistent = () => $$(T.persistent.join(',')).filter((el) => !el.closest(T.container));
   const samePageHash = (url) => url.pathname === location.pathname && url.search === location.search;
 
+  // Navbar et footer ne sont rendus qu'une fois : leurs liens relatifs (« atelier.html ») seraient
+  // résolus depuis la page suivante (« actualites/… »). On les fige en adresses complètes dès le départ.
+  $$('a[href]', $(T.wrapper)).forEach((a) => {
+    if (a.closest(T.container)) return;
+    const href = a.getAttribute('href');
+    if (!href || /^(#|[a-z][a-z0-9+.-]*:|\/\/)/i.test(href)) return;
+    a.setAttribute('href', new URL(href, location.href).href);
+  });
+
   barba.init({
     preventRunning: true,
     timeout: 10000,
