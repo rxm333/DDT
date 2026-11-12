@@ -129,3 +129,47 @@
   .prod-hero_thumb { max-height: var(--th); }
   .prod-hero_thumb img { width: 100%; height: 100%; object-fit: cover; }
 }
+
+/* Fiche produit — miniatures : plus de vues (pièces seules, détails), la rangée défile
+   horizontalement avec ~5 miniatures visibles, aimantée sur chaque miniature. */
+.prod-hero_thumbs {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 3rem) / 5);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.25rem;
+  padding: 0.25rem;
+  margin: -0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+.prod-hero_thumbs > li { scroll-snap-align: start; min-width: 0; }
+.prod-hero_thumb:focus-visible { outline: 2px solid var(--_theme---system--focus-state); outline-offset: 2px; opacity: 1; }
+@media (max-width: 767px) { .prod-hero_thumbs { grid-auto-columns: 5.5rem; grid-template-columns: none; } }
+@media (prefers-reduced-motion: no-preference) { .prod-hero_thumbs { scroll-behavior: smooth; } }
+
+/* Caractéristiques — la grande photo garde sa place, les photos réelles s'alignent dessous. */
+.prod-specs_media:has(.prod-specs_photo) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  aspect-ratio: auto;
+  overflow: visible;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.prod-specs_media:has(.prod-specs_photo) .prod-specs_image {
+  grid-column: 1 / -1;
+  height: auto;
+  aspect-ratio: 624 / 560;
+  border: 1px solid var(--_theme---line--default);
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.14), 0 28px 40px 0 rgba(0, 0, 0, 0.08);
+}
+.prod-specs_photo { border: 1px solid var(--_theme---line--default); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22), 0 6px 14px 0 rgba(0, 0, 0, 0.14); }
+@media (max-width: 479px) { .prod-specs_media:has(.prod-specs_photo) { gap: 0.5rem; } .prod-specs_photo { border-radius: 0.5rem; } }

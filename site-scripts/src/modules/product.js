@@ -11,6 +11,17 @@ function initGallery(gallery) {
   const thumbs = $$('[data-gallery-thumb]', gallery);
   if (!main || !thumbs.length) return;
 
+  // Garde la miniature choisie visible dans la rangée qui défile (sans faire bouger la page).
+  const reveal = (thumb) => {
+    const row = thumb.closest('ul, ol, [role="list"]');
+    if (!row || row.scrollWidth <= row.clientWidth) return;
+    const r = row.getBoundingClientRect();
+    const t = thumb.getBoundingClientRect();
+    const pad = 4;
+    if (t.left < r.left + pad) row.scrollLeft += t.left - r.left - pad;
+    else if (t.right > r.right - pad) row.scrollLeft += t.right - r.right + pad;
+  };
+
   const select = (thumb) => {
     const img = $('img', thumb);
     if (!img) return;
@@ -23,11 +34,13 @@ function initGallery(gallery) {
     main.src = img.currentSrc || img.src;
     main.alt = thumb.dataset.alt || '';
     thumbs.forEach((t) => t.setAttribute('aria-pressed', String(t === thumb)));
+    reveal(thumb);
     gallery.dispatchEvent(new CustomEvent('dds:gallery-change', { bubbles: true, detail: { index: thumbs.indexOf(thumb), src: main.src } }));
   };
 
   thumbs.forEach((thumb) => {
     thumb.addEventListener('click', () => select(thumb));
+    thumb.addEventListener('focus', () => reveal(thumb));
   });
 }
 

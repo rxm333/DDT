@@ -128,7 +128,9 @@ export async function mountViewer(viewer) {
   const still = reduceMotion();
   let lastInput = performance.now();
   let drag = null;
-  const K = 0.0075;
+  // Sensibilité modérée ; l'élan est lissé et plafonné pour éviter l'effet toupie.
+  const K = 0.0048;
+  const SPIN_MAX = 2.2; // rad/s
   canvas.addEventListener('pointerdown', (e) => {
     if (e.button !== undefined && e.button !== 0) return;
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, touch: e.pointerType !== 'mouse' };
@@ -151,8 +153,9 @@ export async function mountViewer(viewer) {
       }
       const now = performance.now();
       orbit.az -= dx * K;
-      if (!drag.touch) orbit.el = THREE.MathUtils.clamp(orbit.el + dy * 0.004, THREE.MathUtils.degToRad(12), THREE.MathUtils.degToRad(70));
-      orbit.v = (-dx * K) / Math.max((now - drag.t) / 1000, 0.008);
+      if (!drag.touch) orbit.el = THREE.MathUtils.clamp(orbit.el + dy * 0.003, THREE.MathUtils.degToRad(12), THREE.MathUtils.degToRad(70));
+      const inst = (-dx * K) / Math.max((now - drag.t) / 1000, 0.016);
+      orbit.v = THREE.MathUtils.clamp(orbit.v * 0.6 + inst * 0.4, -SPIN_MAX, SPIN_MAX);
       drag.x = e.clientX;
       drag.y = e.clientY;
       drag.t = now;
@@ -246,7 +249,7 @@ export async function mountViewer(viewer) {
     if (!drag) {
       if (Math.abs(orbit.v) > 0.002) {
         orbit.az += orbit.v * dt;
-        orbit.v *= Math.exp(-dt * 3.2);
+        orbit.v *= Math.exp(-dt * 4.5);
         busy = true;
       }
       const ease = 1 - Math.exp(-dt * 8);

@@ -477,6 +477,7 @@ export async function mount(container) {
   if (fine && !still) window.addEventListener('pointermove', onPointer, { passive: true });
 
   // ---------- Rotation du plateau au glisser (clic maintenu / doigt) ----------
+  const SPIN_MAX = 2.2; // rad/s, élan maximal après un lancer
   const spin = { yaw: 0, tilt: 0, v: 0, drag: null };
   const onDown = (e) => {
     if (e.button !== undefined && e.button !== 0) return;
@@ -503,10 +504,13 @@ export async function mount(container) {
       }
     }
     const now = performance.now();
-    const k = 0.0065;
+    // Sensibilité modérée + élan lissé et plafonné : un geste vif fait tourner le plateau,
+    // sans jamais le transformer en toupie.
+    const k = 0.004;
     spin.yaw += dx * k;
-    spin.tilt = THREE.MathUtils.clamp(spin.tilt + dy * 0.003, -0.18, 0.22);
-    spin.v = (dx * k) / Math.max((now - d.t) / 1000, 0.008);
+    spin.tilt = THREE.MathUtils.clamp(spin.tilt + dy * 0.002, -0.15, 0.18);
+    const inst = (dx * k) / Math.max((now - d.t) / 1000, 0.016);
+    spin.v = THREE.MathUtils.clamp(spin.v * 0.6 + inst * 0.4, -SPIN_MAX, SPIN_MAX);
     d.x = e.clientX;
     d.y = e.clientY;
     d.t = now;
@@ -589,7 +593,7 @@ export async function mount(container) {
     // Élan après un lancer, puis l'inclinaison revient doucement
     if (!spin.drag) {
       spin.yaw += spin.v * dt;
-      spin.v *= Math.exp(-dt * 3.2);
+      spin.v *= Math.exp(-dt * 4.5);
       if (!spin.drag) spin.tilt *= Math.exp(-dt * 1.5);
     }
     // On tourne la caméra autour du plateau (et non le plateau) : la scène reste immobile et l'ombre n'est pas recalculée

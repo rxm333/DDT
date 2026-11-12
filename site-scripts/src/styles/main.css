@@ -752,3 +752,66 @@ html.lenis.lenis-smooth {
   .news-index_intro { font-size: 1rem; }
   .news-index_list { grid-template-columns: minmax(0, 1fr); row-gap: 1.5rem; }
 }
+
+/* ---------- Newsletter (bas de l'accueil) ---------- */
+.newsletter_form .button { flex-shrink: 0; }
+.newsletter_form .w-form-done, .newsletter_form + .w-form-done { margin-top: 0; }
+@media (max-width: 991px) {
+  .newsletter_component { flex-direction: column; align-items: flex-start; padding: 2.5rem; }
+  .newsletter_form-area { max-width: none; }
+}
+@media (max-width: 767px) {
+  .section_newsletter { padding-left: 1.25rem; padding-right: 1.25rem; padding-bottom: 4rem; }
+  .newsletter_component { padding: 2rem 1.5rem; border-radius: 1.25rem; }
+  .newsletter_heading { font-size: 2rem; }
+  .newsletter_form .button { width: 100%; justify-content: center; }
+}
+
+/* ---------- Collection : note de l'atelier ----------
+   La lettre suit son texte (plus de proportion figée), les tailles suivent la largeur de la lettre,
+   le cachet de cire chevauche le coin du papier sans jamais couvrir la signature. */
+.col-note_letter { container-type: inline-size; }
+.col-note_sheet {
+  aspect-ratio: auto;
+  padding: 7% 8% 9% 9%;
+  transform: rotate(1deg);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.col-note_header { justify-content: flex-start; padding-bottom: 0.75rem; }
+.col-note_title { font-size: clamp(1.75rem, 6.4cqi, 2.75rem); }
+.col-note_body { margin-top: clamp(1rem, 3.5cqi, 1.75rem); font-size: clamp(0.9375rem, 2.55cqi, 1.125rem); line-height: 1.6; row-gap: 0.85em; }
+.col-note_body > :first-child::first-letter {
+  float: left;
+  margin: 0.04em 0.08em 0 0;
+  font-family: "Pinyon Script", cursive;
+  font-size: 3.4em;
+  line-height: 0.82;
+  color: #5b2aab;
+}
+.col-note_signature {
+  margin-top: clamp(1.5rem, 5cqi, 2.5rem);
+  padding-right: clamp(5rem, 22cqi, 9rem);
+  font-size: clamp(1.75rem, 6cqi, 2.6rem);
+}
+.col-note_seal {
+  left: auto;
+  top: auto;
+  right: -3%;
+  bottom: -3.5%;
+  width: clamp(5rem, 19cqi, 8rem);
+  transform: rotate(-9deg);
+  z-index: 2;
+}
+@media (min-width: 992px) {
+  /* La lettre vient se poser sur le bord du film, comme une note glissée contre la vidéo. */
+  .col-note_component { column-gap: 0; justify-content: center; }
+  .col-note_film { width: 42%; height: auto; aspect-ratio: 500 / 720; }
+  .col-note_letter { position: relative; z-index: 2; max-width: 46rem; margin-left: -2.5rem; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .col-note_letter:hover .col-note_sheet { transform: rotate(0deg) translateY(-4px); }
+}
+@media (max-width: 767px) {
+  .col-note_sheet { padding: 9% 8% 12% 9%; transform: rotate(0.6deg); }
+  .col-note_seal { right: -1%; bottom: -2.5%; }
+}
