@@ -11,6 +11,14 @@
   --dds-slow: 0.9s;
 }
 
+/* ---------- Barre de défilement ---------- */
+/* La place de la barre reste toujours réservée : quand le défilement est bloqué (panier ouvert,
+   transition de page, Lenis arrêté), elle disparaît sans décaler la mise en page.
+   Sans effet avec les barres flottantes (macOS par défaut, mobile). */
+html {
+  scrollbar-gutter: stable;
+}
+
 /* ---------- Lenis ---------- */
 html.lenis,
 html.lenis body {

@@ -124,7 +124,7 @@ Aucun serveur n'est nécessaire pour les jeux du catalogue ; le paiement se fait
 |---|---|
 | `[data-cart="add"][data-product="<clé>"][data-quantity]` | Ajoute au panier. `<clé>` → handle via `SHOPIFY.products` ; ou `data-handle` / `data-variant` sur le bouton |
 | `[data-navbar="cart"]`, `[data-cart="open"]` | Ouvre le panneau ; la pastille et `aria-label` donnent le nombre d'articles |
-| `[data-cart-price="<clé>"]`, `.prod-hero_price` de la fiche | Prix remplacé par celui de Shopify (le prix du HTML reste en secours) |
+| `[data-cart-price="<clé>"]` | Prix remplacé par celui de Shopify. Plusieurs clés (`"noir blanc …"`) : le plus bas, précédé de « dès » si les prix diffèrent. Masqué jusqu'à la réponse (3 s au plus), puis gardé dans le navigateur (`dds-prices`) pour s'afficher aussitôt à la visite suivante. Un produit introuvable garde le prix du HTML |
 
 Un produit épuisé dans Shopify désactive son bouton (« Épuisé pour le moment »).
 Le panier est gardé dans le navigateur (`localStorage`, clé `dds-cart:id`) ; un panier payé ou expiré est oublié.

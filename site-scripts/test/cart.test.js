@@ -14,7 +14,10 @@ const html = `<!doctype html><html><head></head><body>
 </nav></header>
 <main>
   <div class="prod-hero_content">
-    <p class="prod-hero_price">199 €</p>
+    <p data-cart-price="noir" class="prod-hero_price">199 €</p>
+    <p data-cart-price="blanc" class="product-card_price">199 €</p>
+    <dt data-cart-price="noir blanc" class="col-hero_fact-value">199 €</dt>
+    <p data-cart-price="inconnu" class="product-card_price">249 €</p>
     <div class="prod-buy_panel"><div class="prod-buy_cart" data-product="noir">
       <div data-qty="noir"><button type="button" data-qty-minus="">−</button><input type="number" value="1" min="1" max="10" data-qty-input=""><button type="button" data-qty-plus="">+</button></div>
       <button type="button" class="prod-buy_add" data-cart="add" data-product="noir" data-quantity="1"><span>Ajouter au panier</span></button>
@@ -147,6 +150,11 @@ assert.equal(cartLink.getAttribute('aria-label'), 'Panier, vide', 'libellé « 1
 assert.equal(cartLink.getAttribute('aria-controls'), 'dds-cart');
 assert.ok(cartLink.querySelector('.navbar_cart-count').hidden, 'pastille masquée quand le panier est vide');
 assert.equal(text(document.querySelector('.prod-hero_price')), '219 €', 'prix de la fiche mis à jour depuis Shopify');
+assert.equal(text(document.querySelector('[data-cart-price="blanc"]')), '199 €', 'prix d’une carte produit');
+assert.equal(text(document.querySelector('[data-cart-price="noir blanc"]')), 'dès 199 €', 'plusieurs produits : le plus bas, avec « dès »');
+assert.equal(text(document.querySelector('[data-cart-price="inconnu"]')), '249 €', 'produit non relié : prix du HTML gardé');
+assert.ok([...document.querySelectorAll('[data-cart-price]')].every((n) => n.classList.contains('is-priced')), 'tous les prix révélés');
+assert.deepEqual(Object.keys(JSON.parse(window.localStorage.getItem('dds-prices'))).sort(), ['blanc', 'noir'], 'prix gardés pour la visite suivante');
 assert.equal(calls[0].url, 'https://boutique-test.myshopify.com/api/2026-04/graphql.json', 'URL Storefront');
 assert.equal(calls[0].token, 'public-token', 'jeton public envoyé');
 const blanc = document.querySelector('[data-product="blanc"]');

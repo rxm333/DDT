@@ -28,7 +28,7 @@ import { initArticle } from './modules/article.js';
 import { initNewsLists } from './modules/news.js';
 import { initCart } from './modules/cart.js';
 
-const VERSION = '1.19.0';
+const VERSION = '1.20.0';
 
 function safe(name, fn) {
   try {

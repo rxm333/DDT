@@ -9,7 +9,8 @@ import { createClient, shopifyConfig } from './shopify.js';
  *    La clé est traduite en handle Shopify par SHOPIFY.products (config.js), ou via data-handle /
  *    data-variant sur le bouton.
  *  - [data-navbar="cart"] (et [data-cart="open"]) : ouvre le panneau panier, affiche le nombre d'articles.
- *  - [data-cart-price="<clé>"] (ou .prod-hero_price de la fiche) : prix mis à jour depuis Shopify.
+ *  - [data-cart-price="<clé>"] : prix lu dans Shopify (plusieurs clés séparées d'espaces : le plus bas,
+ *    précédé de « dès » si les prix diffèrent). Masqué jusqu'à la réponse (.is-priced).
  *
  * Le panneau est créé en JS, hors du conteneur Barba : il reste en place d'une page à l'autre.
  * L'identifiant du panier est gardé dans le navigateur (localStorage) ; le paiement se fait sur
@@ -54,6 +55,24 @@ export function formatMoney(money) {
 const attr = (value) => String(value).replace(/["\\]/g, '\\$&');
 
 const articles = (n) => (n > 1 ? `${n} articles` : `${n} article`);
+
+const PRICE_KEY = 'dds-prices';
+const priceStore = {
+  read() {
+    try {
+      return JSON.parse(localStorage.getItem(PRICE_KEY) || '{}') || {};
+    } catch {
+      return {};
+    }
+  },
+  write(prices) {
+    try {
+      localStorage.setItem(PRICE_KEY, JSON.stringify(prices));
+    } catch {
+      /* stockage indisponible : les prix viendront de Shopify à chaque page */
+    }
+  },
+};
 
 const storage = {
   get() {
@@ -164,9 +183,21 @@ export function initCart({ lenis, navbar } = {}) {
     if (w) say(WARNINGS[w.code] || w.message, 'warning');
   }
 
+  // Relance une animation CSS (classe retirée puis remise au prochain affichage)
+  const replay = (node, className) => {
+    if (!node || prefersReducedMotion()) return;
+    node.classList.remove(className);
+    void node.offsetWidth;
+    node.classList.add(className);
+    node.addEventListener('animationend', () => node.classList.remove(className), { once: true });
+  };
+
   // ---------- Icône de la navbar ----------
+  let shownCount = null;
   function renderTriggers() {
     const n = cart?.totalQuantity || 0;
+    const grew = shownCount !== null && n > shownCount;
+    shownCount = n;
     $$('[data-navbar="cart"], [data-cart="open"]').forEach((trigger) => {
       trigger.setAttribute('aria-haspopup', 'dialog');
       trigger.setAttribute('aria-controls', dialog.id);
@@ -180,12 +211,16 @@ export function initCart({ lenis, navbar } = {}) {
         }
         badge.textContent = n > 99 ? '99+' : String(n);
         badge.hidden = !n;
+        if (grew) {
+          replay(badge, 'is-bump');
+          replay($('svg', trigger), 'is-bump');
+        }
       }
     });
   }
 
   // ---------- Contenu du panneau ----------
-  function renderLine(line) {
+  function renderLine(line, index) {
     const v = line.merchandise || {};
     const product = v.product || {};
     const image = v.image || product.featuredImage;
@@ -193,6 +228,7 @@ export function initCart({ lenis, navbar } = {}) {
 
     const li = el('li', 'cart_line');
     li.dataset.lineId = line.id;
+    li.style.setProperty('--i', String(index)); // cascade à l'ouverture
 
     if (image?.url) {
       const img = el('img', 'cart_line-image');
@@ -248,6 +284,7 @@ export function initCart({ lenis, navbar } = {}) {
     return li;
   }
 
+  let highlight = false; // vrai juste après un ajout ou une modification par le visiteur
   function render() {
     // Garde le focus sur le même contrôle après le re-rendu
     const active = document.activeElement;
@@ -256,11 +293,23 @@ export function initCart({ lenis, navbar } = {}) {
 
     const lines = cart?.lines?.nodes || [];
     const n = cart?.totalQuantity || 0;
+    // Lignes nouvelles ou dont la quantité a augmenté : mises en évidence
+    const before = new Map($$('[data-line-id]', ui.lines).map((row) => [row.dataset.lineId, Number($('.cart_qty-input', row)?.value) || 0]));
     ui.lines.replaceChildren(...lines.map(renderLine));
+    if (highlight) {
+      lines.forEach((line) => {
+        if (line.quantity > (before.get(line.id) || 0)) replay($(`[data-line-id="${attr(line.id)}"]`, ui.lines), 'is-new');
+      });
+      highlight = false;
+    }
     ui.count.textContent = n ? `(${n})` : '';
     ui.empty.hidden = lines.length > 0;
     ui.footer.hidden = lines.length === 0;
-    ui.subtotal.textContent = formatMoney(cart?.cost?.subtotalAmount);
+    const subtotal = formatMoney(cart?.cost?.subtotalAmount);
+    if (ui.subtotal.textContent !== subtotal) {
+      if (ui.subtotal.textContent) replay(ui.subtotal, 'is-updated');
+      ui.subtotal.textContent = subtotal;
+    }
     const blocked = lines.some((l) => l.merchandise?.availableForSale === false);
     if (cart?.checkoutUrl && !blocked) {
       ui.checkout.href = cart.checkoutUrl;
@@ -319,18 +368,30 @@ export function initCart({ lenis, navbar } = {}) {
       } else {
         result = await client.createCart(lines);
       }
+      highlight = true;
       setCart(result.cart);
       return { cart, warnings: result.warnings };
     });
   }
 
+  // Ligne retirée : elle s'efface et se replie pendant que Shopify répond
+  function collapse(row) {
+    if (!row || prefersReducedMotion()) return;
+    row.style.height = `${row.offsetHeight}px`;
+    void row.offsetHeight;
+    row.classList.add('is-removing');
+    row.style.height = '0px';
+  }
+
   function updateLine(lineId, quantity) {
     const q = Math.max(0, Math.min(MAX_QTY, Math.round(Number(quantity)) || 0));
+    if (!q) collapse($(`[data-line-id="${attr(lineId)}"]`, ui.lines));
     return run(async () => {
       if (!cart?.id) return cart;
       const result = q
         ? await client.updateLines(cart.id, [{ id: lineId, quantity: q }])
         : await client.removeLines(cart.id, [lineId]);
+      highlight = true;
       setCart(result.cart);
       warn(result.warnings);
       return cart;
@@ -381,8 +442,17 @@ export function initCart({ lenis, navbar } = {}) {
       done = true;
       finish();
     };
-    panel.addEventListener('transitionend', once, { once: true });
-    setTimeout(once, 500); // filet si la transition n'a pas lieu
+    // Seule la transition du panneau lui-même compte (pas celles des lignes, qui remontent jusqu'ici)
+    const onEnd = (event) => {
+      if (event.target !== panel || event.propertyName !== 'transform') return;
+      panel.removeEventListener('transitionend', onEnd);
+      once();
+    };
+    panel.addEventListener('transitionend', onEnd);
+    setTimeout(() => {
+      panel.removeEventListener('transitionend', onEnd);
+      once();
+    }, 600); // filet si la transition n'a pas lieu
   }
 
   // Échap : fermeture animée plutôt que la fermeture sèche du navigateur
@@ -394,8 +464,9 @@ export function initCart({ lenis, navbar } = {}) {
     if (event.target === dialog) return close(); // clic sur le fond
     if (event.target.closest('[data-cart-close]')) return close();
     const checkout = event.target.closest('[data-cart-checkout]');
-    if (checkout && checkout.getAttribute('aria-disabled') === 'true') {
-      event.preventDefault();
+    if (checkout) {
+      if (checkout.getAttribute('aria-disabled') === 'true') event.preventDefault();
+      else checkout.classList.add('is-loading'); // départ vers la page de paiement Shopify
       return;
     }
     const button = event.target.closest('button[data-cart-action]');
@@ -422,6 +493,7 @@ export function initCart({ lenis, navbar } = {}) {
     try {
       const merchandiseId = await resolveMerchandise(button);
       const { warnings } = await add({ merchandiseId, quantity: button.dataset.quantity });
+      replay(button, 'is-added');
       open();
       if (warnings?.length) warn(warnings);
       else say('Ajouté au panier.');
@@ -448,50 +520,95 @@ export function initCart({ lenis, navbar } = {}) {
     }
   });
 
-  // Prix et disponibilité des fiches produit, lus dans Shopify
+  // ---------- Prix et disponibilité, lus dans Shopify ----------
+  // [data-cart-price="<clé>"] reçoit le prix du produit ; avec plusieurs clés (« noir blanc … »),
+  // le prix le plus bas, précédé de « dès » si les prix diffèrent. Les derniers prix connus sont gardés
+  // dans le navigateur : ils s'affichent aussitôt à la visite suivante, puis Shopify les confirme.
+  // Le CSS masque les prix jusqu'à .is-priced (avec un délai de secours si le script ne répond pas).
+  const pickVariant = (product) => {
+    const variants = product?.variants?.nodes || [];
+    return variants.find((v) => v.availableForSale) || variants[0] || null;
+  };
+  const keysOf = (node) => (node.dataset.cartPrice || '').split(/\s+/).filter(Boolean);
+
+  function priceText(keys, known) {
+    const prices = keys.map((k) => known[k]);
+    if (!prices.length || prices.some((p) => !p)) return null;
+    const amounts = prices.map((p) => Number(p.amount));
+    const lowest = prices[amounts.indexOf(Math.min(...amounts))];
+    const text = formatMoney(lowest);
+    return keys.length > 1 && new Set(amounts).size > 1 ? `dès ${text}` : text;
+  }
+
+  function applyPrices(scope, known, { reveal = false } = {}) {
+    $$('[data-cart-price]', scope).forEach((node) => {
+      const text = priceText(keysOf(node), known);
+      if (text && node.textContent.trim() !== text) node.textContent = text;
+      if (text || reveal) node.classList.add('is-priced');
+    });
+  }
+
+  function markSoldOut(button, soldOut) {
+    button.disabled = soldOut;
+    button.classList.toggle('is-sold-out', soldOut);
+    let note = $('.cart_sold-out', button.parentElement);
+    if (soldOut && !note) {
+      note = el('p', 'cart_sold-out', 'Épuisé pour le moment');
+      note.id = `dds-sold-out-${button.dataset.product}`;
+      button.after(note);
+      button.setAttribute('aria-describedby', note.id);
+    } else if (!soldOut && note) {
+      note.remove();
+      button.removeAttribute('aria-describedby');
+    }
+  }
+
   async function syncPage(scope = document) {
     renderTriggers();
-    if (!config.configured) return;
+    if (!config.configured) return applyPrices(scope, {}, { reveal: true });
+
+    const cached = priceStore.read();
+    applyPrices(scope, cached);
+
     const buttons = $$('[data-cart="add"]', scope).filter((b) => !b.closest('[data-customizer]') && !b.dataset.variant);
+    // clé → handle (un bouton peut imposer son propre handle avec data-handle)
+    const keyOf = (b) => (b.dataset.handle ? `handle:${b.dataset.handle}` : b.dataset.product);
+    const handles = new Map();
+    $$('[data-cart-price]', scope).forEach((node) =>
+      keysOf(node).forEach((k) => config.products[k] && handles.set(k, config.products[k]))
+    );
+    buttons.forEach((b) => {
+      const handle = b.dataset.handle || config.products[b.dataset.product];
+      if (handle) handles.set(keyOf(b), handle);
+    });
+
+    const known = {};
     await Promise.all(
-      buttons.map(async (button) => {
-        const key = button.dataset.product;
-        const handle = button.dataset.handle || config.products[key];
-        if (!handle) return;
+      [...handles].map(async ([key, handle]) => {
         try {
-          const product = await client.product(handle);
-          if (!product) return console.warn(`[DDS] Panier : produit « ${handle} » introuvable dans Shopify.`);
-          const variants = product.variants?.nodes || [];
-          const variant = variants.find((v) => v.availableForSale) || variants[0];
-          if (!variant) return;
-          const prices = [
-            ...$$(`[data-cart-price="${attr(key)}"]`, scope),
-            ...(button.closest('.prod-buy_panel')?.parentElement ? $$('.prod-hero_price', button.closest('.prod-buy_panel').parentElement) : []),
-          ];
-          new Set(prices).forEach((p) => (p.textContent = formatMoney(variant.price)));
-          const soldOut = !variant.availableForSale;
-          button.disabled = soldOut;
-          button.classList.toggle('is-sold-out', soldOut);
-          const holder = button.parentElement;
-          let note = $('.cart_sold-out', holder);
-          if (soldOut && !note) {
-            note = el('p', 'cart_sold-out', 'Épuisé pour le moment');
-            note.id = `dds-sold-out-${key}`;
-            button.after(note);
-            button.setAttribute('aria-describedby', note.id);
-          } else if (!soldOut && note) {
-            note.remove();
-            button.removeAttribute('aria-describedby');
-          }
+          const variant = pickVariant(await client.product(handle));
+          if (!variant) return console.warn(`[DDS] Panier : produit « ${handle} » introuvable dans Shopify.`);
+          known[key] = { ...variant.price, available: variant.availableForSale };
         } catch (error) {
           console.warn('[DDS] Panier : prix non mis à jour', error);
         }
       })
     );
+
+    priceStore.write({ ...cached, ...known });
+    applyPrices(scope, known, { reveal: true }); // un prix introuvable garde la valeur du HTML
+    buttons.forEach((b) => {
+      const info = known[keyOf(b)];
+      if (info) markSoldOut(b, !info.available);
+    });
   }
 
   // Retour depuis la page de paiement (cache « page précédente ») ou autre onglet : on relit le panier
-  window.addEventListener('pageshow', (event) => event.persisted && refresh());
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted) return;
+    ui.checkout.classList.remove('is-loading');
+    refresh();
+  });
   window.addEventListener('storage', (event) => event.key === STORAGE_KEY && refresh());
 
   render();
