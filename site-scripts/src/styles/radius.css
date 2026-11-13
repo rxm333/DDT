@@ -1,0 +1,85 @@
+/* Arrondis — une seule échelle pour tout le site, calée sur la barre de navigation.
+   La nav (14 px) et ses boutons (10 px) sont concentriques : 14 px − 4 px de marge = 10 px.
+   Même règle partout : un élément posé dans un autre = arrondi du parent − la marge entre les deux.
+     control : boutons, champs, quantité .......... 10 px
+     card    : cartes, vignettes, petits blocs .... 14 px (comme la nav)
+     panel   : grands blocs, grandes images ....... 24 px (20 px sur mobile)
+     round   : pastilles, étiquettes ............... rond complet
+   Chargé en dernier : l'emporte sur les valeurs historiques de l'export Webflow. */
+:root {
+  --dds-radius-control: 0.625rem;
+  --dds-radius-card: 0.875rem;
+  --dds-radius-panel: 1.5rem;
+  --_sizes---border-radius--control: var(--dds-radius-control);
+  --_sizes---border-radius--nav: var(--dds-radius-card);
+  --dds-control-radius: var(--dds-radius-control); /* champs de formulaire (contact…) */
+}
+@media (max-width: 767px) {
+  :root { --dds-radius-panel: 1.25rem; }
+}
+
+/* Contrôles */
+.button,
+.atelier_link,
+.product-card_button,
+.prod-custom_button,
+.prod-buy_add,
+.prod-qty,
+.col-viewer_model,
+.contact_input,
+.cfg_text-input,
+.cfg_order,
+.cfg_choice,
+.legal-nav_link,
+.cart_close,
+.cart_qty,
+.cart_checkout,
+.article-product_media { border-radius: var(--dds-radius-control); }
+
+/* Cartes et vignettes */
+.news-card_component,
+.news-card_media,
+.news-card_sheen,
+.product-card_media,
+.product-card_media-link,
+.prod-custom_media,
+.prod-hero_thumb,
+.prod-buy_option,
+.prod-specs_photo,
+.col-viewer_models,
+.atelier_marquee-image,
+.cart_line-image,
+.cart_line::before,
+.article-product_card,
+.newsletter_message,
+.contact_message,
+.cfg_choices,
+.w-dyn-empty { border-radius: var(--dds-radius-card); }
+
+/* Grands blocs et grandes images */
+.footer_panel,
+.newsletter_component,
+.prod-hero_stage,
+.prod-box_panel,
+.prod-buy_panel,
+.prod-specs_image,
+.prod-specs_media,
+.atelier-intro_image,
+.atelier-step_image,
+.atelier-meet_image,
+.atelier-cta_component,
+.col-viewer_component,
+.col-detail_media,
+.col-note_film,
+.cfg-process_media,
+.cfg_panel,
+.cfg_viewer,
+.legal_document,
+.legal-nav_component,
+.article-cover_component,
+.article-aside_component,
+.cf-hero_image { border-radius: var(--dds-radius-panel); }
+
+/* Imbrications : vignette dans une option (14 − 9 px de marge ≈ 6 px) */
+.prod-buy_option-image,
+.col-viewer_model-thumb { border-radius: 0.375rem; }

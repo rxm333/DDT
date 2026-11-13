@@ -695,7 +695,7 @@ button.button { font: inherit; cursor: pointer; }
 .article-product_link:hover { color: var(--_theme---accent--hover); }
 /* La carte du jeu présenté est cliquable en entier (lien du nom étendu). */
 .article-product_card { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
-.article-product_link::after { content: ""; position: absolute; inset: 0; border-radius: 1.125rem; }
+.article-product_link::after { content: ""; position: absolute; inset: 0; border-radius: var(--dds-radius-card); }
 .article-product_card:has(.article-product_link:focus-visible) { outline: 2px solid var(--_theme---system--focus-state); outline-offset: 3px; }
 .article-product_link:focus-visible { outline: none; }
 @media (hover: hover) { .article-product_card:hover { transform: translateY(-2px); } }
@@ -716,7 +716,7 @@ button.button { font: inherit; cursor: pointer; }
 /* Listes CMS : les cartes prennent toute la hauteur de la ligne. */
 .w-dyn-item.news_item, .news-index_item { display: flex; }
 .w-dyn-item.news_item > .news-card_component, .news-index_item > .news-card_component { flex: 1 1 auto; }
-.w-dyn-empty { padding: 1.5rem; border-radius: 1rem; background-color: var(--_theme---bg--panel); color: var(--_theme---text--muted); }
+.w-dyn-empty { padding: 1.5rem; border-radius: var(--dds-radius-card); background-color: var(--_theme---bg--panel); color: var(--_theme---text--muted); }
 .dds-empty { color: var(--_theme---text--muted); }
 
 @media (prefers-reduced-motion: reduce) {

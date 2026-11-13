@@ -53,7 +53,7 @@
 .col-viewer_image { transition: opacity 0.35s var(--dds-ease-out), transform 0.6s var(--dds-ease-out); }
 .col-viewer_image.is-swapping { opacity: 0; transform: scale(0.98); }
 @media (max-width: 767px) {
-  .col-viewer_component { min-height: 22rem; padding: 1rem; border-radius: 1.25rem; }
+  .col-viewer_component { min-height: 22rem; padding: 1rem; }
   .col-viewer_title { font-size: 1.125rem; }
   .col-viewer_model { column-gap: 0.5rem; padding: 0.25rem 0.625rem 0.25rem 0.25rem; font-size: 0.8125rem; }
   .col-viewer_model-thumb { width: 2.25rem; height: 1.875rem; }
@@ -168,11 +168,11 @@
   height: auto;
   aspect-ratio: 624 / 560;
   border: 1px solid var(--_theme---line--default);
-  border-radius: 1.25rem;
+  border-radius: var(--dds-radius-panel);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.14), 0 28px 40px 0 rgba(0, 0, 0, 0.08);
 }
 .prod-specs_photo { border: 1px solid var(--_theme---line--default); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22), 0 6px 14px 0 rgba(0, 0, 0, 0.14); }
-@media (max-width: 479px) { .prod-specs_media:has(.prod-specs_photo) { gap: 0.5rem; } .prod-specs_photo { border-radius: 0.5rem; } }
+@media (max-width: 479px) { .prod-specs_media:has(.prod-specs_photo) { gap: 0.5rem; } }
 
 /* Fiche produit — miniature « 3D » (2e position) et rendu 3D dans la grande image.
    Le canvas (.col-viewer_canvas) est posé par hero-3d.min.js ; masqué tant qu'une photo est choisie. */

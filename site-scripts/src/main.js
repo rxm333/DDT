@@ -7,6 +7,7 @@ import './styles/product.css';
 import './styles/buttons.css';
 import './styles/customizer.css';
 import './styles/cart.css';
+import './styles/radius.css'; // en dernier : échelle d'arrondis commune
 import { ScrollTrigger } from './core/gsap.js';
 import { initSmoothScroll, scrollToTarget, stopScroll, startScroll } from './modules/smooth-scroll.js';
 import { initNavbar } from './modules/navbar.js';
