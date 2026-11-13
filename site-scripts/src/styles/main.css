@@ -9,6 +9,16 @@
   --dds-fast: 0.3s;
   --dds-base: 0.5s;
   --dds-slow: 0.9s;
+
+  /* Contrôles de formulaire : même rendu que le sélecteur de quantité des fiches produit.
+     Réutilisables par tout futur champ (classe .dds-control ou règles dédiées). */
+  --dds-control-height: 3.5rem;
+  --dds-control-radius: 0.5rem;
+  --dds-control-bg: var(--_theme---bg--well);
+  --dds-control-border: var(--_theme---line--default);
+  --dds-control-border-hover: var(--_theme---line--control);
+  --dds-control-border-focus: var(--_theme---accent--default);
+  --dds-control-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 /* ---------- Barre de défilement ---------- */
@@ -471,97 +481,60 @@ html.lenis.lenis-smooth {
   }
 }
 
-/* ---------- Page contact : formulaire « bon de l'atelier » ----------
-   Pas de carte ni de cases arrondies : le formulaire se pose sur la page sous un filet,
-   champs soulignés, libellés en Marcellus, message sur papier ligné, bouton net. */
+/* ---------- Page contact ----------
+   Aucun style propre : les champs reprennent les contrôles du site (--dds-control-*), les libellés
+   ceux des fiches produit, le bouton est le .button du site (texte qui roule, effets de buttons.js). */
 .contact_card {
-  padding: 1.75rem 0 0;
+  padding: 0;
   border: 0;
-  border-top: 1px solid var(--_theme---line--subtle);
   border-radius: 0;
   background: none;
 }
-.contact_form { row-gap: 2.25rem; }
-.contact_row { gap: 2.25rem 2.5rem; }
-.contact_field { row-gap: 0.25rem; }
 .contact_label {
-  display: flex;
-  align-items: baseline;
-  gap: 0.625rem;
-  font-family: var(--font-family--heading, Marcellus, serif);
-  font-size: 1.125rem;
+  color: var(--_theme---text--muted);
+  font-size: 0.875rem;
   letter-spacing: 0;
-  color: var(--_theme---text--default);
 }
-.contact_req {
-  font-family: var(--font-family--body, Cantarell, sans-serif);
-  font-size: 0.75rem;
-  color: var(--_theme---text--subtle);
-}
+.contact_req { color: var(--_theme---text--subtle); }
+.contact_req::before { content: "· "; }
 .contact_input.w-input {
-  height: 2.75rem;
-  padding: 0.5rem 0;
-  border: 0;
-  border-bottom: 1px solid var(--_theme---line--control);
-  border-radius: 0;
-  background: transparent;
+  height: var(--dds-control-height);
+  padding: 0 1rem;
+  border: 1px solid var(--dds-control-border);
+  border-radius: var(--dds-control-radius);
+  background-color: var(--dds-control-bg);
+  box-shadow: var(--dds-control-shadow);
   color: var(--_theme---text--default);
   font-size: 1rem;
-  box-shadow: none;
-  transition: border-color 0.2s var(--dds-ease-out), box-shadow 0.2s var(--dds-ease-out);
+  transition: border-color 0.2s var(--dds-ease-out);
 }
-.contact_input.w-input:hover { border-bottom-color: var(--_theme---text--subtle); }
+.contact_input.w-input.is-textarea {
+  height: auto;
+  min-height: 10rem;
+  padding: 0.875rem 1rem;
+  resize: vertical;
+}
+.contact_input.w-input:hover { border-color: var(--dds-control-border-hover); }
 .contact_input.w-input:focus,
 .contact_input.w-input:focus-visible {
   outline: none;
-  border-bottom-color: var(--_theme---accent--default);
-  box-shadow: inset 0 -1px 0 var(--_theme---accent--default); /* trait doublé, sans halo */
+  border-color: var(--dds-control-border-focus);
 }
 .contact_input.w-input::placeholder {
   color: var(--_theme---text--subtle);
   opacity: 1;
 }
-.contact_input.w-input:user-invalid { border-bottom-color: #ff8a9b; }
+.contact_input.w-input:user-invalid { border-color: #ff8a9b; }
 .contact_input.w-input:-webkit-autofill {
   -webkit-text-fill-color: var(--_theme---text--default);
-  box-shadow: 0 0 0 1000px var(--_theme---bg--page) inset;
+  box-shadow: 0 0 0 1000px var(--dds-control-bg) inset;
   caret-color: var(--_theme---text--default);
 }
-/* Message : papier ligné, les lignes défilent avec le texte */
-.contact_input.is-textarea.w-input {
-  min-height: 12rem;
-  margin-top: 0.25rem;
-  padding: 0;
-  line-height: 2.25rem;
-  border-bottom: 0;
-  background-image: linear-gradient(to bottom, transparent calc(2.25rem - 1px), var(--_theme---line--default) calc(2.25rem - 1px));
-  background-size: 100% 2.25rem;
-  background-attachment: local;
-  resize: vertical;
-}
-.contact_input.is-textarea.w-input:focus,
-.contact_input.is-textarea.w-input:focus-visible {
-  box-shadow: none;
-  background-image: linear-gradient(to bottom, transparent calc(2.25rem - 1px), var(--_theme---line--control) calc(2.25rem - 1px));
-}
-.contact_form-footer { margin-top: 0.25rem; }
-.contact_legal { font-size: 0.8125rem; }
 .contact_legal-link:hover { color: var(--_theme---text--default); }
-/* Bouton : rectangle net, pas d'ombre ni de lueur ; il réagit au survol et à la pression */
-.contact_form-footer .button {
-  flex-shrink: 0;
-  padding: 0.875rem 1.75rem;
-  border-radius: 2px;
-  box-shadow: none !important;
-  cursor: pointer;
-}
 .contact_detail-link:hover { text-decoration-color: currentColor; }
-.contact_message { border-radius: 2px; }
-.contact_message:not(.is-error) {
-  padding: 1.5rem 0 0;
-  border-top: 1px solid var(--_theme---accent--default);
-  background: none;
-}
+/* <button class="button"> identique à <a class="button"> (police du site, pas celle du navigateur) */
+button.button { font: inherit; cursor: pointer; }
+.contact_form-footer .button { flex-shrink: 0; }
 @media (max-width: 767px) {
   .contact_form-footer .button { width: 100%; }
 }
