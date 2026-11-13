@@ -36,7 +36,7 @@ sed -i -E 's#rxm333/DDT@[0-9a-f]{40}/site-scripts#rxm333/DDT@<nouveau-commit>/si
 | Fonction | État |
 |---|---|
 | Formulaires contact et newsletter | ⚠️ ils envoient encore vers l'ancien service. Il faut les relier au serveur du personnaliseur (envoi d'e-mails déjà en place). |
-| Panier / paiement (« Ajouter au panier ») | ⚠️ à relier à Shopify |
+| Panier / paiement (« Ajouter au panier ») | ✅ relié à Shopify (API Storefront, voir `site-scripts/README.md`). ⚠️ Avant de faire pointer `damedetours.com` ici : donner à Shopify un domaine à lui (ex. `boutique.damedetours.com`), sinon le lien de paiement ne marche plus |
 | Personnaliseur (page Personnalisation) | ⚠️ à intégrer (dépôt privé `rxm333/DDT-customizer`) |
 | Adresses sans `.html`, redirections 301 depuis l'ancien site, `sitemap.xml`, `robots.txt` | ⚠️ à configurer chez l'hébergeur |
 | Images de partage (`og:image`) | pointent vers `https://damedetours.com/images/…`, donc valides une fois le site sur ce domaine |
