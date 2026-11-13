@@ -77,7 +77,8 @@ html.lenis.lenis-smooth {
   transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
   /* cascade de gauche à droite, plafonnée pour les longs libellés */
   transition-delay: calc(min(var(--i), 24) * 14ms);
-  will-change: transform;
+  /* Pas de will-change : un calque permanent par lettre (des centaines par page) coûtait de la
+     mémoire graphique et saccadait le défilement ; la transition de transform reste fluide sans. */
 }
 @media (hover: hover) and (pointer: fine) {
   [data-dds-roll]:hover .dds-roll__char {
@@ -236,9 +237,7 @@ html.lenis.lenis-smooth {
 }
 
 /* ---------- Titres découpés (SplitText) ---------- */
-.dds-line {
-  will-change: transform;
-}
+/* Pas de will-change permanent : GSAP promeut chaque ligne le temps de son animation seulement. */
 
 /* ---------- Mouvement réduit : aucune transition décorative ---------- */
 @media (prefers-reduced-motion: reduce) {
