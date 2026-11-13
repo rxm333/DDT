@@ -303,7 +303,7 @@ html.lenis.lenis-smooth {
 /* Le texte du héros apparaît après l'échiquier (classe .is-hero-in posée par le JS).
    Filet de sécurité : sans JS ou si la 3D échoue, il apparaît de lui-même au bout de 4 s. */
 @media (prefers-reduced-motion: no-preference) {
-  .section_hero:has(.hero_viewer) :is(.hero_heading, .hero_content, .hero-card_component) {
+  .section_hero:has(.hero_viewer) :is(.hero_heading, .hero_content) {
     opacity: 0;
     transform: translateY(18px);
     animation: dds-hero-failsafe 0.8s var(--dds-ease-out) 7s forwards;
@@ -312,7 +312,7 @@ html.lenis.lenis-smooth {
     filter: blur(10px);
     transform: translateY(10px) scale(0.985);
   }
-  .section_hero.is-hero-in :is(.hero_heading, .hero_content, .hero-card_component) {
+  .section_hero.is-hero-in :is(.hero_heading, .hero_content) {
     animation: none;
     opacity: 1;
     transform: none;
@@ -324,9 +324,6 @@ html.lenis.lenis-smooth {
   }
   .section_hero.is-hero-in .hero_content {
     transition-delay: 0.25s;
-  }
-  .section_hero.is-hero-in .hero-card_component {
-    transition-delay: 0.45s;
   }
 }
 @keyframes dds-hero-failsafe {
@@ -549,18 +546,6 @@ html.lenis.lenis-smooth {
 .navbar_logo-spin { position: absolute; pointer-events: none; }
 .navbar_logo-link.is-spin .navbar_logo > g > path:not(:first-child) { opacity: 0; }
 
-/* Card produit du hero : toute la card mène à la fiche (le lien du titre s'étend sur la card),
-   le bouton panier reste un lien distinct au-dessus. */
-.hero-card_component { position: relative; cursor: pointer; }
-.hero-card_link::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: 1; }
-.hero-card_link:focus-visible { outline: none; }
-.hero-card_component:has(.hero-card_link:focus-visible) { outline: 2px solid var(--_theme---system--focus-state); outline-offset: 3px; }
-.hero-card_button { position: relative; z-index: 2; }
-@media (hover: hover) {
-  .hero-card_image { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-  .hero-card_component:hover .hero-card_image { transform: scale(1.05); }
-}
-@media (prefers-reduced-motion: reduce) { .hero-card_image { transition: none; } }
 
 /* ---------- Page article (modèle CMS « Actualités ») ---------- */
 /* Blocs facultatifs masqués par le JS quand le champ CMS est vide (l'attribut hidden doit gagner sur display: flex). */
