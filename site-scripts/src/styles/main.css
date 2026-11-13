@@ -809,11 +809,17 @@ html.lenis.lenis-smooth {
 }
 
 /* ---------- Personnaliseur intégré (page Personnalisation) ---------- */
-/* L'iframe prend la hauteur de l'écran ; le script hôte du personnaliseur l'ajuste ensuite
-   (embed-layout-host.js). Espace réservé sous la navbar fixe pour ne pas masquer le haut. */
+/* Le cadre finit pile en bas de l'écran : sa hauteur = écran − padding-top de la section
+   (calculée par modules/customizer-embed.js).
+   Grands écrans : presque aucun espace réservé. La navbar flotte au-dessus de la bande d'outils du
+   personnaliseur (« Sauvegarder », « Reprendre », à droite), vide au centre.
+   En dessous de 1200 px, la navbar toucherait ces boutons : on réserve sa hauteur. */
 .section_cfg-app {
-  padding-top: 6.5rem;
+  padding-top: 5.75rem;
   background-color: #171619;
+}
+@media (min-width: 1200px) {
+  .section_cfg-app { padding-top: 1rem; } /* la navbar ne touche pas le haut de l'aperçu */
 }
 .ddt-personnaliseur-fullscreen {
   position: relative;
@@ -828,5 +834,5 @@ html.lenis.lenis-smooth {
   border: 0;
 }
 @media (max-width: 767px) {
-  .section_cfg-app { padding-top: 5.5rem; }
+  .section_cfg-app { padding-top: 5.25rem; }
 }

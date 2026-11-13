@@ -4,8 +4,8 @@ import { $$ } from '../core/env.js';
  * Pont avec le personnaliseur intégré (iframe, dépôt privé rxm333/DDT-customizer).
  *
  * Reprend le protocole de son script hôte officiel (public/embed-fullscreen.js), adapté au site :
- * - hauteur : chargée depuis le personnaliseur (embed-layout-host.js), sur le cadre placé dans
- *   .ddt-personnaliseur-fullscreen ;
+ * - hauteur : protocole de son embed-layout-host.js, réimplémenté pour retirer l'espace réservé
+ *   sous la navbar (le cadre finit pile en bas de l'écran) ;
  * - plein écran de la vue (« ddt:viewer ») : le cadre passe en position fixe, la page est figée ;
  * - panier (« ddt:cart-ping » / « ddt:cart-add ») : au lieu de l'API panier de la boutique en ligne
  *   Shopify (/cart/add.js, absente ici), la création est ajoutée au panier Storefront du site.
@@ -29,16 +29,52 @@ export function initCustomizerEmbed({ lenis, cart } = {}) {
   const frameOf = (source) => frames().find((f) => f.contentWindow === source);
   const send = (target, message) => target?.postMessage(message, CUSTOMIZER_ORIGIN);
 
-  // ---------- Hauteur : script hôte du personnaliseur, une seule fois ----------
-  let layoutLoaded = false;
-  function mount() {
-    if (layoutLoaded || !frames().length) return;
-    layoutLoaded = true;
-    const script = document.createElement('script');
-    script.src = `${CUSTOMIZER_ORIGIN}/embed-layout-host.js`;
-    script.defer = true;
-    document.head.append(script);
+  // ---------- Hauteur (protocole de embed-layout-host.js du personnaliseur) ----------
+  // Le cadre occupe la hauteur de l'écran MOINS l'espace réservé sous la navbar (padding-top de
+  // .section_cfg-app) : il finit pile en bas de l'écran, bouton « Passer ma commande » visible.
+  // Le personnaliseur peut ensuite demander plus de hauteur (tiroirs ouverts) : « ddt:layout-size ».
+  let probe = null;
+  let pending = 0;
+  const viewportHeight = () => {
+    if (!probe) {
+      probe = document.createElement('div');
+      probe.setAttribute('aria-hidden', 'true');
+      probe.style.cssText = 'position:fixed;visibility:hidden;pointer-events:none;width:0;height:100vh;height:100svh';
+      document.body.append(probe);
+    }
+    return probe.getBoundingClientRect().height || window.innerHeight;
+  };
+  const offsetOf = (frame) => {
+    const section = frame.closest('.section_cfg-app');
+    return section ? parseFloat(getComputedStyle(section).paddingTop) || 0 : 0;
+  };
+  const fitHeight = (frame) => Math.max(320, Math.round(viewportHeight() - offsetOf(frame)));
+
+  function measure() {
+    pending = 0;
+    if (session) return;
+    frames().forEach((frame) => {
+      if (!frame.closest('.ddt-personnaliseur-fullscreen')) return;
+      const rect = frame.getBoundingClientRect();
+      send(frame.contentWindow, { type: 'ddt:layout-viewport', height: fitHeight(frame), width: rect.width, top: rect.top });
+    });
   }
+  const schedule = () => {
+    if (!pending) pending = requestAnimationFrame(measure);
+  };
+
+  function mount() {
+    frames().forEach((frame) => {
+      if (frame.dataset.ddtMounted) return;
+      frame.dataset.ddtMounted = 'true';
+      // Hauteur posée avant la première réponse du personnaliseur : pas de saut au chargement
+      frame.style.height = `${fitHeight(frame)}px`;
+      frame.addEventListener('load', schedule);
+    });
+    schedule();
+  }
+  window.addEventListener('resize', schedule, { passive: true });
+  document.addEventListener('fullscreenchange', schedule);
 
   // ---------- Plein écran de la vue (repris de embed-fullscreen.js) ----------
   let session = null;
@@ -138,6 +174,27 @@ export function initCustomizerEmbed({ lenis, cart } = {}) {
     const frame = frameOf(event.source);
     if (!frame) return;
     const data = event.data || {};
+
+    if (data.type === 'ddt:layout-ready') {
+      mount();
+      return;
+    }
+    if (data.type === 'ddt:layout-size') {
+      if (session || document.fullscreenElement) return;
+      if (Number.isFinite(data.height) && data.height >= 200 && data.height <= 50000) {
+        const height = `${Math.ceil(data.height)}px`;
+        if (frame.style.height !== height) frame.style.height = height;
+      }
+      return;
+    }
+    if (data.type === 'ddt:layout-reveal') {
+      // Le personnaliseur demande à montrer un point précis de son contenu (tiroir ouvert…)
+      if (session || !Number.isFinite(data.top) || data.top < 0) return;
+      const y = window.scrollY + frame.getBoundingClientRect().top + data.top;
+      if (lenis) lenis.scrollTo(y, { immediate: !data.smooth });
+      else window.scrollTo({ top: y, behavior: data.smooth ? 'smooth' : 'instant' });
+      return;
+    }
 
     if (data.type === 'ddt:viewer' && typeof data.active === 'boolean') {
       if (data.active) open(frame);
