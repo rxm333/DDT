@@ -745,20 +745,6 @@ html.lenis.lenis-smooth {
   .news-index_list { grid-template-columns: minmax(0, 1fr); row-gap: 1.5rem; }
 }
 
-/* ---------- Newsletter (bas de l'accueil) ---------- */
-.newsletter_form .button { flex-shrink: 0; }
-.newsletter_form .w-form-done, .newsletter_form + .w-form-done { margin-top: 0; }
-@media (max-width: 991px) {
-  .newsletter_component { flex-direction: column; align-items: flex-start; padding: 2.5rem; }
-  .newsletter_form-area { max-width: none; }
-}
-@media (max-width: 767px) {
-  .section_newsletter { padding-left: 1.25rem; padding-right: 1.25rem; padding-bottom: 4rem; }
-  .newsletter_component { padding: 2rem 1.5rem; border-radius: 1.25rem; }
-  .newsletter_heading { font-size: 2rem; }
-  .newsletter_form .button { width: 100%; justify-content: center; }
-}
-
 /* ---------- Collection : note de l'atelier ----------
    La lettre suit son texte (plus de proportion figée), les tailles suivent la largeur de la lettre,
    le cachet de cire chevauche le coin du papier sans jamais couvrir la signature. */
