@@ -16,7 +16,7 @@ import { loadBoard, loadPieces, buildPieces, MODEL_SCALE, reduceMotion } from '.
  */
 
 const BOARD_OF = { 'la-chute-des-anges': 'la-chute-des-anges', blanc: 'blanc', noir: 'noir' };
-const EXPOSURE = 0.8;
+const EXPOSURE = 0.95;
 const ELEVATION = THREE.MathUtils.degToRad(30);
 const START_AZ = THREE.MathUtils.degToRad(45);
 
@@ -57,10 +57,10 @@ export async function mountViewer(viewer) {
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.4;
+  scene.environmentIntensity = 0.65;
   const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 200);
 
-  const key = new THREE.DirectionalLight('#ffeedd', 1.9);
+  const key = new THREE.DirectionalLight('#fff6ee', 2.1);
   key.position.set(-6, 11, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
@@ -68,10 +68,14 @@ export async function mountViewer(viewer) {
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
   scene.add(key);
-  const rim = new THREE.DirectionalLight('#c9a3ff', 0.7);
+  const rim = new THREE.DirectionalLight('#e6ecff', 0.8);
   rim.position.set(7, 4, -9);
   scene.add(rim);
-  scene.add(new THREE.HemisphereLight('#bfbcc8', '#141217', 0.28));
+  // Lumière d'appoint neutre face au plateau : détails des pièces noires et des coins lisibles
+  const fill = new THREE.DirectionalLight('#ffffff', 0.5);
+  fill.position.set(8, 5, 9);
+  scene.add(fill);
+  scene.add(new THREE.HemisphereLight('#f2f2f2', '#18181b', 0.3));
 
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.32 }));
   ground.rotation.x = -Math.PI / 2;
