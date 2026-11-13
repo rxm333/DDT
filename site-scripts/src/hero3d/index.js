@@ -294,7 +294,7 @@ export async function mount(container) {
   const mobile = window.matchMedia('(max-width: 767px)').matches;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  const EXPOSURE = 0.95;
+  const EXPOSURE = 0.78;
   renderer.toneMappingExposure = EXPOSURE;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -305,12 +305,12 @@ export async function mount(container) {
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.65;
+  scene.environmentIntensity = 0.38;
 
   const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 100);
 
-  // Lumières neutres (studio) : clé légèrement chaude en haut à gauche, contre-jour blanc froid, appoint de face
-  const key = new THREE.DirectionalLight('#fff6ee', 2.1);
+  // Lumières : clé chaude en haut à gauche, contre-jour blanc discret (sans teinte violette)
+  const key = new THREE.DirectionalLight('#ffeedd', 1.9);
   key.position.set(-6, 11, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
@@ -318,14 +318,10 @@ export async function mount(container) {
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
   scene.add(key);
-  const rim = new THREE.DirectionalLight('#e6ecff', 0.8);
+  const rim = new THREE.DirectionalLight('#ffffff', 0.7);
   rim.position.set(7, 4, -9);
   scene.add(rim);
-  // Lumière d'appoint neutre face au plateau : détails des pièces noires et des coins lisibles
-  const fill = new THREE.DirectionalLight('#ffffff', 0.5);
-  fill.position.set(8, 5, 9);
-  scene.add(fill);
-  scene.add(new THREE.HemisphereLight('#f2f2f2', '#18181b', 0.3));
+  scene.add(new THREE.HemisphereLight('#c4c4c4', '#141414', 0.28));
 
   // Ombre portée du plateau sur un sol invisible
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.35 }));
