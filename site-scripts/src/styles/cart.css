@@ -35,8 +35,10 @@
 /* ---------- Panneau ---------- */
 /* Page figée sous le panneau. La place de la barre de défilement reste réservée (scrollbar-gutter,
    dans main.css) : rien ne bouge ; la bande de la barre prend la teinte assombrie du fond. */
+/* Fond de <html> toujours défini : sans lui, la transition partirait de « transparent » et le
+   navigateur afficherait un instant son fond blanc dans la bande de la barre. */
+html { background-color: var(--_theme---bg--page, #17171b); transition: background-color 0.45s var(--dds-ease-out); }
 html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
-html { transition: background-color 0.45s var(--dds-ease-out); }
 
 .cart_drawer {
   position: fixed;
@@ -54,13 +56,10 @@ html { transition: background-color 0.45s var(--dds-ease-out); }
   overflow: hidden;
 }
 .cart_drawer:not([open]) { display: none; }
-.cart_drawer::backdrop {
-  background-color: rgba(10, 9, 13, 0);
-  -webkit-backdrop-filter: blur(0);
-  backdrop-filter: blur(0);
-  transition: background-color 0.5s var(--dds-ease-out), backdrop-filter 0.5s var(--dds-ease-out), -webkit-backdrop-filter 0.5s var(--dds-ease-out);
-}
-.cart_drawer.is-visible::backdrop { background-color: rgba(10, 9, 13, 0.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+/* Assombrissement seul : un flou recalculé à chaque image par-dessus la vue 3D (qui continue de
+   tourner) faisait saccader l'ouverture. */
+.cart_drawer::backdrop { background-color: rgba(10, 9, 13, 0); transition: background-color 0.5s var(--dds-ease-out); }
+.cart_drawer.is-visible::backdrop { background-color: rgba(10, 9, 13, 0.6); }
 
 .cart_panel {
   position: absolute;
@@ -108,7 +107,19 @@ html { transition: background-color 0.45s var(--dds-ease-out); }
 
 .cart_message { margin: 0; padding: 0 1.5rem; font-size: 0.875rem; }
 .cart_message:not(:empty) { padding-top: 0.875rem; padding-bottom: 0.875rem; border-bottom: 1px solid var(--_theme---line--subtle, #2a2830); }
-.cart_message[data-tone="info"] { color: var(--_theme---accent--hover, #c597ff); }
+/* Confirmations (« Ajouté au panier ») : lues par les lecteurs d'écran seulement. À l'écran, le halo
+   sur l'article et la pastille suffisent ; un message visible poussait tout le contenu de 50 px. */
+.cart_message[data-tone="info"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0 !important;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 .cart_message[data-tone="warning"] { color: #f0c36b; }
 .cart_message[data-tone="error"] { color: #ff8a8a; }
 
@@ -324,7 +335,7 @@ html { transition: background-color 0.45s var(--dds-ease-out); }
 .cart_checkout.is-loading > span { opacity: 0; }
 
 /* Message (ajouté, erreur…) qui glisse en place */
-.cart_message:not(:empty) { animation: dds-cart-tick 0.4s var(--dds-ease-out); }
+.cart_message:not(:empty):not([data-tone="info"]) { animation: dds-cart-tick 0.4s var(--dds-ease-out); }
 
 @media (prefers-reduced-motion: reduce) {
   .cart_panel, .cart_drawer::backdrop, html,
@@ -334,5 +345,5 @@ html { transition: background-color 0.45s var(--dds-ease-out); }
   .cart_drawer:not(.is-visible) .cart_empty,
   .cart_drawer:not(.is-visible) .cart_footer { opacity: 1; transform: none; }
   .cart_line.is-new::before, .cart_line.is-new .cart_line-image, [data-cart-subtotal].is-updated,
-  .navbar_cart-count.is-bump, [data-navbar="cart"] svg.is-bump, .prod-buy_add.is-added, .cart_message:not(:empty) { animation: none; }
+  .navbar_cart-count.is-bump, [data-navbar="cart"] svg.is-bump, .prod-buy_add.is-added, .cart_message:not(:empty):not([data-tone="info"]) { animation: none; }
 }
