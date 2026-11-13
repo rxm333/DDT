@@ -112,7 +112,20 @@ html { transition: background-color 0.45s var(--dds-ease-out); }
 .cart_message[data-tone="warning"] { color: #f0c36b; }
 .cart_message[data-tone="error"] { color: #ff8a8a; }
 
-.cart_body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0.5rem 1.5rem; }
+/* overflow-x masqué : les lignes entrent depuis la droite et ne doivent jamais faire apparaître
+   de barre de défilement horizontale pendant l'animation. */
+.cart_body {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--_theme---line--control, #61566e) transparent;
+}
+.cart_body::-webkit-scrollbar { width: 6px; height: 0; }
+.cart_body::-webkit-scrollbar-thumb { background-color: var(--_theme---line--control, #61566e); border-radius: 3px; }
+.cart_body::-webkit-scrollbar-track { background: transparent; }
 .cart_drawer[aria-busy="true"] .cart_body,
 .cart_drawer[aria-busy="true"] .cart_footer { opacity: 0.6; transition: opacity 0.2s ease 0.15s; }
 
