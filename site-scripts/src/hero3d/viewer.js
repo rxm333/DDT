@@ -26,12 +26,13 @@ export async function mountViewer(viewer) {
   const image = stage.querySelector('[data-viewer-image], .col-viewer_image');
   const titleEl = viewer.querySelector('[data-viewer-title]');
   const firstBtn = viewer.querySelector('[data-viewer-model][aria-pressed="true"]') || viewer.querySelector('[data-viewer-model]');
-  let current = firstBtn?.dataset.viewerModel || 'la-chute-des-anges';
+  let current = firstBtn?.dataset.viewerModel || viewer.dataset.viewerDefault || 'la-chute-des-anges'; // data-viewer-default : fiche produit (pas de boutons de modèle)
 
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   } catch {
+    stage.classList.remove('is-loading'); // l'indicateur a pu être posé par la page (fiche produit)
     return null; // pas de WebGL : l'image reste
   }
   viewer.dataset.viewer3d = 'loading';
@@ -50,7 +51,7 @@ export async function mountViewer(viewer) {
   canvas.tabIndex = 0;
   canvas.setAttribute('role', 'img');
   const label = () =>
-    canvas.setAttribute('aria-label', `Vue 3D de l'échiquier ${titleEl?.textContent.trim() || ''}. Faites glisser, ou utilisez les flèches du clavier, pour le faire pivoter.`);
+    canvas.setAttribute('aria-label', `Vue 3D de l'échiquier ${titleEl?.textContent.trim() || viewer.dataset.viewerName || ''}. Faites glisser, ou utilisez les flèches du clavier, pour le faire pivoter.`);
   label();
   stage.append(canvas);
 
@@ -116,7 +117,7 @@ export async function mountViewer(viewer) {
     const r = (active?.full || 10) * 0.62;
     const vfov = THREE.MathUtils.degToRad(camera.fov) / 2;
     const hfov = Math.atan(Math.tan(vfov) * camera.aspect);
-    orbit.dist = Math.max((r / Math.sin(vfov)) * 0.84, (r / Math.sin(hfov)) * 0.98);
+    orbit.dist = Math.max((r / Math.sin(vfov)) * 0.84, (r / Math.sin(hfov)) * 0.98) * (Number(viewer.dataset.viewerFit) || 1); // data-viewer-fit : recul (fiche produit)
   };
   const place = () => {
     const { az, el, dist, target } = orbit;
@@ -271,10 +272,12 @@ export async function mountViewer(viewer) {
 
     place();
     renderer.render(scene, camera);
-    if (busy && visible && !document.hidden) raf = requestAnimationFrame(frame);
+    if (busy && live()) raf = requestAnimationFrame(frame);
   };
+  // data-viewer-paused : la vue 3D est masquée (fiche produit, retour aux photos) — on ne dessine plus rien
+  const live = () => visible && !document.hidden && !('viewerPaused' in viewer.dataset);
   const play = () => {
-    if (!raf && visible && !document.hidden) {
+    if (!raf && live()) {
       last = performance.now();
       raf = requestAnimationFrame(frame);
     }
@@ -286,6 +289,10 @@ export async function mountViewer(viewer) {
   });
   io.observe(stage);
   document.addEventListener('visibilitychange', play);
+  viewer.addEventListener('dds:viewer-resume', () => {
+    lastInput = performance.now();
+    play();
+  });
   const ro = new ResizeObserver(() => {
     fit();
     play();
