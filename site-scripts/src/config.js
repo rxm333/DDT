@@ -47,6 +47,31 @@ export const NAVBAR = {
   autoHideThreshold: 120, // px avant de commencer à masquer (si autoHide)
 };
 
+/**
+ * Boutique Shopify (API Storefront, voir modules/shopify.js et modules/cart.js).
+ *
+ * Le jeton Storefront est PUBLIC par conception : il ne permet que de lire le catalogue et de gérer
+ * un panier. Il peut donc vivre dans ce dépôt public. Ne jamais mettre ici un jeton Admin (shpat_…).
+ *
+ * - domain : domaine Shopify de la boutique (xxx.myshopify.com)
+ * - token  : « Jeton d'accès public » de l'application Headless (canal de vente)
+ * - products : data-product des boutons « Ajouter au panier » → handle du produit dans Shopify
+ *   (le handle est la fin de l'adresse du produit dans l'admin : …/products/<handle>).
+ *   Un bouton peut aussi porter data-handle="…" ou data-variant="gid://shopify/ProductVariant/…".
+ */
+export const SHOPIFY = {
+  domain: '7btbwv-j0.myshopify.com',
+  token: '2654378ee987411f015efcbdd396cc34',
+  apiVersion: '2026-04',
+  country: 'FR',
+  language: 'FR',
+  products: {
+    noir: 'jeux-echecs-dame-de-tours-ancolie-noir',
+    blanc: 'jeux-echecs-dame-de-tours-ancolie-blanc',
+    'la-chute-des-anges': 'jeux-echecs-dame-de-tours-ancolie-la-chute-des-anges',
+  },
+};
+
 /** Accordéons <details> animés. */
 SELECTORS.accordion = ['.prod-acc_item', '.cfg_step'];
 

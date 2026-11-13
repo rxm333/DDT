@@ -88,6 +88,7 @@ La planche de l'emblème (`assets/logo-sprite-112-10x12.webp`) et les modèles 3
 | `logo-spin` | Emblème de la navbar qui tourne au scroll (planche de 120 vues). |
 | `article` / `news` | Modèle d'article CMS (sommaire, partage, date FR, temps de lecture) et listes d'actualités (tri, limite, liens). |
 | `product`, `customizer` | Fiches produit (galerie, quantité) et personnaliseur actuel côté site. |
+| `cart` + `shopify` | Panier Shopify (API Storefront) : boutons « Ajouter au panier », panneau panier, pastille de la navbar, prix et stock lus dans Shopify, paiement sur la page Shopify. Voir « Panier Shopify » ci-dessous. |
 | `swiper`, `forms`, `accordion`, `reveal`, `marquee`, `hover`, `navbar`, `smooth-scroll` | Interactions générales. |
 
 ---
@@ -104,10 +105,37 @@ La planche de l'emblème (`assets/logo-sprite-112-10x12.webp`) et les modèles 3
 
 Pour ajouter un effet à un nouvel élément : ajouter son sélecteur dans `src/config.js`, puis `npm run build`.
 
+## Panier Shopify
+
+Le panier parle directement à Shopify depuis le navigateur, avec l'**API Storefront** et un jeton
+**public** (fait pour être visible : il ne permet que de lire le catalogue et de gérer un panier).
+Aucun serveur n'est nécessaire pour les jeux du catalogue ; le paiement se fait sur la page Shopify.
+
+**Mise en route (admin Shopify)**
+1. Installer l'application **Headless** (Shopify) et créer une vitrine : elle donne un *jeton d'accès public*.
+2. Publier les produits sur le canal de vente **Headless**.
+3. Renseigner `SHOPIFY.domain` (`xxx.myshopify.com`) et `SHOPIFY.token` dans `src/config.js`,
+   vérifier les handles de `SHOPIFY.products`, puis `npm run build`.
+
+> Jamais de jeton Admin (`shpat_…`) ici : ce dépôt est public.
+
+**Contrat avec le markup**
+| Élément | Rôle |
+|---|---|
+| `[data-cart="add"][data-product="<clé>"][data-quantity]` | Ajoute au panier. `<clé>` → handle via `SHOPIFY.products` ; ou `data-handle` / `data-variant` sur le bouton |
+| `[data-navbar="cart"]`, `[data-cart="open"]` | Ouvre le panneau ; la pastille et `aria-label` donnent le nombre d'articles |
+| `[data-cart-price="<clé>"]`, `.prod-hero_price` de la fiche | Prix remplacé par celui de Shopify (le prix du HTML reste en secours) |
+
+Un produit épuisé dans Shopify désactive son bouton (« Épuisé pour le moment »).
+Le panier est gardé dans le navigateur (`localStorage`, clé `dds-cart:id`) ; un panier payé ou expiré est oublié.
+Événement `dds:cart-change` (detail.cart) sur `document`. Pour tester une autre boutique sans recompiler :
+`window.DDS_SHOPIFY = { domain, token }` avant le script.
+
 ## API publique
 
 ```js
 window.DDS.lenis          // instance Lenis (null en mouvement réduit)
+window.DDS.cart           // panier : open(), close(), refresh(), cart (dernier panier Shopify)
 window.DDS.navbar.open()  // .close(), .toggle(), .isOpen
 window.DDS.scrollTo(el)   // scroll animé + focus
 window.DDS.stopScroll()   // ex. ouverture d'une modale panier

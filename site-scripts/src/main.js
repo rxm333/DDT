@@ -6,6 +6,7 @@ import './styles/main.css';
 import './styles/product.css';
 import './styles/buttons.css';
 import './styles/customizer.css';
+import './styles/cart.css';
 import { ScrollTrigger } from './core/gsap.js';
 import { initSmoothScroll, scrollToTarget, stopScroll, startScroll } from './modules/smooth-scroll.js';
 import { initNavbar } from './modules/navbar.js';
@@ -25,8 +26,9 @@ import { initTransitions } from './modules/transitions.js';
 import { initLogoSpin } from './modules/logo-spin.js';
 import { initArticle } from './modules/article.js';
 import { initNewsLists } from './modules/news.js';
+import { initCart } from './modules/cart.js';
 
-const VERSION = '1.18.1';
+const VERSION = '1.19.0';
 
 function safe(name, fn) {
   try {
@@ -42,6 +44,7 @@ let cleanups = [];
 const deferred = [];
 const runDeferred = () => deferred.splice(0).forEach((fn) => fn());
 let lenis = null;
+let cart = null;
 const api = {};
 
 function initPage({ defer = false } = {}) {
@@ -67,6 +70,8 @@ function initPage({ defer = false } = {}) {
   safe('swiper', initSwipers);
   safe('forms', initForms);
   api.customizer = safe('customizer', initCustomizer);
+  // Prix et disponibilité des boutons « Ajouter au panier » de la page (le panneau, lui, est persistant)
+  if (cart) safe('cart-page', () => cart.syncPage());
   cleanups = c;
 }
 
@@ -85,6 +90,7 @@ function boot() {
   const navbar = safe('navbar', () => initNavbar({ lenis }));
   safe('logo-spin', initLogoSpin);
   safe('hover', initHover); // texte qui roule (navbar, footer) + boutons magnétiques
+  cart = safe('cart', () => initCart({ lenis, navbar }));
 
   initPage();
   const barba = safe('transitions', () => initTransitions({ lenis, navbar, destroyPage, initPage: () => initPage({ defer: true }), runDeferred }));
@@ -101,6 +107,7 @@ function boot() {
     lenis,
     navbar,
     barba,
+    cart,
     get customizer() {
       return api.customizer;
     },
