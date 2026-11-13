@@ -24,6 +24,7 @@ const html = `<!doctype html><html><head></head><body>
     </div></div>
   </div>
   <button type="button" class="prod-buy_add" data-cart="add" data-product="blanc" data-quantity="1"><span>Ajouter au panier</span></button>
+  <div class="ddt-personnaliseur-fullscreen"><iframe src="https://personnalisation-jeu-echecs.damedetours.com/?embed=1" title="Personnaliseur"></iframe></div>
   <button type="button" class="prod-buy_add" data-cart="add" data-product="inconnu" data-quantity="1"><span>Ajouter au panier</span></button>
 </main>
 </body></html>`;
@@ -53,6 +54,7 @@ function cartPayload(cart) {
     return {
       id: l.id,
       quantity: l.quantity,
+      attributes: l.attributes || [],
       cost: { totalAmount: { amount: String(t), currencyCode: 'EUR' } },
       merchandise: {
         id: l.merchandiseId,
@@ -69,10 +71,10 @@ function cartPayload(cart) {
 }
 
 function addTo(cart, lines) {
-  for (const { merchandiseId, quantity } of lines) {
-    const existing = cart.lines.find((l) => l.merchandiseId === merchandiseId);
+  for (const { merchandiseId, quantity, attributes = [] } of lines) {
+    const existing = attributes.length ? null : cart.lines.find((l) => l.merchandiseId === merchandiseId && !l.attributes.length);
     if (existing) existing.quantity += quantity;
-    else cart.lines.push({ id: `gid://shopify/CartLine/${nextLine++}`, merchandiseId, quantity });
+    else cart.lines.push({ id: `gid://shopify/CartLine/${nextLine++}`, merchandiseId, quantity, attributes });
   }
 }
 
@@ -238,6 +240,38 @@ await flush();
 assert.equal(window.localStorage.getItem('dds-cart:id'), null, 'identifiant d’un panier disparu effacé');
 window.close();
 
+// 7 bis. Personnaliseur intégré : « ddt:cart-add » envoyé par son cadre → panier Storefront
+{
+  const page = openPage();
+  await flush();
+  const frame = page.document.querySelector('iframe');
+  const post = (data, origin = 'https://personnalisation-jeu-echecs.damedetours.com', source = frame.contentWindow) =>
+    page.window.dispatchEvent(new page.window.MessageEvent('message', { data, origin, source }));
+  const uuidA = '11111111-2222-3333-4444-555555555555';
+  const uuidB = '66666666-7777-8888-9999-000000000000';
+  const lineOf = (uuid) => page.window.DDS.cart.cart?.lines.nodes.find((l) => l.attributes.some((a) => a.key === '_ddt_project' && a.value === uuid));
+
+  post({ type: 'ddt:cart-add', requestId: 'r0', item: { id: 1, quantity: 1, properties: { _ddt_project: uuidA } } }, 'https://ailleurs.example');
+  await flush();
+  assert.equal(lineOf(uuidA), undefined, 'message d’une autre origine ignoré');
+
+  post({ type: 'ddt:cart-add', requestId: 'r1', item: { id: 1, quantity: 1, properties: { _ddt_project: uuidA, Projet: 'Mon jeu' } } });
+  await flush(); await flush();
+  const added = lineOf(uuidA);
+  assert.ok(added, 'création ajoutée au panier Storefront');
+  assert.deepEqual(added.attributes.map((a) => a.key).sort(), ['Projet', '_ddt_project'], 'propriétés transmises en attributs');
+  const row = page.document.querySelector(`[data-line-id="${added.id}"]`);
+  assert.equal(row.querySelector('.cart_qty'), null, 'quantité d’une création verrouillée');
+  assert.equal(row.querySelector('.cart_line-variant').textContent, 'Création personnalisée');
+  assert.ok(page.document.getElementById('dds-cart').open, 'panier ouvert après l’ajout');
+
+  post({ type: 'ddt:cart-add', requestId: 'r2', item: { id: 1, quantity: 1, properties: { _ddt_project: uuidB } }, replaceProjectId: uuidA });
+  await flush(); await flush(); await flush();
+  assert.ok(lineOf(uuidB), 'nouvelle version ajoutée');
+  assert.equal(lineOf(uuidA), undefined, 'ancienne version retirée');
+  page.window.close();
+}
+
 // 8. Boutique non configurée : pas de requête, message « ouvre bientôt »
 {
   const dom = new JSDOM(html, { runScripts: 'outside-only', pretendToBeVisual: true, url: 'https://damedetours.example/' });
@@ -263,4 +297,4 @@ window.close();
   w.close();
 }
 
-console.log('✓ Panier OK — prix et stock Shopify, ajout, pastille, panneau, quantités, stock limité, retrait, persistance, panier expiré, non configuré');
+console.log('✓ Panier OK — prix et stock Shopify, ajout, pastille, panneau, quantités, stock limité, retrait, persistance, panier expiré, personnaliseur intégré, non configuré');

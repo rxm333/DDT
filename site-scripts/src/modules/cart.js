@@ -242,9 +242,12 @@ export function initCart({ lenis, navbar } = {}) {
       li.append(el('span', 'cart_line-image is-empty'));
     }
 
+    // Création du personnaliseur : pièce unique, quantité verrouillée à 1
+    const creation = line.attributes?.some((a) => a.key === '_ddt_project');
     const info = el('div', 'cart_line-info');
     info.append(el('p', 'cart_line-title', title));
     if (v.title && v.title !== 'Default Title') info.append(el('p', 'cart_line-variant', v.title));
+    else if (creation) info.append(el('p', 'cart_line-variant', 'Création personnalisée'));
     if (line.quantity > 1 && v.price) info.append(el('p', 'cart_line-unit', `${formatMoney(v.price)} l’unité`));
     if (v.availableForSale === false) info.append(el('p', 'cart_line-alert', 'Épuisé : retirez-le pour commander.'));
 
@@ -277,7 +280,8 @@ export function initCart({ lenis, navbar } = {}) {
     remove.type = 'button';
     remove.dataset.cartAction = 'remove';
     remove.setAttribute('aria-label', `Retirer ${title} du panier`);
-    actions.append(qty, remove);
+    if (creation) actions.append(remove);
+    else actions.append(qty, remove);
     info.append(actions);
 
     li.append(info, el('p', 'cart_line-price', formatMoney(line.cost?.totalAmount)));
@@ -398,6 +402,16 @@ export function initCart({ lenis, navbar } = {}) {
     }).catch((error) => {
       fail(error);
       render(); // remet la quantité affichée à la valeur réelle
+    });
+  }
+
+  /** Retire plusieurs lignes d'un coup (utilisé par le pont du personnaliseur). */
+  function removeLines(lineIds) {
+    return run(async () => {
+      if (!cart?.id || !lineIds.length) return cart;
+      const result = await client.removeLines(cart.id, lineIds);
+      setCart(result.cart);
+      return cart;
     });
   }
 
@@ -620,6 +634,7 @@ export function initCart({ lenis, navbar } = {}) {
     refresh,
     syncPage,
     add,
+    removeLines,
     get cart() {
       return cart;
     },

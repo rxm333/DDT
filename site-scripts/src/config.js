@@ -100,7 +100,8 @@ export const TRANSITIONS = {
   container: '[data-barba="container"]',
   persistent: ['.footer_component', 'footer'], // estompés pendant l'échange pour éviter un saut visuel
   // Pages chargées normalement (formulaires Webflow protégés : la vérification anti-spam doit se charger)
-  reload: ['/contact'],
+  // Personnalisation : le personnaliseur (iframe) et son pont démarrent sur une page fraîche
+  reload: ['/contact', '/contact.html', '/personnalisation', '/personnalisation.html'],
   leave: { duration: 0.4, y: -20 },
   enter: { duration: 0.7, y: 28 },
 };

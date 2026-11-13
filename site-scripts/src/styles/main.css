@@ -807,3 +807,26 @@ html.lenis.lenis-smooth {
   .col-note_sheet { padding: 9% 8% 12% 9%; transform: rotate(0.6deg); }
   .col-note_seal { right: -1%; bottom: -2.5%; }
 }
+
+/* ---------- Personnaliseur intégré (page Personnalisation) ---------- */
+/* L'iframe prend la hauteur de l'écran ; le script hôte du personnaliseur l'ajuste ensuite
+   (embed-layout-host.js). Espace réservé sous la navbar fixe pour ne pas masquer le haut. */
+.section_cfg-app {
+  padding-top: 6.5rem;
+  background-color: #171619;
+}
+.ddt-personnaliseur-fullscreen {
+  position: relative;
+  width: 100%;
+  background-color: #171619;
+}
+.ddt-personnaliseur-fullscreen iframe {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  border: 0;
+}
+@media (max-width: 767px) {
+  .section_cfg-app { padding-top: 5.5rem; }
+}

@@ -41,6 +41,7 @@ const CART_FIELDS = `
     nodes {
       id
       quantity
+      attributes { key value }
       cost { totalAmount { amount currencyCode } }
       merchandise {
         ... on ProductVariant {

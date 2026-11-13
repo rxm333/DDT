@@ -27,8 +27,9 @@ import { initLogoSpin } from './modules/logo-spin.js';
 import { initArticle } from './modules/article.js';
 import { initNewsLists } from './modules/news.js';
 import { initCart } from './modules/cart.js';
+import { initCustomizerEmbed } from './modules/customizer-embed.js';
 
-const VERSION = '1.21.0';
+const VERSION = '1.22.0';
 
 function safe(name, fn) {
   try {
@@ -45,6 +46,7 @@ const deferred = [];
 const runDeferred = () => deferred.splice(0).forEach((fn) => fn());
 let lenis = null;
 let cart = null;
+let embed = null;
 const api = {};
 
 function initPage({ defer = false } = {}) {
@@ -72,6 +74,7 @@ function initPage({ defer = false } = {}) {
   api.customizer = safe('customizer', initCustomizer);
   // Prix et disponibilité des boutons « Ajouter au panier » de la page (le panneau, lui, est persistant)
   if (cart) safe('cart-page', () => cart.syncPage());
+  if (embed) safe('customizer-embed-page', () => embed.mount());
   cleanups = c;
 }
 
@@ -91,6 +94,7 @@ function boot() {
   safe('logo-spin', initLogoSpin);
   safe('hover', initHover); // texte qui roule (navbar, footer) + boutons magnétiques
   cart = safe('cart', () => initCart({ lenis, navbar }));
+  embed = safe('customizer-embed', () => initCustomizerEmbed({ lenis, cart }));
 
   initPage();
   const barba = safe('transitions', () => initTransitions({ lenis, navbar, destroyPage, initPage: () => initPage({ defer: true }), runDeferred }));
