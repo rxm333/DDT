@@ -50,6 +50,14 @@ export const pageDocs = [
      "collapsible": true,
      "collapsed": true
     }
+   },
+   {
+    "name": "s5",
+    "title": "Les nouvelles de l’atelier, en avant-première",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
    }
   ],
   "fields": [
@@ -337,6 +345,80 @@ export const pageDocs = [
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Toutes les actualités »"
+   },
+   {
+    "name": "t25",
+    "title": "Paragraphe",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Newsletter »"
+   },
+   {
+    "name": "t26",
+    "title": "Titre",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Les nouvelles de l’atelier, en avant-première »"
+   },
+   {
+    "name": "t27",
+    "title": "Paragraphe 2",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Nouvelles collections, événements et ouvertures d’atelier : soyez parmi les premiers informés. »"
+   },
+   {
+    "name": "t28",
+    "title": "Libellé",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Adresse e-mail »"
+   },
+   {
+    "name": "t29",
+    "title": "Texte",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « J’accepte de recevoir la newsletter de Dame de Tours. »"
+   },
+   {
+    "name": "t30",
+    "title": "Bouton",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « S’inscrire »"
+   },
+   {
+    "name": "t31",
+    "title": "Paragraphe 3",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "ligneRiche",
+    "description": "Texte d’origine : « Un e-mail de temps en temps, jamais de spam. Désinscription en un clic depuis chaque message. Politique de confidentialité »"
+   },
+   {
+    "name": "t32",
+    "title": "Texte 2",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Merci ! Votre inscription est bien enregistrée. »"
+   },
+   {
+    "name": "t33",
+    "title": "Texte 3",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « L’inscription n’a pas abouti. Vérifiez votre adresse e-mail puis réessayez. »"
    },
    {
     "name": "seoTitle",

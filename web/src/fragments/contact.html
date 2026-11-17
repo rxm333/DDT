@@ -21,7 +21,7 @@
               </div>
               <div class="contact_card">
                 <div class="w-form">
-                  <form method="post" name="wf-form-Contact-atelier" data-name="Contact atelier" aria-label="Formulaire de contact" id="wf-form-Contact-atelier" data-wf-page-id="6af3a5a52b9c6022421c9f8b" data-wf-element-id="b985d0c8-fd4e-4eb8-1720-86b4f3c2ad2c">
+                  <form data-site-form="contact" aria-label="Formulaire de contact" id="wf-form-Contact-atelier" novalidate="">
                     <div class="contact_form">
                       <div class="contact_row">
                         <div class="contact_field"><label data-t="t7" for="contact-name" class="contact_label">Nom</label><input class="contact_input w-input" autocomplete="name" maxlength="120" name="Nom" data-name="Nom" data-placeholder="Prénom et nom" placeholder="Example Text" type="text" id="contact-name"></div>
@@ -34,7 +34,7 @@
                       <div class="contact_field"><label data-t="t11" for="contact-message" class="contact_label">Votre message</label><textarea class="contact_input is-textarea w-input" maxlength="5000" name="Commentaire" data-name="Commentaire" data-placeholder="Votre message…" placeholder="Example Text" id="contact-message"></textarea></div>
                       <div class="contact_form-footer">
                         <p data-t="t12" class="contact_legal">Vos informations servent uniquement à vous répondre. Voir notre <a href="#" class="contact_legal-link">politique de confidentialité</a>
-                        </p><button data-t="t13" type="submit" data-wait="Envoi en cours…" class="button">Envoyer le message</button>
+                        </p><div class="site-form_trap" aria-hidden="true"><label for="contact-website">Ne pas remplir</label><input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off"></div><button data-t="t13" type="submit" data-wait="Envoi en cours…" class="button">Envoyer le message</button>
                       </div>
                     </div>
                   </form>

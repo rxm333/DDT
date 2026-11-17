@@ -4039,6 +4039,10 @@
     {
      "name": "s4",
      "title": "Nos actualités"
+    },
+    {
+     "name": "s5",
+     "title": "Les nouvelles de l’atelier, en avant-première"
     }
    ],
    "fields": [
@@ -4217,6 +4221,70 @@
      "section": "s4",
      "label": "Lien",
      "original": "Toutes les actualités"
+    },
+    {
+     "name": "t25",
+     "kind": "long",
+     "section": "s5",
+     "label": "Paragraphe",
+     "original": "Newsletter"
+    },
+    {
+     "name": "t26",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Titre",
+     "original": "Les nouvelles de l’atelier, en avant-première"
+    },
+    {
+     "name": "t27",
+     "kind": "long",
+     "section": "s5",
+     "label": "Paragraphe 2",
+     "original": "Nouvelles collections, événements et ouvertures d’atelier : soyez parmi les premiers informés."
+    },
+    {
+     "name": "t28",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Libellé",
+     "original": "Adresse e-mail"
+    },
+    {
+     "name": "t29",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Texte",
+     "original": "J’accepte de recevoir la newsletter de Dame de Tours."
+    },
+    {
+     "name": "t30",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Bouton",
+     "original": "S’inscrire"
+    },
+    {
+     "name": "t31",
+     "kind": "rich",
+     "section": "s5",
+     "label": "Paragraphe 3",
+     "original": "Un e-mail de temps en temps, jamais de spam. Désinscription en un clic depuis chaque message. <a href=\"/confidentialite\" class=\"legal_link\">Politique de confidentialité</a>",
+     "linkClass": "legal_link"
+    },
+    {
+     "name": "t32",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Texte 2",
+     "original": "Merci ! Votre inscription est bien enregistrée."
+    },
+    {
+     "name": "t33",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Texte 3",
+     "original": "L’inscription n’a pas abouti. Vérifiez votre adresse e-mail puis réessayez."
     }
    ]
   },
