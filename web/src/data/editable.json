@@ -5046,6 +5046,13 @@
      "original": "Un jeu d’échecs personnalisé fait un cadeau unique : anniversaire, mariage, départ, club d’échecs ou cadeau d’entreprise à vos couleurs. Pour un logo, une série ou une marque blanche, <a href=\"/contact\">écrivez à l’atelier</a>."
     },
     {
+     "name": "t50",
+     "kind": "rich",
+     "section": "s4",
+     "label": "Paragraphe 5",
+     "original": "L’atelier a par exemple créé l’échiquier vert et blanc du château de la Mothe-Chandeniers, classé 1er de l’exposition artistique 2026 : <a href=\"/actualites/chateau-de-la-mothe-chandeniers\">voir la réalisation</a>."
+    },
+    {
      "name": "t37",
      "kind": "plain",
      "section": "s4",
@@ -5063,7 +5070,7 @@
      "name": "t39",
      "kind": "long",
      "section": "s4",
-     "label": "Paragraphe 5",
+     "label": "Paragraphe 6",
      "original": "Le jeu de base est à 249 € TTC, plateau et 32 pièces compris. Les options s’ajoutent au total : votre image sur le cuir (+20 €), des pièces sur mesure (dès +115 €), un jeu aimanté (+17 €), des pieds métalliques (+10 €), un texte (+6 € par zone)."
     },
     {
@@ -5071,13 +5078,13 @@
      "kind": "plain",
      "section": "s4",
      "label": "Sous-titre 2",
-     "original": "Que peut-on personnaliser ?"
+     "original": "Qu’est-ce qui est personnalisable sur l’échiquier ?"
     },
     {
      "name": "t41",
      "kind": "long",
      "section": "s4",
-     "label": "Paragraphe 6",
+     "label": "Paragraphe 7",
      "original": "Le damier, les teintes du plateau, les clous, les angles, les pieds et le style des pièces, en neuf étapes. Vous pouvez aussi imprimer votre image sur le cuir, ajouter du texte sur quatre zones et y apposer un logo ou une signature."
     },
     {
@@ -5091,7 +5098,7 @@
      "name": "t43",
      "kind": "rich",
      "section": "s4",
-     "label": "Paragraphe 7",
+     "label": "Paragraphe 8",
      "original": "Environ une semaine de fabrication après la validation du bon à tirer et le paiement, puis le temps de livraison. Les délais restent indicatifs : voir la page <a href=\"/livraison\">Livraison</a>."
     },
     {
@@ -5105,7 +5112,7 @@
      "name": "t45",
      "kind": "long",
      "section": "s4",
-     "label": "Paragraphe 8",
+     "label": "Paragraphe 9",
      "original": "Oui. Votre image est imprimée sur le cuir du plateau (+20 €) et un logo ou une signature s’ajoute pour 6 €. Pour les entreprises, l’atelier réalise aussi des adaptations graphiques, des séries et des jeux en marque blanche."
     },
     {
@@ -5119,7 +5126,7 @@
      "name": "t47",
      "kind": "long",
      "section": "s4",
-     "label": "Paragraphe 9",
+     "label": "Paragraphe 10",
      "original": "En France, dans notre atelier de Joué-lès-Tours (Indre-et-Loire) : le plateau y est habillé et assemblé, les pièces peintes et vernies à la main."
     },
     {
@@ -5133,8 +5140,36 @@
      "name": "t49",
      "kind": "rich",
      "section": "s4",
-     "label": "Paragraphe 10",
+     "label": "Paragraphe 11",
      "original": "Oui, tant que le bon à tirer n’est pas validé. Ensuite, la commande est ferme : un produit personnalisé n’ouvre pas de droit de rétractation (voir <a href=\"/remboursements\">Remboursements</a>)."
+    },
+    {
+     "name": "t51",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre 7",
+     "original": "Mon projet est-il sauvegardé ?"
+    },
+    {
+     "name": "t52",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 12",
+     "original": "Oui. À la fin de la composition, vous recevez un lien personnel valable 180 jours pour retrouver ou modifier votre échiquier, et votre projet est transmis à l’atelier."
+    },
+    {
+     "name": "t53",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre 8",
+     "original": "Peut-on jouer avec, ou est-ce un objet de décoration ?"
+    },
+    {
+     "name": "t54",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 13",
+     "original": "Les deux : l’échiquier est fait pour jouer comme pour être exposé. Ce n’est pas un jouet pour les jeunes enfants."
     }
    ]
   },

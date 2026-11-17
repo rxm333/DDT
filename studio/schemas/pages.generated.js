@@ -2020,6 +2020,14 @@ export const pageDocs = [
     "description": "Texte d’origine : « Un jeu d’échecs personnalisé fait un cadeau unique : anniversaire, mariage, départ, club d’échecs ou cadeau d’entreprise à vos couleurs. Po… »"
    },
    {
+    "name": "t50",
+    "title": "Paragraphe 5",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "ligneRiche",
+    "description": "Texte d’origine : « L’atelier a par exemple créé l’échiquier vert et blanc du château de la Mothe-Chandeniers, classé 1er de l’exposition artistique 2026 : voi… »"
+   },
+   {
     "name": "t37",
     "title": "Titre (invisible, lu par Google et les lecteurs d’écran)",
     "fieldset": "s4",
@@ -2037,7 +2045,7 @@ export const pageDocs = [
    },
    {
     "name": "t39",
-    "title": "Paragraphe 5",
+    "title": "Paragraphe 6",
     "fieldset": "s4",
     "group": "contenu",
     "type": "text",
@@ -2050,11 +2058,11 @@ export const pageDocs = [
     "fieldset": "s4",
     "group": "contenu",
     "type": "string",
-    "description": "Texte d’origine : « Que peut-on personnaliser ? »"
+    "description": "Texte d’origine : « Qu’est-ce qui est personnalisable sur l’échiquier ? »"
    },
    {
     "name": "t41",
-    "title": "Paragraphe 6",
+    "title": "Paragraphe 7",
     "fieldset": "s4",
     "group": "contenu",
     "type": "text",
@@ -2071,7 +2079,7 @@ export const pageDocs = [
    },
    {
     "name": "t43",
-    "title": "Paragraphe 7",
+    "title": "Paragraphe 8",
     "fieldset": "s4",
     "group": "contenu",
     "type": "ligneRiche",
@@ -2087,7 +2095,7 @@ export const pageDocs = [
    },
    {
     "name": "t45",
-    "title": "Paragraphe 8",
+    "title": "Paragraphe 9",
     "fieldset": "s4",
     "group": "contenu",
     "type": "text",
@@ -2104,7 +2112,7 @@ export const pageDocs = [
    },
    {
     "name": "t47",
-    "title": "Paragraphe 9",
+    "title": "Paragraphe 10",
     "fieldset": "s4",
     "group": "contenu",
     "type": "text",
@@ -2121,11 +2129,45 @@ export const pageDocs = [
    },
    {
     "name": "t49",
-    "title": "Paragraphe 10",
+    "title": "Paragraphe 11",
     "fieldset": "s4",
     "group": "contenu",
     "type": "ligneRiche",
     "description": "Texte d’origine : « Oui, tant que le bon à tirer n’est pas validé. Ensuite, la commande est ferme : un produit personnalisé n’ouvre pas de droit de rétractatio… »"
+   },
+   {
+    "name": "t51",
+    "title": "Sous-titre 7",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Mon projet est-il sauvegardé ? »"
+   },
+   {
+    "name": "t52",
+    "title": "Paragraphe 12",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Oui. À la fin de la composition, vous recevez un lien personnel valable 180 jours pour retrouver ou modifier votre échiquier, et votre proj… »"
+   },
+   {
+    "name": "t53",
+    "title": "Sous-titre 8",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Peut-on jouer avec, ou est-ce un objet de décoration ? »"
+   },
+   {
+    "name": "t54",
+    "title": "Paragraphe 13",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Les deux : l’échiquier est fait pour jouer comme pour être exposé. Ce n’est pas un jouet pour les jeunes enfants. »"
    },
    {
     "name": "seoTitle",
