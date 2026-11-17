@@ -152,6 +152,10 @@ html.lenis.lenis-smooth {
 .product-card_link {
   transition: color var(--dds-fast) var(--dds-ease-out);
 }
+/* « Échiquier personnalisé » doit tenir sur une ligne dans le menu, même sur un téléphone de 360 px */
+.navbar_link {
+  font-size: min(var(--_typography---font-size--xlarge), 7.4vw);
+}
 
 /* ---------- Cartes produit ---------- */
 /* Carte entièrement cliquable : le lien du titre s'étend sur toute la carte (« stretched link »).
