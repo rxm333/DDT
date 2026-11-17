@@ -24,3 +24,21 @@ export function getArticles() {
   })();
   return articlesPromise;
 }
+
+// Textes et photos des pages modifiés dans Sanity (vide si Sanity est injoignable en local)
+import { fetchPageEdits } from './sanity.js';
+let editsPromise;
+export function getPageEdits() {
+  editsPromise ??= (async () => {
+    try {
+      const edits = await fetchPageEdits();
+      console.log(`[sanity] ${Object.keys(edits).length} page(s) modifiables lues`);
+      return edits;
+    } catch (e) {
+      if (process.env.CI) throw new Error(`Sanity injoignable (${e.message}) : publication annulée`);
+      console.warn(`[sanity] pages : injoignable (${e.message}) : textes d’origine utilisés`);
+      return {};
+    }
+  })();
+  return editsPromise;
+}

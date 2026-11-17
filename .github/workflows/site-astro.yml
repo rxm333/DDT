@@ -43,7 +43,8 @@ jobs:
       - name: Contenus Sanity modifiés ?
         id: check
         run: |
-          Q='{"n":count(*[_type=="article" && !(_id in path("drafts.**"))]),"t":*[_type=="article" && !(_id in path("drafts.**"))]|order(_updatedAt desc)[0]._updatedAt}'
+          F='(_type=="article" || _id in path("page-*")) && !(_id in path("drafts.**"))'
+          Q="{\"n\":count(*[$F]),\"t\":*[$F]|order(_updatedAt desc)[0]._updatedAt}"
           STAMP=$(curl -fsS -m 20 -G "https://bh9d2sfy.api.sanity.io/v2025-02-19/data/query/production" --data-urlencode "query=$Q" | jq -c .result) || STAMP=injoignable
           echo "stamp=$STAMP" >> "$GITHUB_OUTPUT"
           LAST=$(git fetch -q --depth 1 origin deploy 2>/dev/null && git show origin/deploy:sanity-stamp.txt 2>/dev/null || echo none)
@@ -79,8 +80,12 @@ jobs:
         if: steps.check.outputs.skip != 'true'
         env:
           SANITY_STUDIO_TELEMETRY_DISABLED: '1'
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
         run: |
-          cd studio && npm ci && npx sanity build dist --yes
+          cd studio && npm ci
+          # Fiches des pages dans Sanity : créées / complétées avec les textes actuels (jamais écrasées)
+          if [ "${{ github.event_name }}" != "schedule" ]; then node scripts/sync-pages.mjs; fi
+          npx sanity build dist --yes
           cp -r dist ../web/dist/studio
           echo '${{ steps.check.outputs.stamp }}' > ../web/dist/sanity-stamp.txt
 

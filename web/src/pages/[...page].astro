@@ -3,7 +3,9 @@
 // descriptions de src/data/pages.json. Les listes d'actualités sont remplies à la construction.
 import Base from '../layouts/Base.astro';
 import pages from '../data/pages.json';
-import { getArticles } from '../lib/content.js';
+import { getArticles, getPageEdits } from '../lib/content.js';
+import { applyEdits } from '../lib/cms-html.js';
+import editable from '../data/editable.json';
 import { fillNewsLists } from '../lib/news.js';
 import { jsonLd } from '../lib/seo.js';
 import { PRODUCTS } from '../lib/site.js';
@@ -15,9 +17,18 @@ export function getStaticPaths() {
   return pages.map((page) => ({ params: { page: page.path === '/' ? undefined : page.path.slice(1) }, props: { page } }));
 }
 
-const { page } = Astro.props;
+const { page: basePage } = Astro.props;
 const articles = await getArticles();
-const main = fillNewsLists(fragments[`../fragments/${page.key}.html`].trim(), articles);
+// Textes / photos modifiés dans Sanity : seuls les champs changés remplacent le HTML d'origine
+const edits = (await getPageEdits())[basePage.key];
+const fields = Object.fromEntries((editable.pages.find((p) => p.key === basePage.key)?.fields || []).map((f) => [f.name, f]));
+const changed = [];
+const edited = applyEdits(fragments[`../fragments/${basePage.key}.html`].trim(), fields, edits, { onEdit: (k) => changed.push(k) });
+if (changed.length) console.log(`[sanity] ${basePage.path} : ${changed.length} modification(s) (${changed.join(', ')})`);
+const page = { ...basePage, title: edits?.seoTitle || basePage.title, description: edits?.seoDescription || basePage.description };
+if (edits?.seoTitle) Object.assign(page, { ogTitle: edits.seoTitle, twitterTitle: edits.seoTitle });
+if (edits?.seoDescription) Object.assign(page, { ogDescription: edits.seoDescription, twitterDescription: edits.seoDescription });
+const main = fillNewsLists(edited, articles);
 const shopify = await shopifyProducts(Object.values(PRODUCTS).map((p) => p.handle));
 const ld = jsonLd({ page, main, shopify });
 ---

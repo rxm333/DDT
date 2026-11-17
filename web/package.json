@@ -8,10 +8,14 @@
     "predev": "node scripts/sync-assets.mjs",
     "dev": "astro dev",
     "preview": "astro preview",
-    "test": "node scripts/check-build.mjs"
+    "test": "node scripts/check-build.mjs && node scripts/cms-selftest.mjs",
+    "cms": "node scripts/cms-annotate.mjs && node scripts/cms-schema.mjs && node scripts/cms-selftest.mjs"
   },
   "dependencies": {
     "@portabletext/to-html": "^6.0.0",
     "astro": "^7.4.12"
+  },
+  "devDependencies": {
+    "node-html-parser": "^9.0.7"
   }
 }

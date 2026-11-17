@@ -63,3 +63,29 @@ export async function fetchSanityArticles() {
     seo: { title: d.seoTitle || `${d.title} | Dame de Tours`, description: d.seoDescription || d.intro, ogImage: d.cover?.url ? `${d.cover.url}?w=1200&h=630&fit=crop&auto=format` : null },
   }));
 }
+
+// ---------------------------------------------------------------- Pages du site (textes et photos modifiés)
+const query = async (q, params = {}) => {
+  const qs = new URLSearchParams({ query: q, ...Object.fromEntries(Object.entries(params).map(([k, v]) => [`$${k}`, JSON.stringify(v)])) });
+  const res = await fetch(`https://${SANITY.projectId}.api.sanity.io/v${SANITY.apiVersion}/data/query/${SANITY.dataset}?${qs}`, { signal: AbortSignal.timeout(20000) });
+  if (!res.ok) throw new Error(`Sanity ${res.status}`);
+  return (await res.json()).result;
+};
+
+/** { 'index': { t1: …, i6: { url, alt }, seoTitle, seoDescription }, … } — fiches publiées seulement. */
+export async function fetchPageEdits() {
+  const docs = await query('*[_id in path("page-*")]');
+  const refs = new Set();
+  for (const d of docs) for (const v of Object.values(d)) if (v?._type === 'image' && v.asset?._ref) refs.add(v.asset._ref);
+  const assets = refs.size ? Object.fromEntries((await query('*[_id in $ids]{_id, url}', { ids: [...refs] })).map((a) => [a._id, a.url])) : {};
+  const out = {};
+  for (const d of docs) {
+    const values = {};
+    for (const [k, v] of Object.entries(d)) {
+      if (k.startsWith('_')) continue;
+      values[k] = v?._type === 'image' ? (v.asset?._ref ? { url: assets[v.asset._ref], alt: v.alt } : null) : v;
+    }
+    out[d._id.replace(/^page-/, '')] = values;
+  }
+  return out;
+}
