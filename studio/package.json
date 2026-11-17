@@ -1,0 +1,19 @@
+{
+  "name": "dame-de-tours-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build dist --yes"
+  },
+  "dependencies": {
+    "@sanity/client": "^8.16.0",
+    "@sanity/locale-fr-fr": "^1.2.37",
+    "@sanity/vision": "^6.23.0",
+    "node-html-parser": "^9.0.7",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.23.0",
+    "styled-components": "^6.6.0"
+  }
+}

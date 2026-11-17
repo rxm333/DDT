@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const DIST = new URL('../dist/', import.meta.url).pathname;
-const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? (f === 'site-scripts' || f === 'images' ? [] : walk(join(d, f))) : [join(d, f)]));
+const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? (['site-scripts', 'images', 'studio'].includes(f) ? [] : walk(join(d, f))) : [join(d, f)]));
 const pages = walk(DIST).filter((f) => f.endsWith('.html') && !f.endsWith('style-guide.html'));
 const errors = [];
 const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');

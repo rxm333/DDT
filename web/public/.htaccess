@@ -28,6 +28,10 @@ ErrorDocument 404 /404.html
   RewriteCond %{THE_REQUEST} \s/+([^?\s]+?)\.html[\s?] [NC]
   RewriteRule ^ /%1 [R=301,L,NE]
 
+  # Espace d'écriture Sanity (/studio) : application d'une seule page
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^studio(/.*)?$ /studio/index.html [L]
+
   # Barre oblique finale → sans (aucun dossier n'est navigable)
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 

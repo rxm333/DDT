@@ -48,7 +48,7 @@ export function jsonLd({ page, main, article, shopify }) {
     out.push(
       {
         '@type': 'NewsArticle', headline: article.title, description: article.seo?.description || article.intro,
-        image: [abs(article.cover.src)], datePublished: article.date, dateModified: article.updated || article.date,
+        image: [abs(article.cover.src)].filter(Boolean), datePublished: article.date, dateModified: article.updated || article.date,
         inLanguage: 'fr-FR', mainEntityOfPage: abs(path),
         author: { '@type': 'Organization', name: 'L’atelier Dame de Tours', url: SITE.url + '/' },
         publisher: { '@id': `${SITE.url}/#organisation` },

@@ -3,8 +3,10 @@
 #
 # Se déclenche :
 #  - à chaque modification du site (web/) ou des scripts du site (site-scripts/) sur main ;
-#  - quand un contenu est publié dans Sanity (webhook → repository_dispatch « sanity-publish ») ;
+#  - quand un contenu est publié dans Sanity : vérification toutes les 5 minutes (rien n'est reconstruit
+#    si rien n'a changé), ou tout de suite via un webhook Sanity → repository_dispatch « sanity-publish » ;
 #  - à la main (onglet Actions → « Site Astro » → Run workflow).
+# L'espace d'écriture Sanity (studio/) est construit en même temps et servi sur /studio.
 name: Site Astro
 
 on:
@@ -19,6 +21,8 @@ on:
       - '.github/workflows/site-astro.yml'
   repository_dispatch:
     types: [sanity-publish]
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -34,28 +38,58 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Passage programmé : on ne reconstruit que si un contenu Sanity a changé depuis la dernière publication
+      - name: Contenus Sanity modifiés ?
+        id: check
+        run: |
+          Q='{"n":count(*[_type=="article" && !(_id in path("drafts.**"))]),"t":*[_type=="article" && !(_id in path("drafts.**"))]|order(_updatedAt desc)[0]._updatedAt}'
+          STAMP=$(curl -fsS -m 20 -G "https://bh9d2sfy.api.sanity.io/v2025-02-19/data/query/production" --data-urlencode "query=$Q" | jq -c .result) || STAMP=injoignable
+          echo "stamp=$STAMP" >> "$GITHUB_OUTPUT"
+          LAST=$(git fetch -q --depth 1 origin deploy 2>/dev/null && git show origin/deploy:sanity-stamp.txt 2>/dev/null || echo none)
+          echo "Sanity : $STAMP — dernière publication : $LAST"
+          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$STAMP" = "$LAST" ] || [ "$STAMP" = "injoignable" ]; }; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Aucun changement : rien à publier."
+          fi
+
       - uses: actions/setup-node@v4
+        if: steps.check.outputs.skip != 'true'
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: |
+            web/package-lock.json
+            studio/package-lock.json
 
       - name: Installation
+        if: steps.check.outputs.skip != 'true'
         working-directory: web
         run: npm ci
 
       - name: Construction
+        if: steps.check.outputs.skip != 'true'
         working-directory: web
         env:
           SITE_URL: https://damedetours.com
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
         run: npm run build
 
+      - name: Espace d'écriture Sanity (/studio)
+        if: steps.check.outputs.skip != 'true'
+        env:
+          SANITY_STUDIO_TELEMETRY_DISABLED: '1'
+        run: |
+          cd studio && npm ci && npx sanity build dist --yes
+          cp -r dist ../web/dist/studio
+          echo '${{ steps.check.outputs.stamp }}' > ../web/dist/sanity-stamp.txt
+
       - name: Contrôles (titres, liens, données Google…)
+        if: steps.check.outputs.skip != 'true'
         working-directory: web
         run: npm test
 
       - name: Publication sur la branche deploy
+        if: steps.check.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898299+github-actions[bot]@users.noreply.github.com"

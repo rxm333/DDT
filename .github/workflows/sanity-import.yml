@@ -1,0 +1,27 @@
+# Import UNIQUE des 3 articles d'origine dans Sanity (textes, photos, liens).
+# À lancer une fois : onglet Actions → « Sanity : import des articles » → Run workflow.
+# Sans risque à relancer : un article déjà présent dans Sanity n'est jamais écrasé.
+name: 'Sanity : import des articles'
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - working-directory: studio
+        run: npm ci
+      - working-directory: studio
+        env:
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+        run: node scripts/import-articles.mjs
