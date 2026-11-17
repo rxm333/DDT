@@ -1,1 +1,0 @@
-export{t as default}from"./sanity-B_OYfO06.js";
