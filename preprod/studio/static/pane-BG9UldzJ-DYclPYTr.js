@@ -1,1 +1,0 @@
-export{t as default}from"./sanity-BrRTOf6v.js";
