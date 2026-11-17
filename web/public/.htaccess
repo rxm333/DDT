@@ -13,6 +13,52 @@ ErrorDocument 404 /404.html
   RewriteCond %{HTTPS} off
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+  # www → domaine sans www (l'adresse canonique est https://damedetours.com)
+  RewriteCond %{HTTP_HOST} ^www\.damedetours\.com(:[0-9]+)?$ [NC]
+  RewriteRule ^ https://damedetours.com%{REQUEST_URI} [L,R=301,NE]
+
+  # ── Anciennes adresses de la boutique Shopify (bascule de damedetours.com) ──
+  # Inventaire du 17/11/2026 (sitemaps Shopify). Un « ? » final retire les paramètres
+  # (?variant=…, ?page=…) pour ne pas créer de doublons.
+
+  # Paiement, commandes, liens d'e-mails Shopify → la boutique sur son sous-domaine
+  # (302 : liens de service, pas de référencement ; les paramètres sont gardés)
+  RewriteRule ^(checkouts?|cart/.+|[0-9]+/(orders|checkouts|invoices)|apps|tools|services)(/.*)?$ https://boutique.damedetours.com%{REQUEST_URI} [R=302,L,NE]
+  RewriteRule ^(account|customer_authentication)(/.*)?$ https://profil.damedetours.com/profile [R=302,L]
+  RewriteRule ^cart/?$ /? [R=301,L]
+
+  # Fiches produit (aussi sous /collections/…/products/…, et .json/.js/.atom)
+  RewriteRule ^(?:collections/[^/]+/)?products/jeux-echecs-dame-de-tours-ancolie-(blanc|noir|la-chute-des-anges)(?:\.[a-z]+)?/?$ /ancolie-$1? [R=301,L]
+  RewriteRule ^(?:collections/[^/]+/)?products(/.*)?$ /collection-ancolie? [R=301,L]
+
+  # Collections
+  RewriteRule ^collections/variantes?-dancolie-blanc/?$ /ancolie-blanc? [R=301,L]
+  RewriteRule ^collections/variantes?-dancolie-noir/?$ /ancolie-noir? [R=301,L]
+  RewriteRule ^collections/(variantes?-dancolie-ange|editions-ephemeres)/?$ /ancolie-la-chute-des-anges? [R=301,L]
+  RewriteRule ^collections(/.*)?$ /collection-ancolie? [R=301,L]
+
+  # Pages
+  RewriteRule ^pages/jeux-dechecs/?$ /collection-ancolie? [R=301,L]
+  RewriteRule ^pages/(personnalisation|professionnels)/?$ /personnalisation? [R=301,L]
+  RewriteRule ^pages/atelier/?$ /atelier? [R=301,L]
+  RewriteRule ^pages/(contact|support|faq)/?$ /contact? [R=301,L]
+  RewriteRule ^pages(/.*)?$ /? [R=301,L]
+
+  # Blog (vide) et pages légales
+  RewriteRule ^blogs(/.*)?$ /actualites? [R=301,L]
+  RewriteRule ^policies/privacy-policy/?$ /confidentialite? [R=301,L]
+  RewriteRule ^policies/contact-information/?$ /coordonnees? [R=301,L]
+  RewriteRule ^policies/legal-notice/?$ /mentions-legales? [R=301,L]
+  RewriteRule ^policies/refund-policy/?$ /remboursements? [R=301,L]
+  RewriteRule ^policies/shipping-policy/?$ /livraison? [R=301,L]
+  RewriteRule ^policies/terms-of-sale/?$ /conditions-generales-de-vente? [R=301,L]
+  RewriteRule ^policies/terms-of-service/?$ /conditions-utilisation? [R=301,L]
+  RewriteRule ^policies(/.*)?$ /mentions-legales? [R=301,L]
+
+  # Plans du site et recherche Shopify
+  RewriteRule ^sitemap_[^/]*\.xml$ /sitemap.xml? [R=301,L]
+  RewriteRule ^search/?$ /? [R=301,L]
+
   # Adresse de test (preprod.) : masquée à Google
   RewriteCond %{HTTP_HOST} ^preprod\. [NC]
   RewriteRule ^ - [E=DDT_PREPROD:1]
