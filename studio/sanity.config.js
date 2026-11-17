@@ -11,7 +11,6 @@ export default defineConfig({
   title: 'Dame de Tours',
   projectId: 'bh9d2sfy',
   dataset: 'production',
-  basePath: '/studio',
   plugins: [structureTool({ structure, title: 'Contenus' }), frFRLocale()],
   schema: { types: schemaTypes },
   document: {
