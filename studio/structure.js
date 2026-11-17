@@ -3,5 +3,8 @@ export const structure = (S) =>
   S.list()
     .title('Contenus')
     .items([
-      S.documentTypeListItem('article').title('Actualités').defaultOrdering([{ field: 'date', direction: 'desc' }]),
+      S.listItem()
+        .title('Actualités')
+        .schemaType('article')
+        .child(S.documentTypeList('article').title('Actualités').defaultOrdering([{ field: 'date', direction: 'desc' }])),
     ]);
