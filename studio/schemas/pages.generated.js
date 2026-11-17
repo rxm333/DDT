@@ -1680,6 +1680,14 @@ export const pageDocs = [
      "collapsible": true,
      "collapsed": true
     }
+   },
+   {
+    "name": "s4",
+    "title": "Un échiquier personnalisé, fabriqué à Tours",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
    }
   ],
   "fields": [
@@ -1689,7 +1697,7 @@ export const pageDocs = [
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
-    "description": "Texte d’origine : « Personnalisez votre jeu d’échecs »"
+    "description": "Texte d’origine : « Échiquier personnalisé : créez votre jeu d’échecs sur mesure »"
    },
    {
     "name": "t2",
@@ -1967,6 +1975,157 @@ export const pageDocs = [
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Inclus »"
+   },
+   {
+    "name": "t32",
+    "title": "Titre",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Un échiquier personnalisé, fabriqué à Tours »"
+   },
+   {
+    "name": "t33",
+    "title": "Paragraphe",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Chaque échiquier personnalisé Dame de Tours est composé en ligne par vous, puis fabriqué à la main dans notre atelier de Joué-lès-Tours. Vo… »"
+   },
+   {
+    "name": "t34",
+    "title": "Paragraphe 2",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Le plateau peut porter votre propre image, imprimée sur le cuir, ainsi qu’un prénom, une date, une dédicace, votre signature ou votre logo.… »"
+   },
+   {
+    "name": "t35",
+    "title": "Paragraphe 3",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Avant toute fabrication, l’atelier vous soumet un bon à tirer à valider. Les pièces sont ensuite peintes et vernies à la main, le plateau h… »"
+   },
+   {
+    "name": "t36",
+    "title": "Paragraphe 4",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "ligneRiche",
+    "description": "Texte d’origine : « Un jeu d’échecs personnalisé fait un cadeau unique : anniversaire, mariage, départ, club d’échecs ou cadeau d’entreprise à vos couleurs. Po… »"
+   },
+   {
+    "name": "t37",
+    "title": "Titre (invisible, lu par Google et les lecteurs d’écran)",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Questions fréquentes sur l’échiquier personnalisé »"
+   },
+   {
+    "name": "t38",
+    "title": "Sous-titre",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Combien coûte un échiquier personnalisé ? »"
+   },
+   {
+    "name": "t39",
+    "title": "Paragraphe 5",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Le jeu de base est à 249 € TTC, plateau et 32 pièces compris. Les options s’ajoutent au total : votre image sur le cuir (+20 €), des pièces… »"
+   },
+   {
+    "name": "t40",
+    "title": "Sous-titre 2",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Que peut-on personnaliser ? »"
+   },
+   {
+    "name": "t41",
+    "title": "Paragraphe 6",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Le damier, les teintes du plateau, les clous, les angles, les pieds et le style des pièces, en neuf étapes. Vous pouvez aussi imprimer votr… »"
+   },
+   {
+    "name": "t42",
+    "title": "Sous-titre 3",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Quel est le délai de fabrication ? »"
+   },
+   {
+    "name": "t43",
+    "title": "Paragraphe 7",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "ligneRiche",
+    "description": "Texte d’origine : « Environ une semaine de fabrication après la validation du bon à tirer et le paiement, puis le temps de livraison. Les délais restent indica… »"
+   },
+   {
+    "name": "t44",
+    "title": "Sous-titre 4",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Puis-je mettre ma photo ou le logo de mon entreprise ? »"
+   },
+   {
+    "name": "t45",
+    "title": "Paragraphe 8",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Oui. Votre image est imprimée sur le cuir du plateau (+20 €) et un logo ou une signature s’ajoute pour 6 €. Pour les entreprises, l’atelier… »"
+   },
+   {
+    "name": "t46",
+    "title": "Sous-titre 5",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Où l’échiquier est-il fabriqué ? »"
+   },
+   {
+    "name": "t47",
+    "title": "Paragraphe 9",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « En France, dans notre atelier de Joué-lès-Tours (Indre-et-Loire) : le plateau y est habillé et assemblé, les pièces peintes et vernies à la… »"
+   },
+   {
+    "name": "t48",
+    "title": "Sous-titre 6",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Puis-je modifier ou annuler ma commande ? »"
+   },
+   {
+    "name": "t49",
+    "title": "Paragraphe 10",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "ligneRiche",
+    "description": "Texte d’origine : « Oui, tant que le bon à tirer n’est pas validé. Ensuite, la commande est ferme : un produit personnalisé n’ouvre pas de droit de rétractatio… »"
    },
    {
     "name": "seoTitle",
@@ -3051,7 +3210,7 @@ export const pageDocs = [
    },
    {
     "name": "i69",
-    "title": "Photo (personnaliseur-carte.webp)",
+    "title": "Photo : Échiquier personnalisé en 3D : damier bleu nuit et",
     "fieldset": "s4",
     "group": "contenu",
     "type": "image",
@@ -3063,7 +3222,8 @@ export const pageDocs = [
      {
       "name": "alt",
       "type": "string",
-      "title": "Description de la photo"
+      "title": "Description de la photo",
+      "description": "Actuelle : « Échiquier personnalisé en 3D : damier bleu nuit et blanc, pièces bleues et argentées »"
      }
     ]
    },
@@ -3949,7 +4109,7 @@ export const pageDocs = [
    },
    {
     "name": "i69",
-    "title": "Photo (personnaliseur-carte.webp)",
+    "title": "Photo : Échiquier personnalisé en 3D : damier bleu nuit et",
     "fieldset": "s4",
     "group": "contenu",
     "type": "image",
@@ -3961,7 +4121,8 @@ export const pageDocs = [
      {
       "name": "alt",
       "type": "string",
-      "title": "Description de la photo"
+      "title": "Description de la photo",
+      "description": "Actuelle : « Échiquier personnalisé en 3D : damier bleu nuit et blanc, pièces bleues et argentées »"
      }
     ]
    },
@@ -4839,7 +5000,7 @@ export const pageDocs = [
    },
    {
     "name": "i68",
-    "title": "Photo (personnaliseur-carte.webp)",
+    "title": "Photo : Échiquier personnalisé en 3D : damier bleu nuit et",
     "fieldset": "s4",
     "group": "contenu",
     "type": "image",
@@ -4851,7 +5012,8 @@ export const pageDocs = [
      {
       "name": "alt",
       "type": "string",
-      "title": "Description de la photo"
+      "title": "Description de la photo",
+      "description": "Actuelle : « Échiquier personnalisé en 3D : damier bleu nuit et blanc, pièces bleues et argentées »"
      }
     ]
    },

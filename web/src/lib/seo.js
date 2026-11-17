@@ -56,10 +56,27 @@ export function jsonLd({ page, main, article, shopify }) {
       crumbs([['Accueil', '/'], ['Actualités', '/actualites'], [article.title, path]]),
       org(),
     );
+  } else if (path === '/personnalisation') {
+    // Échiquier sur mesure : prix de départ lu dans le texte « Le jeu de base est à 249 € TTC »
+    // (modifiable dans Sanity), fabriqué à la commande.
+    const from = main.match(/jeu de base est à\s*([\d\s ]+(?:,\d+)?)\s*€/i)?.[1].replace(/[\s ]/g, '').replace(',', '.');
+    const product = {
+      '@type': 'Product', name: 'Échiquier personnalisé Dame de Tours', description: page.description,
+      image: imgs(main).slice(0, 8), brand: { '@type': 'Brand', name: SITE.name }, manufacturer: { '@id': `${SITE.url}/#organisation` },
+    };
+    if (from) product.offers = { '@type': 'Offer', url: abs(path), priceCurrency: 'EUR', price: from, availability: 'https://schema.org/MadeToOrder', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${SITE.url}/#organisation` } };
+    out.push(product, crumbs([['Accueil', '/'], ['Échiquier personnalisé', path]]), org());
   } else if (path !== '/') {
     const h1 = main.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
     const name = h1 ? text(h1[1]) : page.title.split('|')[0].trim();
     out.push(crumbs([['Accueil', '/'], [name, path]]));
+  }
+  // Questions fréquentes : les volets qui suivent un titre id="…-faq-title" (texte visible sur la page)
+  const faqAt = main.search(/id="[a-z-]*faq-title"/);
+  if (faqAt > -1) {
+    const qa = [...main.slice(faqAt).matchAll(/<summary[^>]*>[\s\S]*?<h3[^>]*>([\s\S]*?)<\/h3>[\s\S]*?<\/summary>\s*<div class="prod-acc_content">([\s\S]*?)<\/div>/g)]
+      .map(([, q, a]) => ({ '@type': 'Question', name: text(q), acceptedAnswer: { '@type': 'Answer', text: text(a.replace(/<\/?(a|em|strong|b|i)\b[^>]*>/g, '')) } }));
+    if (qa.length) out.push({ '@type': 'FAQPage', mainEntity: qa });
   }
   if (!out.length) return '';
   return `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': out }).replace(/</g, '\\u003c')}</script>`;

@@ -553,9 +553,9 @@
      "name": "i69",
      "type": "image",
      "section": "s4",
-     "label": "Photo (personnaliseur-carte.webp)",
+     "label": "Photo : Échiquier personnalisé en 3D : damier bleu nuit et",
      "src": "/images/personnaliseur-carte.webp",
-     "alt": ""
+     "alt": "Échiquier personnalisé en 3D : damier bleu nuit et blanc, pièces bleues et argentées"
     },
     {
      "name": "t70",
@@ -1114,9 +1114,9 @@
      "name": "i68",
      "type": "image",
      "section": "s4",
-     "label": "Photo (personnaliseur-carte.webp)",
+     "label": "Photo : Échiquier personnalisé en 3D : damier bleu nuit et",
      "src": "/images/personnaliseur-carte.webp",
-     "alt": ""
+     "alt": "Échiquier personnalisé en 3D : damier bleu nuit et blanc, pièces bleues et argentées"
     },
     {
      "name": "t69",
@@ -1682,9 +1682,9 @@
      "name": "i69",
      "type": "image",
      "section": "s4",
-     "label": "Photo (personnaliseur-carte.webp)",
+     "label": "Photo : Échiquier personnalisé en 3D : damier bleu nuit et",
      "src": "/images/personnaliseur-carte.webp",
-     "alt": ""
+     "alt": "Échiquier personnalisé en 3D : damier bleu nuit et blanc, pièces bleues et argentées"
     },
     {
      "name": "t70",
@@ -4783,6 +4783,10 @@
     {
      "name": "s3",
      "title": "Options et tarifs"
+    },
+    {
+     "name": "s4",
+     "title": "Un échiquier personnalisé, fabriqué à Tours"
     }
    ],
    "fields": [
@@ -4791,7 +4795,7 @@
      "kind": "plain",
      "section": "s1",
      "label": "Grand titre (invisible, lu par Google et les lecteurs d’écran)",
-     "original": "Personnalisez votre jeu d’échecs"
+     "original": "Échiquier personnalisé : créez votre jeu d’échecs sur mesure"
     },
     {
      "name": "t2",
@@ -5005,6 +5009,132 @@
      "section": "s3",
      "label": "Valeur 10",
      "original": "Inclus"
+    },
+    {
+     "name": "t32",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Titre",
+     "original": "Un échiquier personnalisé, fabriqué à Tours"
+    },
+    {
+     "name": "t33",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe",
+     "original": "Chaque échiquier personnalisé Dame de Tours est composé en ligne par vous, puis fabriqué à la main dans notre atelier de Joué-lès-Tours. Vous choisissez le damier, les teintes, les clous, les angles et le style des pièces : Ancolie, classiques, minimalistes ou traditionnelles."
+    },
+    {
+     "name": "t34",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 2",
+     "original": "Le plateau peut porter votre propre image, imprimée sur le cuir, ainsi qu’un prénom, une date, une dédicace, votre signature ou votre logo. Un aperçu 3D suit chacun de vos choix et le prix se met à jour en direct."
+    },
+    {
+     "name": "t35",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 3",
+     "original": "Avant toute fabrication, l’atelier vous soumet un bon à tirer à valider. Les pièces sont ensuite peintes et vernies à la main, le plateau habillé et assemblé : comptez environ une semaine après validation et paiement."
+    },
+    {
+     "name": "t36",
+     "kind": "rich",
+     "section": "s4",
+     "label": "Paragraphe 4",
+     "original": "Un jeu d’échecs personnalisé fait un cadeau unique : anniversaire, mariage, départ, club d’échecs ou cadeau d’entreprise à vos couleurs. Pour un logo, une série ou une marque blanche, <a href=\"/contact\">écrivez à l’atelier</a>."
+    },
+    {
+     "name": "t37",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Titre (invisible, lu par Google et les lecteurs d’écran)",
+     "original": "Questions fréquentes sur l’échiquier personnalisé"
+    },
+    {
+     "name": "t38",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre",
+     "original": "Combien coûte un échiquier personnalisé ?"
+    },
+    {
+     "name": "t39",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 5",
+     "original": "Le jeu de base est à 249 € TTC, plateau et 32 pièces compris. Les options s’ajoutent au total : votre image sur le cuir (+20 €), des pièces sur mesure (dès +115 €), un jeu aimanté (+17 €), des pieds métalliques (+10 €), un texte (+6 € par zone)."
+    },
+    {
+     "name": "t40",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre 2",
+     "original": "Que peut-on personnaliser ?"
+    },
+    {
+     "name": "t41",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 6",
+     "original": "Le damier, les teintes du plateau, les clous, les angles, les pieds et le style des pièces, en neuf étapes. Vous pouvez aussi imprimer votre image sur le cuir, ajouter du texte sur quatre zones et y apposer un logo ou une signature."
+    },
+    {
+     "name": "t42",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre 3",
+     "original": "Quel est le délai de fabrication ?"
+    },
+    {
+     "name": "t43",
+     "kind": "rich",
+     "section": "s4",
+     "label": "Paragraphe 7",
+     "original": "Environ une semaine de fabrication après la validation du bon à tirer et le paiement, puis le temps de livraison. Les délais restent indicatifs : voir la page <a href=\"/livraison\">Livraison</a>."
+    },
+    {
+     "name": "t44",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre 4",
+     "original": "Puis-je mettre ma photo ou le logo de mon entreprise ?"
+    },
+    {
+     "name": "t45",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 8",
+     "original": "Oui. Votre image est imprimée sur le cuir du plateau (+20 €) et un logo ou une signature s’ajoute pour 6 €. Pour les entreprises, l’atelier réalise aussi des adaptations graphiques, des séries et des jeux en marque blanche."
+    },
+    {
+     "name": "t46",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre 5",
+     "original": "Où l’échiquier est-il fabriqué ?"
+    },
+    {
+     "name": "t47",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 9",
+     "original": "En France, dans notre atelier de Joué-lès-Tours (Indre-et-Loire) : le plateau y est habillé et assemblé, les pièces peintes et vernies à la main."
+    },
+    {
+     "name": "t48",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Sous-titre 6",
+     "original": "Puis-je modifier ou annuler ma commande ?"
+    },
+    {
+     "name": "t49",
+     "kind": "rich",
+     "section": "s4",
+     "label": "Paragraphe 10",
+     "original": "Oui, tant que le bon à tirer n’est pas validé. Ensuite, la commande est ferme : un produit personnalisé n’ouvre pas de droit de rétractation (voir <a href=\"/remboursements\">Remboursements</a>)."
     }
    ]
   },
