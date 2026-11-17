@@ -1,5 +1,5 @@
 # Site Dame de Tours (Astro) : construit le site et le publie sur la branche « deploy ».
-# Hostinger récupère cette branche telle quelle (pages HTML prêtes, .htaccess compris).
+# Hostinger récupère cette branche dans public_html : le site est rangé dans preprod/ (pages HTML prêtes, .htaccess compris).
 #
 # Se déclenche :
 #  - à chaque modification du site (web/) ou des scripts du site (site-scripts/) sur main ;
@@ -99,7 +99,16 @@ jobs:
           else
             git worktree add --orphan -b deploy /tmp/deploy
           fi
-          rsync -a --delete --exclude .git web/dist/ /tmp/deploy/
+          # Hostinger déploie la branche dans public_html : le site va dans le sous-dossier du sous-domaine.
+          # (Le jour de la mise en ligne sur damedetours.com : DEPLOY_DIR vide → site à la racine.)
+          DEPLOY_DIR=preprod
+          find /tmp/deploy -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          mkdir -p "/tmp/deploy/$DEPLOY_DIR"
+          rsync -a web/dist/ "/tmp/deploy/$DEPLOY_DIR/"
+          if [ -n "$DEPLOY_DIR" ]; then
+            # À la racine de public_html : seulement de quoi cacher le dossier .git du déploiement
+            printf '%s\n' '# Racine de public_html (déploiement Hostinger) : le site est dans preprod/.' 'RedirectMatch 404 /\.git' > /tmp/deploy/.htaccess
+          fi
           cd /tmp/deploy
           git add -A
           if git diff --cached --quiet; then
