@@ -1,0 +1,69 @@
+# Site Dame de Tours (version Astro) — servi tel quel par Hostinger depuis la branche « deploy ».
+# Adresses propres : /atelier sert atelier.html ; /atelier.html redirige (301) vers /atelier.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+DirectorySlash Off
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Toujours en HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Adresse de test (preprod.) : masquée à Google
+  RewriteCond %{HTTP_HOST} ^preprod\. [NC]
+  RewriteRule ^ - [E=DDT_PREPROD:1]
+  RewriteCond %{HTTP_HOST} ^preprod\. [NC]
+  RewriteRule ^robots\.txt$ /robots-preprod.txt [L]
+
+  # Ancien chemin /site/… (premier déploiement)
+  RewriteCond %{THE_REQUEST} \s/site/(\S*?)(?:\.html)?[\s?]
+  RewriteRule ^ /%1 [R=301,L]
+  # Anciennes adresses en .html (et /index) → adresse propre
+  RewriteCond %{THE_REQUEST} \s/+(.*?/)?index(?:\.html)?[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L,NE]
+  RewriteCond %{THE_REQUEST} \s/+([^?\s]+?)\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L,NE]
+
+  # Espace d'écriture Sanity (/studio) : application d'une seule page
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^studio(/.*)?$ /studio/index.html [L]
+
+  # Barre oblique finale → sans (aucun dossier n'est navigable)
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # /atelier → atelier.html (le fichier existe)
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow" env=DDT_PREPROD
+  Header set X-Robots-Tag "noindex, nofollow" env=REDIRECT_DDT_PREPROD
+  # Fichiers versionnés (?v=empreinte) et images : cache long. Pages HTML : toujours revérifiées.
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/avif "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/css "access plus 30 days"
+  ExpiresByType application/javascript "access plus 30 days"
+  ExpiresByType text/javascript "access plus 30 days"
+  ExpiresByType model/gltf-binary "access plus 30 days"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/javascript text/javascript image/svg+xml
+</IfModule>
