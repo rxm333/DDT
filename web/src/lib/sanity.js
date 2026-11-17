@@ -74,7 +74,7 @@ const query = async (q, params = {}) => {
 
 /** { 'index': { t1: …, i6: { url, alt }, seoTitle, seoDescription }, … } — fiches publiées seulement. */
 export async function fetchPageEdits() {
-  const docs = await query('*[_id in path("page-*")]');
+  const docs = await query('*[string::startsWith(_id, "page-")]');
   const refs = new Set();
   for (const d of docs) for (const v of Object.values(d)) if (v?._type === 'image' && v.asset?._ref) refs.add(v.asset._ref);
   const assets = refs.size ? Object.fromEntries((await query('*[_id in $ids]{_id, url}', { ids: [...refs] })).map((a) => [a._id, a.url])) : {};

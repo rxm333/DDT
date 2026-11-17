@@ -43,7 +43,7 @@ jobs:
       - name: Contenus Sanity modifiés ?
         id: check
         run: |
-          F='(_type=="article" || _id in path("page-*")) && !(_id in path("drafts.**"))'
+          F='(_type=="article" || string::startsWith(_id, "page-")) && !(_id in path("drafts.**"))'
           Q="{\"n\":count(*[$F]),\"t\":*[$F]|order(_updatedAt desc)[0]._updatedAt}"
           STAMP=$(curl -fsS -m 20 -G "https://bh9d2sfy.api.sanity.io/v2025-02-19/data/query/production" --data-urlencode "query=$Q" | jq -c .result) || STAMP=injoignable
           echo "stamp=$STAMP" >> "$GITHUB_OUTPUT"
