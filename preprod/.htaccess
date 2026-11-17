@@ -29,6 +29,8 @@ ErrorDocument 404 /404.html
 
   # Fiches produit (aussi sous /collections/…/products/…, et .json/.js/.atom)
   RewriteRule ^(?:collections/[^/]+/)?products/jeux-echecs-dame-de-tours-ancolie-(blanc|noir|la-chute-des-anges)(?:\.[a-z]+)?/?$ /ancolie-$1? [R=301,L]
+  # Créations du personnaliseur (lien du produit dans le paiement Shopify) : leur récapitulatif
+  RewriteRule ^(?:collections/[^/]+/)?products/ddt-creation-([a-f0-9-]{36})/?$ https://personnalisation-jeu-echecs.damedetours.com/creation-recap.html?id=$1 [R=302,L]
   RewriteRule ^(?:collections/[^/]+/)?products(/.*)?$ /collection-ancolie? [R=301,L]
 
   # Collections
