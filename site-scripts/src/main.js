@@ -29,6 +29,7 @@ import { initArticle } from './modules/article.js';
 import { initNewsLists } from './modules/news.js';
 import { initCart } from './modules/cart.js';
 import { initCustomizerEmbed } from './modules/customizer-embed.js';
+import { initVideos } from './modules/video.js';
 
 const VERSION = '1.22.0';
 
@@ -72,6 +73,8 @@ function initPage({ defer = false } = {}) {
   safe('news', initNewsLists);
   safe('swiper', initSwipers);
   safe('forms', initForms);
+  const videos = safe('videos', initVideos);
+  if (videos) c.push(() => videos.destroy());
   api.customizer = safe('customizer', initCustomizer);
   // Prix et disponibilité des boutons « Ajouter au panier » de la page (le panneau, lui, est persistant)
   if (cart) safe('cart-page', () => cart.syncPage());

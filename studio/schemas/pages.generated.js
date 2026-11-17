@@ -37,7 +37,7 @@ export const pageDocs = [
    },
    {
     "name": "s3",
-    "title": "L’atelier au cœur de la Touraine",
+    "title": "Votre propre jeu d’échecs",
     "options": {
      "collapsible": true,
      "collapsed": true
@@ -45,7 +45,7 @@ export const pageDocs = [
    },
    {
     "name": "s4",
-    "title": "Nos actualités",
+    "title": "L’atelier au cœur de la Touraine",
     "options": {
      "collapsible": true,
      "collapsed": true
@@ -53,6 +53,14 @@ export const pageDocs = [
    },
    {
     "name": "s5",
+    "title": "Nos actualités",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
+   },
+   {
+    "name": "s6",
     "title": "Les nouvelles de l’atelier, en avant-première",
     "options": {
      "collapsible": true,
@@ -202,9 +210,43 @@ export const pageDocs = [
     "description": "Texte d’origine : « Noir »"
    },
    {
-    "name": "t14",
+    "name": "t34",
+    "title": "Paragraphe",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Personnalisation »"
+   },
+   {
+    "name": "t35",
     "title": "Titre",
     "fieldset": "s3",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Votre propre jeu d’échecs »"
+   },
+   {
+    "name": "t36",
+    "title": "Paragraphe 2",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Votre image sur le plateau, le style des angles, les pièces et leurs couleurs : l’aperçu 3D suit chacun de vos choix, puis l’atelier le fab… »"
+   },
+   {
+    "name": "t37",
+    "title": "Lien",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Créer mon échiquier »"
+   },
+   {
+    "name": "t14",
+    "title": "Titre",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "ligneRiche",
     "description": "Texte d’origine : « L’atelier au cœur de la Touraine »"
@@ -212,7 +254,7 @@ export const pageDocs = [
    {
     "name": "t15",
     "title": "Paragraphe",
-    "fieldset": "s3",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "text",
     "rows": 3,
@@ -221,7 +263,7 @@ export const pageDocs = [
    {
     "name": "t16",
     "title": "Lien",
-    "fieldset": "s3",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Découvrir l’atelier »"
@@ -229,7 +271,7 @@ export const pageDocs = [
    {
     "name": "i17",
     "title": "Photo : Pièces d’échecs blanches sculptées sur un plateau,",
-    "fieldset": "s3",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "image",
     "options": {
@@ -248,7 +290,7 @@ export const pageDocs = [
    {
     "name": "i18",
     "title": "Photo : Pose d’un damier bleu et blanc sur un plateau roug",
-    "fieldset": "s3",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "image",
     "options": {
@@ -267,7 +309,7 @@ export const pageDocs = [
    {
     "name": "i19",
     "title": "Photo : L’artisan trace le plateau d’un échiquier à l’atel",
-    "fieldset": "s3",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "image",
     "options": {
@@ -286,7 +328,7 @@ export const pageDocs = [
    {
     "name": "i20",
     "title": "Photo : Échiquier vert et blanc orné de mousse végétale.",
-    "fieldset": "s3",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "image",
     "options": {
@@ -305,7 +347,7 @@ export const pageDocs = [
    {
     "name": "i21",
     "title": "Photo : Les lauréats de l’exposition artistique 2026 au ch",
-    "fieldset": "s3",
+    "fieldset": "s4",
     "group": "contenu",
     "type": "image",
     "options": {
@@ -324,7 +366,7 @@ export const pageDocs = [
    {
     "name": "t22",
     "title": "Titre",
-    "fieldset": "s4",
+    "fieldset": "s5",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Nos actualités »"
@@ -332,7 +374,7 @@ export const pageDocs = [
    {
     "name": "t23",
     "title": "Paragraphe",
-    "fieldset": "s4",
+    "fieldset": "s5",
     "group": "contenu",
     "type": "text",
     "rows": 3,
@@ -341,7 +383,7 @@ export const pageDocs = [
    {
     "name": "t24",
     "title": "Lien",
-    "fieldset": "s4",
+    "fieldset": "s5",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Toutes les actualités »"
@@ -349,7 +391,7 @@ export const pageDocs = [
    {
     "name": "t25",
     "title": "Paragraphe",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "text",
     "rows": 3,
@@ -358,7 +400,7 @@ export const pageDocs = [
    {
     "name": "t26",
     "title": "Titre",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Les nouvelles de l’atelier, en avant-première »"
@@ -366,7 +408,7 @@ export const pageDocs = [
    {
     "name": "t27",
     "title": "Paragraphe 2",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "text",
     "rows": 3,
@@ -375,7 +417,7 @@ export const pageDocs = [
    {
     "name": "t28",
     "title": "Libellé",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Adresse e-mail »"
@@ -383,7 +425,7 @@ export const pageDocs = [
    {
     "name": "t29",
     "title": "Texte",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « J’accepte de recevoir la newsletter de Dame de Tours. »"
@@ -391,7 +433,7 @@ export const pageDocs = [
    {
     "name": "t30",
     "title": "Bouton",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « S’inscrire »"
@@ -399,7 +441,7 @@ export const pageDocs = [
    {
     "name": "t31",
     "title": "Paragraphe 3",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "ligneRiche",
     "description": "Texte d’origine : « Un e-mail de temps en temps, jamais de spam. Désinscription en un clic depuis chaque message. Politique de confidentialité »"
@@ -407,7 +449,7 @@ export const pageDocs = [
    {
     "name": "t32",
     "title": "Texte 2",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Merci ! Votre inscription est bien enregistrée. »"
@@ -415,7 +457,7 @@ export const pageDocs = [
    {
     "name": "t33",
     "title": "Texte 3",
-    "fieldset": "s5",
+    "fieldset": "s6",
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « L’inscription n’a pas abouti. Vérifiez votre adresse e-mail puis réessayez. »"
@@ -8334,6 +8376,506 @@ export const pageDocs = [
     "fieldset": "entete",
     "group": "contenu",
     "type": "texteLegal"
+   },
+   {
+    "name": "seoTitle",
+    "title": "Titre pour Google",
+    "type": "string",
+    "group": "google",
+    "description": "Vide = titre actuel de la page. Idéalement 50 à 60 caractères."
+   },
+   {
+    "name": "seoDescription",
+    "title": "Description pour Google",
+    "type": "text",
+    "rows": 3,
+    "group": "google",
+    "description": "Vide = description actuelle. Idéalement 120 à 155 caractères."
+   }
+  ],
+  "preview": {}
+ },
+ {
+  "name": "page_ouverture",
+  "title": "Bienvenue (QR code)",
+  "type": "document",
+  "__group": "pages",
+  "__key": "ouverture",
+  "groups": [
+   {
+    "name": "contenu",
+    "title": "Contenu",
+    "default": true
+   },
+   {
+    "name": "google",
+    "title": "Google"
+   }
+  ],
+  "fieldsets": [
+   {
+    "name": "s1",
+    "title": "Votre jeu d’échecs, vraiment personnalisé",
+    "options": {
+     "collapsible": true,
+     "collapsed": false
+    }
+   },
+   {
+    "name": "s2",
+    "title": "Votre propre jeu d’échecs",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
+   },
+   {
+    "name": "s3",
+    "title": "Oui, vraiment personnalisé !",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
+   },
+   {
+    "name": "s4",
+    "title": "Atelier intro",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
+   },
+   {
+    "name": "s5",
+    "title": "Événements et actualités",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
+   },
+   {
+    "name": "s6",
+    "title": "Ne manquez pas le prochain événement",
+    "options": {
+     "collapsible": true,
+     "collapsed": true
+    }
+   }
+  ],
+  "fields": [
+   {
+    "name": "i1",
+    "title": "Photo : Échiquier personnalisé aux pièces vertes et blanch",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-echiquier-mothe-chandeniers.jpg).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Échiquier personnalisé aux pièces vertes et blanches, plateau orné de mousse, posé en extérieur. »"
+     }
+    ]
+   },
+   {
+    "name": "t2",
+    "title": "Paragraphe",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Bienvenue à l’atelier Dame de Tours »"
+   },
+   {
+    "name": "t3",
+    "title": "Grand titre",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Votre jeu d’échecs, vraiment personnalisé »"
+   },
+   {
+    "name": "t4",
+    "title": "Paragraphe 2",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Votre image sur le plateau, vos couleurs, vos pièces : vous le composez en ligne, l’atelier le fabrique à la main, à Tours. »"
+   },
+   {
+    "name": "t5",
+    "title": "Lien",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Créer mon échiquier »"
+   },
+   {
+    "name": "t6",
+    "title": "Lien 2",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Découvrir l’atelier »"
+   },
+   {
+    "name": "t41",
+    "title": "Paragraphe",
+    "fieldset": "s2",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Personnalisation »"
+   },
+   {
+    "name": "t42",
+    "title": "Titre",
+    "fieldset": "s2",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Votre propre jeu d’échecs »"
+   },
+   {
+    "name": "t43",
+    "title": "Paragraphe 2",
+    "fieldset": "s2",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Votre image sur le plateau, le style des angles, les pièces et leurs couleurs : l’aperçu 3D suit chacun de vos choix, puis l’atelier le fab… »"
+   },
+   {
+    "name": "t7",
+    "title": "Paragraphe",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « En trois choix »"
+   },
+   {
+    "name": "t8",
+    "title": "Titre",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Oui, vraiment personnalisé ! »"
+   },
+   {
+    "name": "t9",
+    "title": "Paragraphe 2",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Un aperçu 3D suit chacun de vos choix en temps réel. Vous voyez votre jeu avant même qu’il existe. »"
+   },
+   {
+    "name": "i10",
+    "title": "Photo : Échiquier personnalisé au plateau rouge et au dami",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-echiquier-personnalise-jardin.jpg).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Échiquier personnalisé au plateau rouge et au damier bleu et blanc, posé sur une table de jardin. »"
+     }
+    ]
+   },
+   {
+    "name": "t11",
+    "title": "Sous-titre",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Le plateau »"
+   },
+   {
+    "name": "t12",
+    "title": "Paragraphe 3",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Importez votre image ou choisissez un motif, puis réglez les couleurs du damier. »"
+   },
+   {
+    "name": "i13",
+    "title": "Photo : Angle de plateau en cuir noir orné d’une rosace do",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-blanc-coin.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Angle de plateau en cuir noir orné d’une rosace dorée. »"
+     }
+    ]
+   },
+   {
+    "name": "t14",
+    "title": "Sous-titre 2",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Les angles »"
+   },
+   {
+    "name": "t15",
+    "title": "Paragraphe 4",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Le style et la couleur des angles, qui tiennent le cuir sur les quatre bords. »"
+   },
+   {
+    "name": "i16",
+    "title": "Photo : Pièces d’échecs blanches sculptées sur un plateau,",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-pieces-blanches.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Pièces d’échecs blanches sculptées sur un plateau, en extérieur. »"
+     }
+    ]
+   },
+   {
+    "name": "t17",
+    "title": "Sous-titre 3",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Les pièces »"
+   },
+   {
+    "name": "t18",
+    "title": "Paragraphe 5",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Les modèles et les couleurs des pièces dessinées par l’atelier, peintes à la main. »"
+   },
+   {
+    "name": "t19",
+    "title": "Lien",
+    "fieldset": "s3",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Commencer à créer »"
+   },
+   {
+    "name": "i20",
+    "title": "Photo : Un artisan de l’atelier trace à la main le dessin ",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (perso-etape-atelier.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Un artisan de l’atelier trace à la main le dessin d’un plateau. »"
+     }
+    ]
+   },
+   {
+    "name": "t21",
+    "title": "Légende",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Chaque plateau commence par un dessin, à la main. »"
+   },
+   {
+    "name": "t22",
+    "title": "Paragraphe",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « L’atelier »"
+   },
+   {
+    "name": "t23",
+    "title": "Paragraphe 2",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Un atelier indépendant, au cœur de la Touraine, qui crée des jeux d’échecs contemporains. »"
+   },
+   {
+    "name": "t24",
+    "title": "Paragraphe 3",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Architectures néo-médiévales, formes célestes, grands récits visuels : chaque collection mêle design, artisanat et patrimoine. »"
+   },
+   {
+    "name": "t25",
+    "title": "Élément de liste",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Conçu, fabriqué et assemblé à Tours »"
+   },
+   {
+    "name": "t26",
+    "title": "Élément de liste 2",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Pièces peintes et vernies à la main »"
+   },
+   {
+    "name": "t27",
+    "title": "Élément de liste 3",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Exemplaires numérotés et certifiés »"
+   },
+   {
+    "name": "t28",
+    "title": "Lien",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Voir la collection Ancolie »"
+   },
+   {
+    "name": "t29",
+    "title": "Titre",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Événements et actualités »"
+   },
+   {
+    "name": "t30",
+    "title": "Paragraphe",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Expositions, salons, lancements : où retrouver l’atelier et ses jeux. »"
+   },
+   {
+    "name": "t31",
+    "title": "Lien",
+    "fieldset": "s5",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Toutes les actualités »"
+   },
+   {
+    "name": "t32",
+    "title": "Paragraphe",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Prochains rendez-vous »"
+   },
+   {
+    "name": "t33",
+    "title": "Titre",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Ne manquez pas le prochain événement »"
+   },
+   {
+    "name": "t34",
+    "title": "Paragraphe 2",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "text",
+    "rows": 3,
+    "description": "Texte d’origine : « Ouvertures d’atelier, expositions, nouvelles collections : recevez la date avant tout le monde. »"
+   },
+   {
+    "name": "t35",
+    "title": "Libellé",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Adresse e-mail »"
+   },
+   {
+    "name": "t36",
+    "title": "Texte",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « J’accepte de recevoir la newsletter de Dame de Tours. »"
+   },
+   {
+    "name": "t37",
+    "title": "Bouton",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Me prévenir »"
+   },
+   {
+    "name": "t38",
+    "title": "Paragraphe 3",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "ligneRiche",
+    "description": "Texte d’origine : « Un e-mail de temps en temps, jamais de spam. Désinscription en un clic depuis chaque message. Politique de confidentialité »"
+   },
+   {
+    "name": "t39",
+    "title": "Texte 2",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Merci ! Vous serez prévenu du prochain événement. »"
+   },
+   {
+    "name": "t40",
+    "title": "Texte 3",
+    "fieldset": "s6",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « L’inscription n’a pas abouti. Vérifiez votre adresse e-mail puis réessayez. »"
    },
    {
     "name": "seoTitle",

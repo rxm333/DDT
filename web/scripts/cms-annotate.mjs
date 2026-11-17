@@ -17,6 +17,7 @@ export const PAGES = {
   atelier: ['L’atelier', 'pages'],
   personnalisation: ['Personnalisation', 'pages'],
   contact: ['Contact', 'pages'],
+  ouverture: ['Bienvenue (QR code)', 'pages'],
   actualites: ['Actualités (page liste)', 'pages'],
   'ancolie-blanc': ['Ancolie Blanc', 'produits'],
   'ancolie-noir': ['Ancolie Noir', 'produits'],

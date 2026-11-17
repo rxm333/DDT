@@ -4034,14 +4034,18 @@
     },
     {
      "name": "s3",
-     "title": "L’atelier au cœur de la Touraine"
+     "title": "Votre propre jeu d’échecs"
     },
     {
      "name": "s4",
-     "title": "Nos actualités"
+     "title": "L’atelier au cœur de la Touraine"
     },
     {
      "name": "s5",
+     "title": "Nos actualités"
+    },
+    {
+     "name": "s6",
      "title": "Les nouvelles de l’atelier, en avant-première"
     }
    ],
@@ -4141,30 +4145,58 @@
      "original": "Noir"
     },
     {
+     "name": "t34",
+     "kind": "long",
+     "section": "s3",
+     "label": "Paragraphe",
+     "original": "Personnalisation"
+    },
+    {
+     "name": "t35",
+     "kind": "plain",
+     "section": "s3",
+     "label": "Titre",
+     "original": "Votre propre jeu d’échecs"
+    },
+    {
+     "name": "t36",
+     "kind": "long",
+     "section": "s3",
+     "label": "Paragraphe 2",
+     "original": "Votre image sur le plateau, le style des angles, les pièces et leurs couleurs : l’aperçu 3D suit chacun de vos choix, puis l’atelier le fabrique à la main, à Tours."
+    },
+    {
+     "name": "t37",
+     "kind": "plain",
+     "section": "s3",
+     "label": "Lien",
+     "original": "Créer mon échiquier"
+    },
+    {
      "name": "t14",
      "kind": "rich",
-     "section": "s3",
+     "section": "s4",
      "label": "Titre",
      "original": "L’atelier au cœur<br>de la Touraine"
     },
     {
      "name": "t15",
      "kind": "long",
-     "section": "s3",
+     "section": "s4",
      "label": "Paragraphe",
      "original": "Installé au cœur de la Touraine, Dame de Tours est un atelier indépendant consacré à la création de jeux d’échecs contemporains."
     },
     {
      "name": "t16",
      "kind": "plain",
-     "section": "s3",
+     "section": "s4",
      "label": "Lien",
      "original": "Découvrir l’atelier"
     },
     {
      "name": "i17",
      "type": "image",
-     "section": "s3",
+     "section": "s4",
      "label": "Photo : Pièces d’échecs blanches sculptées sur un plateau,",
      "src": "/images/atelier-pieces-blanches.webp",
      "alt": "Pièces d’échecs blanches sculptées sur un plateau, en extérieur."
@@ -4172,7 +4204,7 @@
     {
      "name": "i18",
      "type": "image",
-     "section": "s3",
+     "section": "s4",
      "label": "Photo : Pose d’un damier bleu et blanc sur un plateau roug",
      "src": "/images/perso-etape-sauvegarder.webp",
      "alt": "Pose d’un damier bleu et blanc sur un plateau rouge, à l’atelier."
@@ -4180,7 +4212,7 @@
     {
      "name": "i19",
      "type": "image",
-     "section": "s3",
+     "section": "s4",
      "label": "Photo : L’artisan trace le plateau d’un échiquier à l’atel",
      "src": "/images/perso-etape-atelier.webp",
      "alt": "L’artisan trace le plateau d’un échiquier à l’atelier."
@@ -4188,7 +4220,7 @@
     {
      "name": "i20",
      "type": "image",
-     "section": "s3",
+     "section": "s4",
      "label": "Photo : Échiquier vert et blanc orné de mousse végétale.",
      "src": "/images/perso-etape-composer.webp",
      "alt": "Échiquier vert et blanc orné de mousse végétale."
@@ -4196,7 +4228,7 @@
     {
      "name": "i21",
      "type": "image",
-     "section": "s3",
+     "section": "s4",
      "label": "Photo : Les lauréats de l’exposition artistique 2026 au ch",
      "src": "/images/atelier-laureats-mothe-chandeniers.webp",
      "alt": "Les lauréats de l’exposition artistique 2026 au château de la Mothe-Chandeniers, avec leur échiquier."
@@ -4204,70 +4236,70 @@
     {
      "name": "t22",
      "kind": "plain",
-     "section": "s4",
+     "section": "s5",
      "label": "Titre",
      "original": "Nos actualités"
     },
     {
      "name": "t23",
      "kind": "long",
-     "section": "s4",
+     "section": "s5",
      "label": "Paragraphe",
      "original": "Concours, lancements, expositions : les dernières nouvelles de Dame de Tours."
     },
     {
      "name": "t24",
      "kind": "plain",
-     "section": "s4",
+     "section": "s5",
      "label": "Lien",
      "original": "Toutes les actualités"
     },
     {
      "name": "t25",
      "kind": "long",
-     "section": "s5",
+     "section": "s6",
      "label": "Paragraphe",
      "original": "Newsletter"
     },
     {
      "name": "t26",
      "kind": "plain",
-     "section": "s5",
+     "section": "s6",
      "label": "Titre",
      "original": "Les nouvelles de l’atelier, en avant-première"
     },
     {
      "name": "t27",
      "kind": "long",
-     "section": "s5",
+     "section": "s6",
      "label": "Paragraphe 2",
      "original": "Nouvelles collections, événements et ouvertures d’atelier : soyez parmi les premiers informés."
     },
     {
      "name": "t28",
      "kind": "plain",
-     "section": "s5",
+     "section": "s6",
      "label": "Libellé",
      "original": "Adresse e-mail"
     },
     {
      "name": "t29",
      "kind": "plain",
-     "section": "s5",
+     "section": "s6",
      "label": "Texte",
      "original": "J’accepte de recevoir la newsletter de Dame de Tours."
     },
     {
      "name": "t30",
      "kind": "plain",
-     "section": "s5",
+     "section": "s6",
      "label": "Bouton",
      "original": "S’inscrire"
     },
     {
      "name": "t31",
      "kind": "rich",
-     "section": "s5",
+     "section": "s6",
      "label": "Paragraphe 3",
      "original": "Un e-mail de temps en temps, jamais de spam. Désinscription en un clic depuis chaque message. <a href=\"/confidentialite\" class=\"legal_link\">Politique de confidentialité</a>",
      "linkClass": "legal_link"
@@ -4275,14 +4307,14 @@
     {
      "name": "t32",
      "kind": "plain",
-     "section": "s5",
+     "section": "s6",
      "label": "Texte 2",
      "original": "Merci ! Votre inscription est bien enregistrée."
     },
     {
      "name": "t33",
      "kind": "plain",
-     "section": "s5",
+     "section": "s6",
      "label": "Texte 3",
      "original": "L’inscription n’a pas abouti. Vérifiez votre adresse e-mail puis réessayez."
     }
@@ -4832,6 +4864,346 @@
      "section": "a10",
      "label": "Texte de l’article",
      "original": "<p class=\"legal_text\">Pour toute question relative au site ou aux présentes mentions légales, vous pouvez contacter :</p>\n                      <p class=\"legal_text\">\n                        <a href=\"mailto:contact@damedetours.com\" class=\"legal_link\">contact@damedetours.com</a>\n                      </p>"
+    }
+   ]
+  },
+  {
+   "key": "ouverture",
+   "label": "Bienvenue (QR code)",
+   "group": "pages",
+   "sections": [
+    {
+     "name": "s1",
+     "title": "Votre jeu d’échecs, vraiment personnalisé"
+    },
+    {
+     "name": "s2",
+     "title": "Votre propre jeu d’échecs"
+    },
+    {
+     "name": "s3",
+     "title": "Oui, vraiment personnalisé !"
+    },
+    {
+     "name": "s4",
+     "title": "Atelier intro"
+    },
+    {
+     "name": "s5",
+     "title": "Événements et actualités"
+    },
+    {
+     "name": "s6",
+     "title": "Ne manquez pas le prochain événement"
+    }
+   ],
+   "fields": [
+    {
+     "name": "i1",
+     "type": "image",
+     "section": "s1",
+     "label": "Photo : Échiquier personnalisé aux pièces vertes et blanch",
+     "src": "/images/atelier-echiquier-mothe-chandeniers.jpg",
+     "alt": "Échiquier personnalisé aux pièces vertes et blanches, plateau orné de mousse, posé en extérieur."
+    },
+    {
+     "name": "t2",
+     "kind": "long",
+     "section": "s1",
+     "label": "Paragraphe",
+     "original": "Bienvenue à l’atelier Dame de Tours"
+    },
+    {
+     "name": "t3",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Grand titre",
+     "original": "Votre jeu d’échecs, vraiment personnalisé"
+    },
+    {
+     "name": "t4",
+     "kind": "long",
+     "section": "s1",
+     "label": "Paragraphe 2",
+     "original": "Votre image sur le plateau, vos couleurs, vos pièces : vous le composez en ligne, l’atelier le fabrique à la main, à Tours."
+    },
+    {
+     "name": "t5",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Lien",
+     "original": "Créer mon échiquier"
+    },
+    {
+     "name": "t6",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Lien 2",
+     "original": "Découvrir l’atelier"
+    },
+    {
+     "name": "t41",
+     "kind": "long",
+     "section": "s2",
+     "label": "Paragraphe",
+     "original": "Personnalisation"
+    },
+    {
+     "name": "t42",
+     "kind": "plain",
+     "section": "s2",
+     "label": "Titre",
+     "original": "Votre propre jeu d’échecs"
+    },
+    {
+     "name": "t43",
+     "kind": "long",
+     "section": "s2",
+     "label": "Paragraphe 2",
+     "original": "Votre image sur le plateau, le style des angles, les pièces et leurs couleurs : l’aperçu 3D suit chacun de vos choix, puis l’atelier le fabrique à la main, à Tours."
+    },
+    {
+     "name": "t7",
+     "kind": "long",
+     "section": "s3",
+     "label": "Paragraphe",
+     "original": "En trois choix"
+    },
+    {
+     "name": "t8",
+     "kind": "plain",
+     "section": "s3",
+     "label": "Titre",
+     "original": "Oui, vraiment personnalisé&nbsp;!"
+    },
+    {
+     "name": "t9",
+     "kind": "long",
+     "section": "s3",
+     "label": "Paragraphe 2",
+     "original": "Un aperçu 3D suit chacun de vos choix en temps réel. Vous voyez votre jeu avant même qu’il existe."
+    },
+    {
+     "name": "i10",
+     "type": "image",
+     "section": "s3",
+     "label": "Photo : Échiquier personnalisé au plateau rouge et au dami",
+     "src": "/images/atelier-echiquier-personnalise-jardin.jpg",
+     "alt": "Échiquier personnalisé au plateau rouge et au damier bleu et blanc, posé sur une table de jardin."
+    },
+    {
+     "name": "t11",
+     "kind": "plain",
+     "section": "s3",
+     "label": "Sous-titre",
+     "original": "Le plateau"
+    },
+    {
+     "name": "t12",
+     "kind": "long",
+     "section": "s3",
+     "label": "Paragraphe 3",
+     "original": "Importez votre image ou choisissez un motif, puis réglez les couleurs du damier."
+    },
+    {
+     "name": "i13",
+     "type": "image",
+     "section": "s3",
+     "label": "Photo : Angle de plateau en cuir noir orné d’une rosace do",
+     "src": "/images/ancolie-blanc-coin.webp",
+     "alt": "Angle de plateau en cuir noir orné d’une rosace dorée."
+    },
+    {
+     "name": "t14",
+     "kind": "plain",
+     "section": "s3",
+     "label": "Sous-titre 2",
+     "original": "Les angles"
+    },
+    {
+     "name": "t15",
+     "kind": "long",
+     "section": "s3",
+     "label": "Paragraphe 4",
+     "original": "Le style et la couleur des angles, qui tiennent le cuir sur les quatre bords."
+    },
+    {
+     "name": "i16",
+     "type": "image",
+     "section": "s3",
+     "label": "Photo : Pièces d’échecs blanches sculptées sur un plateau,",
+     "src": "/images/atelier-pieces-blanches.webp",
+     "alt": "Pièces d’échecs blanches sculptées sur un plateau, en extérieur."
+    },
+    {
+     "name": "t17",
+     "kind": "plain",
+     "section": "s3",
+     "label": "Sous-titre 3",
+     "original": "Les pièces"
+    },
+    {
+     "name": "t18",
+     "kind": "long",
+     "section": "s3",
+     "label": "Paragraphe 5",
+     "original": "Les modèles et les couleurs des pièces dessinées par l’atelier, peintes à la main."
+    },
+    {
+     "name": "t19",
+     "kind": "plain",
+     "section": "s3",
+     "label": "Lien",
+     "original": "Commencer à créer"
+    },
+    {
+     "name": "i20",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Un artisan de l’atelier trace à la main le dessin ",
+     "src": "/images/perso-etape-atelier.webp",
+     "alt": "Un artisan de l’atelier trace à la main le dessin d’un plateau."
+    },
+    {
+     "name": "t21",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Légende",
+     "original": "Chaque plateau commence par un dessin, à la main."
+    },
+    {
+     "name": "t22",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe",
+     "original": "L’atelier"
+    },
+    {
+     "name": "t23",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 2",
+     "original": "Un atelier indépendant, au cœur de la Touraine, qui crée des jeux d’échecs contemporains."
+    },
+    {
+     "name": "t24",
+     "kind": "long",
+     "section": "s4",
+     "label": "Paragraphe 3",
+     "original": "Architectures néo-médiévales, formes célestes, grands récits visuels : chaque collection mêle design, artisanat et patrimoine."
+    },
+    {
+     "name": "t25",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Élément de liste",
+     "original": "Conçu, fabriqué et assemblé à Tours"
+    },
+    {
+     "name": "t26",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Élément de liste 2",
+     "original": "Pièces peintes et vernies à la main"
+    },
+    {
+     "name": "t27",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Élément de liste 3",
+     "original": "Exemplaires numérotés et certifiés"
+    },
+    {
+     "name": "t28",
+     "kind": "plain",
+     "section": "s4",
+     "label": "Lien",
+     "original": "Voir la collection Ancolie"
+    },
+    {
+     "name": "t29",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Titre",
+     "original": "Événements et actualités"
+    },
+    {
+     "name": "t30",
+     "kind": "long",
+     "section": "s5",
+     "label": "Paragraphe",
+     "original": "Expositions, salons, lancements : où retrouver l’atelier et ses jeux."
+    },
+    {
+     "name": "t31",
+     "kind": "plain",
+     "section": "s5",
+     "label": "Lien",
+     "original": "Toutes les actualités"
+    },
+    {
+     "name": "t32",
+     "kind": "long",
+     "section": "s6",
+     "label": "Paragraphe",
+     "original": "Prochains rendez-vous"
+    },
+    {
+     "name": "t33",
+     "kind": "plain",
+     "section": "s6",
+     "label": "Titre",
+     "original": "Ne manquez pas le prochain événement"
+    },
+    {
+     "name": "t34",
+     "kind": "long",
+     "section": "s6",
+     "label": "Paragraphe 2",
+     "original": "Ouvertures d’atelier, expositions, nouvelles collections : recevez la date avant tout le monde."
+    },
+    {
+     "name": "t35",
+     "kind": "plain",
+     "section": "s6",
+     "label": "Libellé",
+     "original": "Adresse e-mail"
+    },
+    {
+     "name": "t36",
+     "kind": "plain",
+     "section": "s6",
+     "label": "Texte",
+     "original": "J’accepte de recevoir la newsletter de Dame de Tours."
+    },
+    {
+     "name": "t37",
+     "kind": "plain",
+     "section": "s6",
+     "label": "Bouton",
+     "original": "Me prévenir"
+    },
+    {
+     "name": "t38",
+     "kind": "rich",
+     "section": "s6",
+     "label": "Paragraphe 3",
+     "original": "Un e-mail de temps en temps, jamais de spam. Désinscription en un clic depuis chaque message. <a href=\"/confidentialite\" class=\"legal_link\">Politique de confidentialité</a>",
+     "linkClass": "legal_link"
+    },
+    {
+     "name": "t39",
+     "kind": "plain",
+     "section": "s6",
+     "label": "Texte 2",
+     "original": "Merci ! Vous serez prévenu du prochain événement."
+    },
+    {
+     "name": "t40",
+     "kind": "plain",
+     "section": "s6",
+     "label": "Texte 3",
+     "original": "L’inscription n’a pas abouti. Vérifiez votre adresse e-mail puis réessayez."
     }
    ]
   },

@@ -238,6 +238,21 @@
     ]
   },
   {
+    "key": "ouverture",
+    "path": "/ouverture",
+    "title": "Jeu d’échecs personnalisé, fait main à Tours | Dame de Tours",
+    "description": "Bienvenue à l’atelier Dame de Tours : composez en ligne votre jeu d’échecs personnalisé (plateau, angles, pièces), fabriqué à la main en Touraine. Prochains événements.",
+    "ogTitle": "Jeu d’échecs personnalisé, fait main à Tours | Dame de Tours",
+    "ogDescription": "Bienvenue à l’atelier Dame de Tours : composez en ligne votre jeu d’échecs personnalisé (plateau, angles, pièces), fabriqué à la main en Touraine. Prochains événements.",
+    "twitterTitle": "Jeu d’échecs personnalisé, fait main à Tours | Dame de Tours",
+    "twitterDescription": "Bienvenue à l’atelier Dame de Tours : composez en ligne votre jeu d’échecs personnalisé (plateau, angles, pièces), fabriqué à la main en Touraine. Prochains événements.",
+    "ogImage": "https://damedetours.com/images/og-dame-de-tours.jpg",
+    "ogType": "website",
+    "wfPage": "6af31f837b16f50a57d74381",
+    "navCurrent": [],
+    "footerCurrent": []
+  },
+  {
     "key": "personnalisation",
     "path": "/personnalisation",
     "title": "Échiquier personnalisé, fabriqué en France | Dame de Tours",
