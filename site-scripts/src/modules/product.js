@@ -1,5 +1,6 @@
 import { $, $$ } from '../core/env.js';
 import { loadHero3d } from './hero3d-loader.js';
+import { openLightbox, makeZoomable, itemOf } from './lightbox.js';
 
 /**
  * Fiche produit : galerie (miniatures → image principale) et sélecteur de quantité.
@@ -56,6 +57,7 @@ function initGallery(gallery) {
     gallery.dataset.viewerDefault = thumb.dataset.galleryModel || '';
     gallery.dataset.viewerName = $('h1')?.textContent.trim() || '';
     gallery.dataset.viewerFit = '1.32'; // l'échiquier entier, coins compris, dans le cadre
+    gallery.dataset.viewerZoom = ''; // zoom autorisé (pincement, Ctrl + molette, boutons, double-clic)
     stage.setAttribute('data-viewer-stage', '');
     main.setAttribute('data-viewer-image', ''); // le visualiseur la masque aux lecteurs d'écran une fois la 3D prête
     stage.classList.add('is-3d-on');
@@ -63,8 +65,27 @@ function initGallery(gallery) {
       hint = document.createElement('p');
       hint.className = 'prod-hero_3d-hint';
       hint.setAttribute('aria-hidden', 'true'); // la scène porte sa propre description
-      hint.textContent = 'Faites glisser pour pivoter';
+      hint.textContent = matchMedia('(pointer: coarse)').matches ? 'Glissez pour pivoter · pincez pour zoomer' : 'Glissez pour pivoter · double-clic pour zoomer';
       stage.append(hint);
+      // Boutons de zoom (visibles seulement en vue 3D)
+      const zoomBar = document.createElement('div');
+      zoomBar.className = 'prod-hero_zoom';
+      zoomBar.setAttribute('role', 'group');
+      zoomBar.setAttribute('aria-label', 'Zoom de la vue 3D');
+      zoomBar.innerHTML =
+        '<button type="button" class="prod-hero_zoom-btn" data-zoom="in" aria-label="Zoomer"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></button>' +
+        '<button type="button" class="prod-hero_zoom-btn" data-zoom="out" aria-label="Dézoomer"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg></button>';
+      zoomBar.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-zoom]');
+        if (!btn) return;
+        gallery.dispatchEvent(new CustomEvent('dds:viewer-zoom', { detail: { factor: btn.dataset.zoom === 'in' ? 0.78 : 1 / 0.78 } }));
+      });
+      gallery.addEventListener('dds:viewer-zoomed', (e) => {
+        const { zoom, min, max } = e.detail;
+        zoomBar.querySelector('[data-zoom="in"]').disabled = zoom <= min + 0.001;
+        zoomBar.querySelector('[data-zoom="out"]').disabled = zoom >= max - 0.001;
+      });
+      stage.append(zoomBar);
       const used = () => stage.classList.contains('is-ready') && stage.classList.add('was-dragged');
       stage.addEventListener('pointerdown', used);
       stage.addEventListener('keydown', used);
@@ -102,6 +123,23 @@ function initGallery(gallery) {
     thumb.addEventListener('click', () => select(thumb));
     thumb.addEventListener('focus', () => reveal(thumb));
   });
+
+  // Grande photo : s'ouvre en plein écran, on y passe d'une vue à l'autre (la miniature 3D est ignorée)
+  const photos = thumbs.filter((t) => !('galleryModel' in t.dataset) && $('img', t));
+  makeZoomable(main, () => {
+    const current = photos.findIndex((t) => t.getAttribute('aria-pressed') === 'true');
+    openLightbox(photos.map((t) => itemOf($('img', t), t.dataset.alt || '')), Math.max(0, current), main);
+  }, { generic: true });
+}
+
+// Autres photos de la fiche (caractéristiques, coffret) : chaque bloc forme sa propre série
+function initPhotoGroups(root) {
+  for (const selector of ['.prod-specs_media', '.prod-box_media']) {
+    for (const group of $$(selector, root)) {
+      const imgs = $$('img', group).filter((img) => !img.closest('[data-gallery], a, button'));
+      imgs.forEach((img, i) => makeZoomable(img, () => openLightbox(imgs.map((x) => itemOf(x)), i, img)));
+    }
+  }
 }
 
 function initQuantity(group) {
@@ -131,5 +169,6 @@ function initQuantity(group) {
 
 export function initProduct(root = document) {
   $$('[data-gallery]', root).forEach(initGallery);
+  initPhotoGroups(root);
   $$('[data-qty]', root).forEach(initQuantity);
 }

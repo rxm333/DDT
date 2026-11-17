@@ -246,3 +246,138 @@
   .prod-hero_stage-image, .prod-hero_3d-hint { transition: none; }
   .prod-hero_stage.is-3d-on.is-loading::after { animation: none; }
 }
+
+/* Zoom de la vue 3D (fiche produit) */
+.prod-hero_zoom {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid #ffffff1f;
+  border-radius: var(--dds-radius-control, 0.625rem);
+  background: #0b0814b3;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.prod-hero_stage.is-3d-on.is-ready .prod-hero_zoom { opacity: 1; visibility: visible; }
+.prod-hero_zoom-btn {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--dds-radius-control, 0.625rem) - 0.25rem);
+  background: transparent;
+  color: var(--_theme---text--default, #fff);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.prod-hero_zoom-btn svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.prod-hero_zoom-btn:hover:not(:disabled) { background: #ffffff1a; }
+.prod-hero_zoom-btn:disabled { opacity: 0.35; cursor: default; }
+.prod-hero_zoom-btn:focus-visible { outline: 2px solid var(--_theme---system--focus-state, #b69cff); outline-offset: 1px; }
+@media (prefers-reduced-motion: reduce) { .prod-hero_zoom { transition: none; } }
+
+/* ---------- Visionneuse plein écran (photos des fiches produit) ---------- */
+[data-lightbox] { cursor: zoom-in; }
+[data-lightbox]:focus-visible { outline: 2px solid var(--_theme---system--focus-state, #b69cff); outline-offset: 3px; }
+html.is-lightbox-open { overflow: hidden; }
+.dds-lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #07050cf2;
+  color: var(--_theme---text--default, #fff);
+  opacity: 0;
+  transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1), overlay 0.28s allow-discrete, display 0.28s allow-discrete;
+}
+.dds-lightbox[open] { opacity: 1; }
+@starting-style { .dds-lightbox[open] { opacity: 0; } }
+.dds-lightbox::backdrop { background: transparent; }
+.dds-lightbox_stage {
+  position: absolute;
+  inset: 4.5rem 4.5rem 4.5rem;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.dds-lightbox_image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--dds-radius-card, 0.875rem);
+  cursor: zoom-in;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.dds-lightbox_image.is-in { opacity: 1; transform: none; }
+.dds-lightbox.is-zoomed .dds-lightbox_image { transform: scale(2); cursor: zoom-out; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.dds-lightbox_caption {
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  width: min(42rem, calc(100% - 9rem));
+  margin: 0;
+  transform: translateX(-50%);
+  color: var(--_theme---text--secondary, #ffffffb3);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-align: center;
+}
+.dds-lightbox_count {
+  position: absolute;
+  left: 1.5rem;
+  top: 1.6rem;
+  margin: 0;
+  color: var(--_theme---text--secondary, #ffffffb3);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.dds-lightbox_btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid #ffffff24;
+  border-radius: 999px;
+  background: #0b0814b3;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.dds-lightbox_btn svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.dds-lightbox_btn:hover { background: #ffffff1a; border-color: #ffffff40; }
+.dds-lightbox_btn:focus-visible { outline: 2px solid var(--_theme---system--focus-state, #b69cff); outline-offset: 2px; }
+.dds-lightbox_btn.is-close { top: 1rem; right: 1rem; }
+.dds-lightbox_btn.is-prev { left: 1rem; top: 50%; transform: translateY(-50%); }
+.dds-lightbox_btn.is-next { right: 1rem; top: 50%; transform: translateY(-50%); }
+.dds-lightbox.is-single .is-prev, .dds-lightbox.is-single .is-next { display: none; }
+@media (max-width: 767px) {
+  .dds-lightbox_stage { inset: 4rem 0.75rem 5.5rem; }
+  .dds-lightbox_btn.is-prev, .dds-lightbox_btn.is-next { top: auto; bottom: 1rem; transform: none; }
+  .dds-lightbox_btn.is-prev { left: 1rem; }
+  .dds-lightbox_btn.is-next { right: 1rem; }
+  .dds-lightbox_caption { bottom: 1.6rem; width: calc(100% - 8.5rem); font-size: 0.8125rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dds-lightbox, .dds-lightbox_image { transition: none; }
+}

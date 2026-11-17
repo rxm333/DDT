@@ -790,14 +790,20 @@ button.button { font: inherit; cursor: pointer; }
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .col-note_header { justify-content: flex-start; padding-bottom: 0.75rem; }
-.col-note_title { font-size: clamp(1.75rem, 6.4cqi, 2.75rem); }
+.col-note_title {
+  /* Titre du parchemin : calligraphie lisible (Fondamento) plutôt que l'anglaise Pinyon */
+  font-family: "Fondamento", "Pinyon Script", cursive;
+  font-size: clamp(1.5rem, 5.2cqi, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+}
 .col-note_body { margin-top: clamp(1rem, 3.5cqi, 1.75rem); font-size: clamp(0.9375rem, 2.55cqi, 1.125rem); line-height: 1.6; row-gap: 0.85em; }
 .col-note_body > :first-child::first-letter {
   float: left;
   margin: 0.04em 0.08em 0 0;
-  font-family: "Pinyon Script", cursive;
-  font-size: 3.4em;
-  line-height: 0.82;
+  font-family: "Fondamento", "Pinyon Script", cursive;
+  font-size: 3.1em;
+  line-height: 0.8;
   color: #5b2aab;
 }
 .col-note_signature {

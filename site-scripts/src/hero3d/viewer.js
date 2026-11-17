@@ -120,10 +120,38 @@ export async function mountViewer(viewer) {
     orbit.dist = Math.max((r / Math.sin(vfov)) * 0.84, (r / Math.sin(hfov)) * 0.98) * (Number(viewer.dataset.viewerFit) || 1); // data-viewer-fit : recul (fiche produit)
   };
   const place = () => {
-    const { az, el, dist, target } = orbit;
+    const { az, el, target } = orbit;
+    const dist = orbit.dist * zoom.k;
     camera.position.set(target.x + Math.sin(az) * Math.cos(el) * dist, target.y + Math.sin(el) * dist, target.z + Math.cos(az) * Math.cos(el) * dist);
     camera.lookAt(target);
   };
+
+  // ---------- Zoom (fiche produit : data-viewer-zoom) ----------
+  // Pincement à deux doigts, Ctrl + molette (et pincement du pavé tactile), touches + / −, double-clic,
+  // boutons de la page (événement « dds:viewer-zoom »). La molette seule continue de faire défiler la page.
+  const ZOOM_MIN = 0.42, ZOOM_MAX = 1.25;
+  const zoom = { k: 1, aim: 1, on: 'viewerZoom' in viewer.dataset };
+  const zoomTo = (aim) => {
+    if (!zoom.on) return;
+    zoom.aim = THREE.MathUtils.clamp(aim, ZOOM_MIN, ZOOM_MAX);
+    stage.classList.toggle('is-zoomed', zoom.aim < 0.98);
+    viewer.dispatchEvent(new CustomEvent('dds:viewer-zoomed', { detail: { zoom: zoom.aim, min: ZOOM_MIN, max: ZOOM_MAX } }));
+    lastInput = performance.now();
+    play();
+  };
+  viewer.addEventListener('dds:viewer-zoom', (e) => {
+    const d = e.detail || {};
+    zoomTo(d.reset ? 1 : zoom.aim * (d.factor || 1));
+  });
+  canvas.addEventListener('wheel', (e) => {
+    if (!zoom.on || !e.ctrlKey) return;
+    e.preventDefault();
+    zoomTo(zoom.aim * Math.exp(e.deltaY * 0.01));
+  }, { passive: false });
+  canvas.addEventListener('dblclick', () => zoomTo(zoom.aim < 0.98 ? 1 : 0.6));
+  if (zoom.on) canvas.setAttribute('aria-label', `${canvas.getAttribute('aria-label')} Pincez, double-cliquez ou utilisez + et − pour zoomer.`);
+  const pinch = { pts: new Map(), d0: 0, k0: 1 };
+  const spread = () => { const [a, b] = [...pinch.pts.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
 
   // ---------- Interaction ----------
   const still = reduceMotion();
@@ -134,10 +162,25 @@ export async function mountViewer(viewer) {
   const SPIN_MAX = 2.2; // rad/s
   canvas.addEventListener('pointerdown', (e) => {
     if (e.button !== undefined && e.button !== 0) return;
+    if (zoom.on && e.pointerType === 'touch') {
+      pinch.pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch.pts.size === 2) {
+        // Deuxième doigt : on passe du pivotement au zoom
+        drag = null;
+        stage.classList.remove('is-dragging');
+        pinch.d0 = spread();
+        pinch.k0 = zoom.aim;
+        return;
+      }
+    }
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, touch: e.pointerType !== 'mouse' };
     orbit.v = 0;
   });
   const onMove = (e) => {
+      if (pinch.pts.has(e.pointerId)) {
+        pinch.pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pinch.pts.size === 2 && pinch.d0 > 0) return void zoomTo(pinch.k0 * (pinch.d0 / Math.max(spread(), 1)));
+      }
       if (!drag || e.pointerId !== drag.id) return;
       const dx = e.clientX - drag.x;
       const dy = e.clientY - drag.y;
@@ -164,7 +207,8 @@ export async function mountViewer(viewer) {
       play();
   };
   window.addEventListener('pointermove', onMove, { passive: true });
-  const up = () => {
+  const up = (e) => {
+    if (e?.pointerId !== undefined && pinch.pts.delete(e.pointerId) && pinch.pts.size < 2) pinch.d0 = 0;
     if (!drag) return;
     if (performance.now() - drag.t > 120 || still) orbit.v = 0;
     drag = null;
@@ -184,7 +228,9 @@ export async function mountViewer(viewer) {
     else if (e.key === 'ArrowRight') aim.az = base.az - step;
     else if (e.key === 'ArrowUp') aim.el = THREE.MathUtils.clamp(base.el + step / 2, THREE.MathUtils.degToRad(12), THREE.MathUtils.degToRad(70));
     else if (e.key === 'ArrowDown') aim.el = THREE.MathUtils.clamp(base.el - step / 2, THREE.MathUtils.degToRad(12), THREE.MathUtils.degToRad(70));
-    else if (e.key === 'Home') Object.assign(aim, { az: START_AZ + Math.round((orbit.az - START_AZ) / (Math.PI * 2)) * Math.PI * 2, el: ELEVATION });
+    else if (e.key === 'Home') { Object.assign(aim, { az: START_AZ + Math.round((orbit.az - START_AZ) / (Math.PI * 2)) * Math.PI * 2, el: ELEVATION }); zoomTo(1); }
+    else if (zoom.on && (e.key === '+' || e.key === '=')) zoomTo(zoom.aim * 0.8);
+    else if (zoom.on && (e.key === '-' || e.key === '_')) zoomTo(zoom.aim / 0.8);
     else return;
     e.preventDefault();
     orbit.v = 0;
@@ -259,6 +305,10 @@ export async function mountViewer(viewer) {
         if (Math.abs(aim.az - orbit.az) < 0.001) aim.az = null;
         busy = true;
       }
+      if (Math.abs(zoom.aim - zoom.k) > 0.0005) {
+        zoom.k += (zoom.aim - zoom.k) * (still ? 1 : ease);
+        busy = true;
+      } else zoom.k = zoom.aim;
       if (aim.el !== null) {
         orbit.el += (aim.el - orbit.el) * ease;
         if (Math.abs(aim.el - orbit.el) < 0.001) aim.el = null;
