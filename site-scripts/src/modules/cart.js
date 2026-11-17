@@ -248,6 +248,18 @@ export function initCart({ lenis, navbar } = {}) {
     info.append(el('p', 'cart_line-title', title));
     if (v.title && v.title !== 'Default Title') info.append(el('p', 'cart_line-variant', v.title));
     else if (creation) info.append(el('p', 'cart_line-variant', 'Création personnalisée'));
+    if (creation) {
+      const id = line.attributes.find((a) => a.key === '_ddt_project')?.value || '';
+      if (/^[a-f0-9-]{36}$/.test(id)) {
+        const recap = el('a', 'cart_line-link', 'Récapitulatif de la création');
+        recap.href = `https://personnalisation-jeu-echecs.damedetours.com/creation-recap.html?id=${id}`;
+        recap.target = '_blank';
+        recap.rel = 'noopener';
+        recap.dataset.barbaPrevent = 'self';
+        recap.setAttribute('aria-label', 'Récapitulatif de la création (nouvel onglet)');
+        info.append(recap);
+      }
+    }
     if (line.quantity > 1 && v.price) info.append(el('p', 'cart_line-unit', `${formatMoney(v.price)} l’unité`));
     if (v.availableForSale === false) info.append(el('p', 'cart_line-alert', 'Épuisé : retirez-le pour commander.'));
 

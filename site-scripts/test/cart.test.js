@@ -263,6 +263,7 @@ window.close();
   const row = page.document.querySelector(`[data-line-id="${added.id}"]`);
   assert.equal(row.querySelector('.cart_qty'), null, 'quantité d’une création verrouillée');
   assert.equal(row.querySelector('.cart_line-variant').textContent, 'Création personnalisée');
+  assert.equal(row.querySelector('.cart_line-link')?.getAttribute('href'), `https://personnalisation-jeu-echecs.damedetours.com/creation-recap.html?id=${uuidA}`, 'lien vers le récapitulatif');
   assert.ok(page.document.getElementById('dds-cart').open, 'panier ouvert après l’ajout');
 
   post({ type: 'ddt:cart-add', requestId: 'r2', item: { id: 1, quantity: 1, properties: { _ddt_project: uuidB } }, replaceProjectId: uuidA });
