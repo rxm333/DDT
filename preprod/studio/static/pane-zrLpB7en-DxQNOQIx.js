@@ -1,1 +1,0 @@
-export{a as default}from"./sanity-D2SPTerA.js";
