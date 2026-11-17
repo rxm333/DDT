@@ -1,7 +1,7 @@
 // Informations de l'atelier, reprises dans les données structurées (Google) et le plan du site.
 export const SITE = {
   name: 'Dame de Tours',
-  url: (import.meta.env.SITE || 'https://damedetours.com').replace(/\/$/, ''),
+  url: (import.meta.env?.SITE || 'https://damedetours.com').replace(/\/$/, ''),
   logo: '/images/webclip-dame-de-tours-256.png',
   email: 'contact@damedetours.com',
   address: { street: '1 Route de la Girarderie', postalCode: '37300', city: 'Joué-lès-Tours', country: 'FR' },

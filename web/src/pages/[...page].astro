@@ -18,7 +18,7 @@ export function getStaticPaths() {
 const { page } = Astro.props;
 const articles = await getArticles();
 const main = fillNewsLists(fragments[`../fragments/${page.key}.html`].trim(), articles);
-const shopify = PRODUCTS[page.key] ? await shopifyProducts(Object.values(PRODUCTS).map((p) => p.handle)) : null;
+const shopify = await shopifyProducts(Object.values(PRODUCTS).map((p) => p.handle));
 const ld = jsonLd({ page, main, shopify });
 ---
 <Base page={page} main={main} ld={ld} />

@@ -19,6 +19,7 @@ export function shopifyProducts(handles) {
       for (const p of Object.values(data || {})) {
         if (p) out[p.handle] = { available: p.availableForSale, price: Number(p.priceRange.minVariantPrice.amount).toFixed(2), currency: p.priceRange.minVariantPrice.currencyCode };
       }
+      console.log(`[shopify] prix : ${Object.entries(out).map(([h, p]) => `${h.replace('jeux-echecs-dame-de-tours-', '')} ${p.price} ${p.currency}${p.available ? '' : ' (épuisé)'}`).join(' · ')}`);
       return out;
     } catch (e) {
       console.warn(`[shopify] prix non récupérés (${e.message}) : prix de la page utilisés`);

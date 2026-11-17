@@ -7,9 +7,12 @@ import navbar from '../partials/navbar.html?raw';
 import footer from '../partials/footer.html?raw';
 import tail from '../partials/tail.html?raw';
 import { fill, esc, version, markCurrent } from '../lib/render.js';
-import { abs, NOINDEX } from '../lib/site.js';
+import { abs, NOINDEX, PRODUCTS } from '../lib/site.js';
+import { shopifyProducts } from '../lib/shopify.js';
+import { applyPrices } from '../lib/prices.js';
 
-const { page, main, ld = '' } = Astro.props;
+const { page, main: rawMain, ld = '' } = Astro.props;
+const main = applyPrices(rawMain, await shopifyProducts(Object.values(PRODUCTS).map((p) => p.handle)));
 const canonical = abs(page.path);
 const seo = [
   `<link rel="canonical" href="${esc(canonical)}">`,
