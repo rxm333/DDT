@@ -35,3 +35,11 @@ Le workflow `.github/workflows/site-astro.yml` construit le site à chaque modif
 
 `scripts/import-static.py` a converti l'ancien site statique (`../site/`) une fois. Il n'est plus à relancer.
 Après conversion, ajout manuel : un `<h1>` masqué sur `fragments/personnalisation.html` (la page n'en avait pas).
+
+## Pages modifiables dans Sanity
+
+- `npm run cms` : après avoir ajouté ou changé du contenu dans un fragment, repère les nouveaux textes
+  et photos (`data-t` / `data-i`), régénère les formulaires du Studio et vérifie le tout.
+- Les identifiants déjà posés ne changent jamais : un texte modifié dans Sanity reste rattaché au bon endroit.
+- À la construction, seuls les champs **modifiés** dans Sanity remplacent le HTML d'origine.
+- Les fiches de Sanity sont créées / complétées automatiquement (`studio/scripts/sync-pages.mjs`, jamais écrasées).
