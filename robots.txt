@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /style-guide
+Disallow: /studio
 
 Sitemap: https://damedetours.com/sitemap.xml
