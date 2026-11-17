@@ -1,0 +1,34 @@
+---
+// Page d'un article : gabarit unique (src/templates/article.html) rempli avec les données de l'article.
+import Base from '../../layouts/Base.astro';
+import tpl from '../../templates/article.html?raw';
+import ctaTpl from '../../templates/article-cta.html?raw';
+import productTpl from '../../templates/article-product.html?raw';
+import emptyProduct from '../../templates/article-product-empty.html?raw';
+import meta from '../../data/article-page.json';
+import { getArticles } from '../../lib/content.js';
+import { cards } from '../../lib/news.js';
+import { fill, dateFr, readingMinutes } from '../../lib/render.js';
+import { jsonLd } from '../../lib/seo.js';
+
+export async function getStaticPaths() {
+  return (await getArticles()).map((article) => ({ params: { slug: article.slug }, props: { article } }));
+}
+
+const { article: a } = Astro.props;
+const articles = await getArticles();
+const main = fill(tpl.trim(), {
+  category: a.category, dateIso: a.date, dateLabel: dateFr(a.date), readingMinutes: a.readingMinutes || readingMinutes(a.body),
+  title: a.title, intro: a.intro, coverSrc: a.cover.src, coverAlt: a.cover.alt,
+  body: a.body,
+  cta: a.cta ? fill(ctaTpl.trim(), a.cta) : '',
+  product: a.product ? fill(productTpl.trim(), a.product) : emptyProduct.trim(),
+  related: cards(articles, { limit: 3, exclude: a.slug }),
+});
+const page = {
+  path: `/actualites/${a.slug}`, title: a.seo?.title || `${a.title} | Dame de Tours`, description: a.seo?.description || a.intro,
+  ogImage: a.seo?.ogImage || a.cover.src, ogType: 'article', wfPage: meta.wfPage, navCurrent: meta.navCurrent, footerCurrent: meta.footerCurrent,
+};
+const ld = jsonLd({ page, main, article: a });
+---
+<Base page={page} main={main} ld={ld} />

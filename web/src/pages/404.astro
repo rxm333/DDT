@@ -1,0 +1,8 @@
+---
+// Page introuvable : en français, avec la nav et le pied de page (l'ancienne était un gabarit anglais nu).
+import Base from '../layouts/Base.astro';
+import meta from '../data/article-page.json';
+const page = { path: '/404', title: 'Page introuvable | Dame de Tours', description: 'Cette page n’existe pas ou a été déplacée. Retrouvez nos jeux d’échecs fabriqués à Tours depuis l’accueil du site Dame de Tours.', wfPage: meta.wfPage, navCurrent: [], footerCurrent: [] };
+const main = `<main data-barba-namespace="404" data-barba="container" class="main-wrapper"><section class="section_legal"><div class="padding-global"><div class="container-large"><div class="utility-page_component"><div class="utility-page_wrapper"><h1 class="legal_title">Page introuvable</h1><p>Cette page n’existe pas ou a été déplacée.</p><a href="/" class="button w-button">Retour à l’accueil</a></div></div></div></div></section></main>`;
+---
+<Base page={page} main={main} />

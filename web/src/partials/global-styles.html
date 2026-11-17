@@ -1,0 +1,198 @@
+<div class="global-styles">
+      <div class="global-styles_default w-embed">
+        <style>
+  /* Make text look crisper and more legible in all browsers */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Accessible focus styles for keyboard users, customizable via the Variables panel */
+  [tabindex]:not([tabindex='-1']):focus-visible,
+  button:focus-visible,
+  a:focus-visible,
+  [role='button']:focus-visible,
+  input[type='file']:focus-visible {
+    outline: var(--_sizes---focus--width, 2px) solid var(--_theme---system--focus-state, #005fcc);
+    outline-offset: var(--_sizes---focus--offset, 2px);
+  }
+  /* Text selection styling, customizable via the Variables panel */
+  ::selection {
+    background-color: var(--_theme---system--selection-background);
+    color: var(--_theme---system--selection-text);
+    text-shadow: none; /* Ensures text remains readable */
+  }
+  ::-moz-selection {
+    background-color: var(--_theme---system--selection-background);
+    color: var(--_theme---system--selection-text);
+    text-shadow: none;
+  }
+  /* Pointer cursor for essential interactive elements
+Uncomment to enable. Keep this message for future handoff clarity. */
+  /*
+  button,
+  a[href],
+  input[type='button'],
+  input[type='submit'],
+  input[type='checkbox'],
+  input[type='radio'],
+  input[type='file'],
+  select,
+  [role='button'] {
+    cursor: pointer;
+  }
+*/
+  /* Reset default browser styles for form elements, especially on Apple devices.
+Uncomment to enable. Keep this message for future handoff clarity. */
+  /*
+  input,
+  textarea,
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    background-image: none;
+    background-color: transparent;
+  }
+*/
+  /* Make the following elements inherit typography styles from their parent.
+  Note: This will override Webflow’s base styles (e.g. “All Links” won’t work as expected in Designer).
+Uncomment to enable. Keep this message for futurehandoff clarity. */
+  /*
+  a,
+  .w-input,
+  .w-select,
+  .w-tab-link,
+  .w-nav-link,
+  .w-dropdown-btn,
+  .w-dropdown-toggle,
+  .w-dropdown-link {
+    color: inherit;
+    text-decoration: inherit;
+  }
+*/
+  /* Highlight empty links, can be used to find broken links
+Uncomment to enable. Keep this message for futurehandoff clarity.
+*/
+  /*
+  .wf-design-mode a[href='#']:not(.w-lightbox):not([class='pagination']) {
+    outline-color: red;
+    outline-style: solid;
+    outline-width: 3px;
+    outline-offset: 5px;
+  }
+*/
+  /* Remove top margin from the first element inside any Rich Text block */
+  .w-richtext > :not(div):first-child,
+  .w-richtext > div:first-child > :first-child {
+    margin-top: 0 !important;
+  }
+  /* Remove bottom margin from the last element inside any Rich Text block */
+  .w-richtext > :last-child,
+  .w-richtext ul li:last-child,
+  .w-richtext ol li:last-child {
+    margin-bottom: 0 !important;
+  }
+  /* Apply "..." after 3 lines of text */
+  .text-style-3lines {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  /* Apply "..." after 2 lines of text */
+  .text-style-2lines {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  /* Apply "..." after 1 line of text */
+  .text-style-1line {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+</style>
+      </div>
+      <div class="global-styles_custom w-embed">
+        <style>
+/* Custom CSS */
+/* ---------- Polices auto-hébergées (github.com/rxm333/DDT/fonts, SIL OFL 1.1) ---------- */
+@font-face { font-family: "Marcellus"; src: url("/site-scripts/fonts/marcellus-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cantarell"; src: url("/site-scripts/fonts/cantarell-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cantarell"; src: url("/site-scripts/fonts/cantarell-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "EB Garamond"; src: url("/site-scripts/fonts/eb-garamond-var.woff2") format("woff2"); font-weight: 400 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "EB Garamond"; src: url("/site-scripts/fonts/eb-garamond-italic-var.woff2") format("woff2"); font-weight: 400 800; font-style: italic; font-display: swap; }
+@font-face { font-family: "Lexend Mega"; src: url("/site-scripts/fonts/lexend-mega-var.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Pinyon Script"; src: url("/site-scripts/fonts/pinyon-script-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+/* ---------- Atelier : marquee d'images (CSS pur, aucune interaction Webflow) ---------- */
+@keyframes atelier-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-100%, 0, 0); }
+}
+.atelier_marquee-list {
+  animation: atelier-marquee 40s linear infinite;
+  will-change: transform;
+}
+/* Pause au survol et via le contrôle « Mettre en pause » (WCAG 2.2.2) */
+.atelier_marquee:hover .atelier_marquee-list,
+.section_atelier:has(.atelier_pause-input:checked) .atelier_marquee-list {
+  animation-play-state: paused;
+}
+.atelier_pause-input:focus-visible + .atelier_pause-button {
+  outline: 2px solid var(--_theme---system--focus-state);
+  outline-offset: 2px;
+}
+.atelier_pause-input:checked + .atelier_pause-button {
+  color: var(--_theme---text--default);
+  box-shadow: inset 0 0 0 1px var(--_theme---accent--default);
+}
+/* Mouvement réduit : pas d'animation, défilement manuel, pas de doublon */
+@media (prefers-reduced-motion: reduce) {
+  .atelier_marquee-list { animation: none; }
+  .atelier_marquee { overflow-x: auto; }
+  .atelier_marquee-list[aria-hidden="true"] { display: none; }
+  .atelier_controls { display: none; }
+}
+/* ---------- Pages légales ---------- */
+/* Lien actif de la navigation latérale */
+.legal-nav_link.w--current:not([href*="#"]),
+.legal-nav_link[aria-current="page"] {
+  background-color: var(--_theme---bg--soft);
+  color: var(--_theme---text--default);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+/* Pas de filet sous le dernier article (articles directs ou groupés) */
+.legal_document > .legal_article:last-child,
+.legal_document > .legal_group:last-child > .legal_article:last-child {
+  border-bottom-width: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .legal-nav_link, .legal_link { transition: none; }
+}
+/* ---------- Page Collection ---------- */
+/* Ancre « Voir les modèles » : compense la navbar fixe */
+#modeles { scroll-margin-top: 6rem; }
+/* Lettre de l'atelier : typographie proportionnelle à la feuille (container queries), avec minimums lisibles sur mobile */
+.col-note_sheet { container-type: inline-size; }
+.col-note_header { padding-bottom: 1.2cqw; }
+.col-note_title { font-size: max(1.75rem, 5cqw); }
+.col-note_date { font-size: max(0.875rem, 2.225cqw); }
+.col-note_body { margin-top: 3.35cqw; row-gap: 2.318cqw; font-size: max(0.9375rem, 2.704cqw); }
+.col-note_signature { padding-top: 2cqw; font-size: max(1.75rem, 6.4cqw); }
+/* Galerie inversée (Le plateau) : grande photo à droite sur 2 rangées */
+@media (min-width: 768px) {
+  .col-detail_gallery.is-reversed > .col-detail_media.is-large { grid-column: 2; grid-row: 1 / span 2; }
+}
+/* Bouton du film */
+.col-note_film-button { cursor: pointer; border: 0; font-family: inherit; }
+.col-note_film-button:hover .col-note_film-icon { transform: scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .col-note_film-icon { transition: none; }
+  .col-note_film-button:hover .col-note_film-icon { transform: none; }
+}
+</style>
+      </div>
+    </div>

@@ -1,0 +1,76 @@
+# Site Dame de Tours (Astro) : construit le site et le publie sur la branche « deploy ».
+# Hostinger récupère cette branche telle quelle (pages HTML prêtes, .htaccess compris).
+#
+# Se déclenche :
+#  - à chaque modification du site (web/) ou des scripts du site (site-scripts/) sur main ;
+#  - quand un contenu est publié dans Sanity (webhook → repository_dispatch « sanity-publish ») ;
+#  - à la main (onglet Actions → « Site Astro » → Run workflow).
+name: Site Astro
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - 'site-scripts/dist/**'
+      - 'site-scripts/models/**'
+      - 'site-scripts/fonts/**'
+      - 'site-scripts/assets/**'
+      - '.github/workflows/site-astro.yml'
+  repository_dispatch:
+    types: [sanity-publish]
+  workflow_dispatch:
+
+concurrency:
+  group: site-astro
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Installation
+        working-directory: web
+        run: npm ci
+
+      - name: Construction
+        working-directory: web
+        env:
+          SITE_URL: https://damedetours.com
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+        run: npm run build
+
+      - name: Contrôles (titres, liens, données Google…)
+        working-directory: web
+        run: npm test
+
+      - name: Publication sur la branche deploy
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin deploy >/dev/null; then
+            git fetch --depth 1 origin deploy
+            git worktree add -B deploy /tmp/deploy origin/deploy
+          else
+            git worktree add --orphan -b deploy /tmp/deploy
+          fi
+          rsync -a --delete --exclude .git web/dist/ /tmp/deploy/
+          cd /tmp/deploy
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Rien n'a changé."
+          else
+            git commit -q -m "Site construit depuis ${GITHUB_SHA::7} (${{ github.event_name }})"
+            git push origin deploy
+          fi

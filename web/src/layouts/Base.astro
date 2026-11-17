@@ -1,0 +1,48 @@
+---
+// Squelette commun à toutes les pages : <head>, styles globaux, nav, contenu, pied de page, scripts.
+// Le HTML vient tel quel de l'ancien site (src/partials) ; seules les valeurs propres à la page changent.
+import head from '../partials/head.html?raw';
+import globalStyles from '../partials/global-styles.html?raw';
+import navbar from '../partials/navbar.html?raw';
+import footer from '../partials/footer.html?raw';
+import tail from '../partials/tail.html?raw';
+import { fill, esc, version, markCurrent } from '../lib/render.js';
+import { abs, NOINDEX } from '../lib/site.js';
+
+const { page, main, ld = '' } = Astro.props;
+const canonical = abs(page.path);
+const seo = [
+  `<link rel="canonical" href="${esc(canonical)}">`,
+  `<meta property="og:url" content="${esc(canonical)}">`,
+  `<meta property="og:locale" content="fr_FR">`,
+  NOINDEX.has(page.path) ? '<meta name="robots" content="noindex">' : '',
+  ld,
+].filter(Boolean).join('\n  ');
+
+const headHtml = fill(head, {
+  title: page.title, description: page.description,
+  ogTitle: page.ogTitle || page.title, ogDescription: page.ogDescription || page.description,
+  twitterTitle: page.twitterTitle || page.ogTitle || page.title, twitterDescription: page.twitterDescription || page.ogDescription || page.description,
+  ogImage: abs(page.ogImage || '/images/og-dame-de-tours.jpg'), ogType: page.ogType || 'website',
+  v_css: version('/site-scripts/dist/dame-de-tours.min.css'), seo,
+});
+const body = [
+  globalStyles,
+  markCurrent(navbar, page.navCurrent),
+  main,
+  markCurrent(footer, page.footerCurrent),
+].join('\n');
+const tailHtml = fill(tail, { v_js: version('/site-scripts/dist/dame-de-tours.min.js') });
+---
+<!DOCTYPE html>
+<html data-wf-page={page.wfPage} data-wf-site="6af31f817b16f50a57d74331" lang="fr">
+<head>
+  <Fragment set:html={headHtml} />
+</head>
+<body>
+  <div data-barba="wrapper" class="page-wrapper">
+    <Fragment set:html={body} />
+  </div>
+  <Fragment set:html={tailHtml} />
+</body>
+</html>

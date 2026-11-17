@@ -1,0 +1,34 @@
+{
+  "slug": "collection-ancolie",
+  "title": "Collection Ancolie : notre première collection est disponible",
+  "category": "Lancement",
+  "date": "2026-09-01",
+  "intro": "Notre première collection est disponible depuis le 1er septembre 2026. Découvrez-la plus en détail.",
+  "cover": {
+    "src": "/images/actu-collection-ancolie.webp",
+    "alt": "Échiquier de la Collection Ancolie : pièces blanches sur un plateau gravé."
+  },
+  "body": "<p>Depuis le 1er septembre 2026, la Collection Ancolie est disponible. C’est la première collection de l’atelier : des jeux d’échecs français au design sculptural, imaginés, fabriqués et assemblés à Tours.</p><h2>Trois finitions</h2><p>Ancolie se décline en trois versions. <a href=\"/ancolie-blanc\">Ancolie Blanc</a>, lumineuse et élancée. <a href=\"/ancolie-noir\">Ancolie Noir</a>, plus sculpturale et radicale. Et <a href=\"/ancolie-la-chute-des-anges\">La Chute des Anges</a>, une série limitée.</p><h2>La Chute des Anges, en série limitée</h2><p>Déclinée à partir de la collection Ancolie, cette édition rend hommage à l’univers visionnaire de Gustave Doré. Elle transpose l’intensité de son œuvre « La Chute des anges rebelles » dans un échiquier où l’art dialogue avec la stratégie.</p><blockquote>Des jeux d’échecs pensés pour durer, jouer et être transmis.</blockquote><p><em>L’atelier Dame de Tours</em></p><h2>Fabriqué à Tours</h2><p>Chaque échiquier est conçu, peint et assemblé à la main dans notre atelier de Touraine. Retrouvez les trois finitions sur la page de la <a href=\"/collection-ancolie\">Collection Ancolie</a>.</p>",
+  "cta": {
+    "label": "Voir la collection",
+    "href": "/collection-ancolie"
+  },
+  "product": {
+    "image": "/images/ancolie-la-chute-des-anges.webp",
+    "href": "/ancolie-la-chute-des-anges",
+    "name": "La Chute des Anges",
+    "detail": "Collection Ancolie · Série limitée",
+    "priceKey": "la-chute-des-anges",
+    "price": "199 €"
+  },
+  "card": {
+    "text": "Notre première collection est disponible depuis le 1er septembre 2026. Découvrez-la plus en détail.",
+    "image": "/images/actu-collection-ancolie.webp",
+    "alt": "Échiquier de la Collection Ancolie : pièces blanches sur un plateau gravé."
+  },
+  "seo": {
+    "title": "Collection Ancolie, notre première collection | Dame de Tours",
+    "description": "La Collection Ancolie est disponible depuis le 1er septembre 2026 : trois jeux d’échecs français au design sculptural, fabriqués et assemblés à Tours.",
+    "ogImage": null
+  }
+}

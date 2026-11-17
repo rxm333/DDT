@@ -1,0 +1,24 @@
+---
+// Toutes les pages « fixes » du site : leur contenu (<main>) vient de src/fragments/, leurs titres et
+// descriptions de src/data/pages.json. Les listes d'actualités sont remplies à la construction.
+import Base from '../layouts/Base.astro';
+import pages from '../data/pages.json';
+import { getArticles } from '../lib/content.js';
+import { fillNewsLists } from '../lib/news.js';
+import { jsonLd } from '../lib/seo.js';
+import { PRODUCTS } from '../lib/site.js';
+import { shopifyProducts } from '../lib/shopify.js';
+
+const fragments = import.meta.glob('../fragments/*.html', { query: '?raw', import: 'default', eager: true });
+
+export function getStaticPaths() {
+  return pages.map((page) => ({ params: { page: page.path === '/' ? undefined : page.path.slice(1) }, props: { page } }));
+}
+
+const { page } = Astro.props;
+const articles = await getArticles();
+const main = fillNewsLists(fragments[`../fragments/${page.key}.html`].trim(), articles);
+const shopify = PRODUCTS[page.key] ? await shopifyProducts(Object.values(PRODUCTS).map((p) => p.handle)) : null;
+const ld = jsonLd({ page, main, shopify });
+---
+<Base page={page} main={main} ld={ld} />

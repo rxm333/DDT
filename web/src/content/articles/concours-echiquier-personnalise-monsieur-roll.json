@@ -1,0 +1,27 @@
+{
+  "slug": "concours-echiquier-personnalise-monsieur-roll",
+  "title": "Gagnez un échiquier personnalisé avec Monsieur Roll",
+  "category": "Concours",
+  "date": "2026-09-15",
+  "intro": "Dame de Tours et Monsieur Roll vous font gagner un échiquier personnalisé à l’occasion du weekend musical Chambord Live.",
+  "cover": {
+    "src": "/images/actu-concours-monsieur-roll.webp",
+    "alt": "Smartphone affichant le jeu concours Dame de Tours et Monsieur Roll sur Instagram."
+  },
+  "body": "<p>À l’occasion du weekend musical Chambord Live, Dame de Tours et Monsieur Roll s’associent pour vous faire gagner un échiquier personnalisé, réalisé dans notre atelier de Tours.</p><h2>Comment participer</h2><p>Le concours se déroule sur Instagram. Rendez-vous sur <a href=\"https://www.instagram.com/p/DZ-WkIrjJNJ/\" target=\"_blank\" rel=\"noopener\">la publication du concours</a> et suivez les indications pour tenter votre chance.</p><h2>Un échiquier à votre image</h2><p>L’échiquier personnalisé est créé à partir du visuel de votre choix, puis fabriqué et assemblé à la main. Pas envie d’attendre le tirage ? Vous pouvez aussi <a href=\"/personnalisation\">imaginer le vôtre dès maintenant</a>.</p>",
+  "cta": {
+    "label": "Participer sur Instagram",
+    "href": "https://www.instagram.com/p/DZ-WkIrjJNJ/"
+  },
+  "product": null,
+  "card": {
+    "text": "Dame de Tours et Monsieur Roll vous font gagner un échiquier personnalisé à l’occasion du weekend musical Chambord Live.",
+    "image": "/images/actu-concours-monsieur-roll.webp",
+    "alt": "Smartphone affichant le jeu concours Dame de Tours et Monsieur Roll sur Instagram."
+  },
+  "seo": {
+    "title": "Concours : un échiquier personnalisé à gagner | Dame de Tours",
+    "description": "Dame de Tours et Monsieur Roll vous font gagner un échiquier personnalisé à l’occasion du weekend musical Chambord Live. Participez sur Instagram.",
+    "ogImage": null
+  }
+}

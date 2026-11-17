@@ -1,0 +1,16 @@
+{
+  "name": "dame-de-tours-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prebuild": "node scripts/sync-assets.mjs",
+    "build": "astro build",
+    "predev": "node scripts/sync-assets.mjs",
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "test": "node scripts/check-build.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.4.12"
+  }
+}
