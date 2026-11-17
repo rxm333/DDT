@@ -41,6 +41,7 @@ ErrorDocument 404 /404.html
   RewriteRule ^pages/jeux-dechecs/?$ /collection-ancolie? [R=301,L]
   RewriteRule ^pages/(personnalisation|professionnels)/?$ /personnalisation? [R=301,L]
   RewriteRule ^pages/atelier/?$ /atelier? [R=301,L]
+  RewriteRule ^pages/ouverture/?$ /ouverture? [R=301,L]
   RewriteRule ^pages/(contact|support|faq)/?$ /contact? [R=301,L]
   RewriteRule ^pages(/.*)?$ /? [R=301,L]
 
@@ -98,6 +99,7 @@ ErrorDocument 404 /404.html
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
   ExpiresByType image/avif "access plus 30 days"
   ExpiresByType image/jpeg "access plus 30 days"
   ExpiresByType image/png "access plus 30 days"
