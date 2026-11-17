@@ -27,7 +27,10 @@ const components = {
   },
   marks: {
     link: ({ children, value }) => {
-      return `<a href="${attr(value?.href || '#')}">${children}</a>`;
+      // Autre site : nouvel onglet (comme le lien Instagram d'origine)
+      const href = value?.href || '#';
+      const ext = /^https?:\/\//.test(href) && !/^https?:\/\/([a-z0-9-]+\.)?damedetours\.com/.test(href);
+      return `<a href="${attr(href)}"${ext ? ' target="_blank" rel="noopener"' : ''}>${children}</a>`;
     },
   },
   block: {
