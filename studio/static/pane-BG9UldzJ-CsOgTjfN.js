@@ -1,0 +1,1 @@
+export{t as default}from"./sanity-CgVg5YeE.js";
