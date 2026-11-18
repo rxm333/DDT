@@ -37,8 +37,11 @@ html.lenis body {
 html.lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
+/* « hidden » et non « clip » : seul « hidden » garde la place réservée de la barre de défilement.
+   Avec « clip », la barre disparaissait à l'ouverture du panier (et pendant les transitions) : la page
+   s'élargissait d'un coup, tout se décalait et la 3D se redimensionnait, puis l'inverse à la fermeture. */
 .lenis:not(.lenis-autoToggle).lenis-stopped {
-  overflow: clip;
+  overflow: hidden;
 }
 .lenis [data-lenis-prevent] {
   overscroll-behavior: contain;
