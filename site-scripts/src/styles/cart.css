@@ -37,7 +37,8 @@
    dans main.css) : rien ne bouge ; la bande de la barre prend la teinte assombrie du fond. */
 /* Fond de <html> toujours défini : sans lui, la transition partirait de « transparent » et le
    navigateur afficherait un instant son fond blanc dans la bande de la barre. */
-html { background-color: var(--_theme---bg--page, #17171b); transition: background-color 0.45s var(--dds-ease-out); }
+/* Pas de transition ici : animer le fond de <html> repeignait toute la page à chaque image. */
+html { background-color: var(--_theme---bg--page, #17171b); }
 html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 
 .cart_drawer {
@@ -56,10 +57,19 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
   overflow: hidden;
 }
 .cart_drawer:not([open]) { display: none; }
-/* Assombrissement seul : un flou recalculé à chaque image par-dessus la vue 3D (qui continue de
-   tourner) faisait saccader l'ouverture. */
-.cart_drawer::backdrop { background-color: rgba(10, 9, 13, 0); transition: background-color 0.5s var(--dds-ease-out); }
-.cart_drawer.is-visible::backdrop { background-color: rgba(10, 9, 13, 0.6); }
+/* Assombrissement par un calque dont seule l'opacité change (calculé par la carte graphique) ;
+   le ::backdrop natif, dont la couleur était animée, repeignait tout l'écran à chaque image. */
+.cart_drawer { --cart-ease: cubic-bezier(0.32, 0.72, 0, 1); }
+.cart_drawer::backdrop { background: transparent; }
+.cart_scrim {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(10, 9, 13, 0.6);
+  opacity: 0;
+  transition: opacity 0.6s var(--cart-ease);
+  will-change: opacity;
+}
+.cart_drawer.is-visible .cart_scrim { opacity: 1; }
 
 .cart_panel {
   position: absolute;
@@ -72,14 +82,15 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
   background-color: var(--_theme---bg--panel, #202025);
   border-left: 1px solid var(--_theme---line--default, #3b3743);
   box-shadow: -24px 0 64px -24px rgba(0, 0, 0, 0.6);
-  transform: translateX(100%);
-  transition: transform 0.7s var(--dds-ease-out);
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.6s var(--cart-ease);
   will-change: transform;
+  backface-visibility: hidden;
 }
-.cart_drawer.is-visible .cart_panel { transform: none; }
-/* Fermeture plus vive que l'ouverture */
-.cart_drawer.is-closing .cart_panel { transition: transform 0.38s cubic-bezier(0.55, 0, 0.75, 0.2); }
-.cart_drawer.is-closing::backdrop { transition-duration: 0.38s; }
+.cart_drawer.is-visible .cart_panel { transform: translate3d(0, 0, 0); }
+/* Fermeture un peu plus courte, même courbe : démarrage immédiat, arrivée en douceur, sans à-coup */
+.cart_drawer.is-closing .cart_panel { transition-duration: 0.42s; }
+.cart_drawer.is-closing .cart_scrim { transition-duration: 0.42s; }
 
 .cart_header {
   display: flex;
@@ -246,7 +257,7 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 /* Ouverture : en-tête, lignes (en cascade) et pied arrivent après le panneau. Les éléments ajoutés
    panneau ouvert sont déjà dans leur état final : pas d'animation parasite à chaque mise à jour. */
 .cart_header, .cart_line, .cart_empty, .cart_footer {
-  transition: opacity 0.5s var(--dds-ease-out), transform 0.7s var(--dds-ease-out);
+  transition: opacity 0.45s var(--cart-ease), transform 0.6s var(--cart-ease);
 }
 .cart_drawer:not(.is-visible) .cart_header { opacity: 0; transform: translateX(1.25rem); }
 .cart_drawer:not(.is-visible) .cart_line { opacity: 0; transform: translateX(2rem); }
@@ -259,7 +270,7 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 .cart_drawer.is-closing .cart_header,
 .cart_drawer.is-closing .cart_line,
 .cart_drawer.is-closing .cart_empty,
-.cart_drawer.is-closing .cart_footer { transition-duration: 0.2s; transition-delay: 0s; }
+.cart_drawer.is-closing .cart_footer { transition-duration: 0.18s; transition-delay: 0s; }
 
 /* Ligne ajoutée ou augmentée : halo lilas qui s'estompe */
 .cart_line { position: relative; }
@@ -338,7 +349,7 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 .cart_message:not(:empty):not([data-tone="info"]) { animation: dds-cart-tick 0.4s var(--dds-ease-out); }
 
 @media (prefers-reduced-motion: reduce) {
-  .cart_panel, .cart_drawer::backdrop, html,
+  .cart_panel, .cart_scrim, html,
   .cart_header, .cart_line, .cart_empty, .cart_footer, [data-cart-price] { transition: none !important; }
   .cart_drawer:not(.is-visible) .cart_header,
   .cart_drawer:not(.is-visible) .cart_line,

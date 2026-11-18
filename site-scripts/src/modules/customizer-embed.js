@@ -210,7 +210,8 @@ export function initCustomizerEmbed({ lenis, cart } = {}) {
         await addCreation({ item: data.item, replaceProjectId: data.replaceProjectId });
         send(event.source, { type: 'ddt:cart-result', requestId: data.requestId, ok: true });
         close();
-        cart?.open?.();
+        // La sortie du plein écran remet la page en place : le panier glisse à l'image suivante, sur une page stable
+        requestAnimationFrame(() => requestAnimationFrame(() => cart?.open?.()));
       } catch (error) {
         console.error('[DDS] Personnaliseur : ajout au panier non finalisé', error);
         send(event.source, { type: 'ddt:cart-result', requestId: data.requestId, ok: false, error: error.message });

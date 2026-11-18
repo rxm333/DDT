@@ -568,8 +568,11 @@ export async function mount(container) {
     }
   };
 
+  // Panier en mouvement (html[data-cart-moving]) : pause le temps de l'animation, reprise à « dds:cart-settled »
+  const cartMoving = () => 'cartMoving' in document.documentElement.dataset;
   const frame = () => {
     raf = 0;
+    if (cartMoving()) return;
     clock.update();
     const raw = clock.getDelta();
     // Pendant l'intro, un à-coup ponctuel ne fait pas sauter l'animation : le temps ralentit un instant
@@ -603,7 +606,7 @@ export async function mount(container) {
     if ((!still || moving) && visible && !document.hidden) raf = requestAnimationFrame(frame);
   };
   const play = () => {
-    if (!raf && visible && !document.hidden) {
+    if (!raf && visible && !document.hidden && !cartMoving()) {
       clock.update();
       raf = requestAnimationFrame(frame);
     }
@@ -615,6 +618,7 @@ export async function mount(container) {
   });
   io.observe(section);
   document.addEventListener('visibilitychange', play);
+  document.addEventListener('dds:cart-settled', play);
   const ro = new ResizeObserver(() => {
     fit();
     if (still) frame();
@@ -683,6 +687,7 @@ export async function mount(container) {
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onUp);
       document.removeEventListener('visibilitychange', play);
+      document.removeEventListener('dds:cart-settled', play);
       renderer.dispose();
       renderer.forceContextLoss(); // libère le contexte WebGL (navigation sans rechargement)
       canvas.remove();

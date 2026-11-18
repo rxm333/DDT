@@ -277,6 +277,7 @@ export async function mountViewer(viewer) {
   let last = performance.now();
   const frame = (now) => {
     raf = 0;
+    if ('cartMoving' in document.documentElement.dataset) return;
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
     let busy = false;
@@ -325,7 +326,8 @@ export async function mountViewer(viewer) {
     if (busy && live()) raf = requestAnimationFrame(frame);
   };
   // data-viewer-paused : la vue 3D est masquée (fiche produit, retour aux photos) — on ne dessine plus rien
-  const live = () => visible && !document.hidden && !('viewerPaused' in viewer.dataset);
+  // …et pendant l'animation du panier (html[data-cart-moving]), reprise à « dds:cart-settled »
+  const live = () => visible && !document.hidden && !('viewerPaused' in viewer.dataset) && !('cartMoving' in document.documentElement.dataset);
   const play = () => {
     if (!raf && live()) {
       last = performance.now();
@@ -339,6 +341,7 @@ export async function mountViewer(viewer) {
   });
   io.observe(stage);
   document.addEventListener('visibilitychange', play);
+  document.addEventListener('dds:cart-settled', play);
   viewer.addEventListener('dds:viewer-resume', () => {
     lastInput = performance.now();
     play();
@@ -383,6 +386,7 @@ export async function mountViewer(viewer) {
       window.removeEventListener('pointerup', up);
       window.removeEventListener('pointercancel', up);
       document.removeEventListener('visibilitychange', play);
+      document.removeEventListener('dds:cart-settled', play);
       renderer.dispose();
       renderer.forceContextLoss();
       canvas.remove();

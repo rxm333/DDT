@@ -105,6 +105,7 @@ function buildDrawer() {
   dialog.setAttribute('aria-labelledby', 'dds-cart-title');
   dialog.setAttribute('data-lenis-prevent', '');
   dialog.innerHTML = `
+    <div class="cart_scrim" aria-hidden="true"></div>
     <div class="cart_panel">
       <div class="cart_header">
         <h2 class="cart_title" id="dds-cart-title">Panier <span class="cart_count" data-cart-count></span></h2>
@@ -437,49 +438,93 @@ export function initCart({ lenis, navbar } = {}) {
   }
 
   // ---------- Ouverture / fermeture ----------
+  // Une seule animation à la fois, pilotée par une phase : rouvrir pendant la fermeture (ou l'inverse)
+  // repart de la position courante du panneau au lieu de sauter. Pendant le mouvement, la 3D de la page
+  // se met en pause (html[data-cart-moving]) pour laisser toute la puissance à l'animation.
   const root = document.documentElement;
+  const panel = $('.cart_panel', dialog);
+  let phase = 'closed'; // closed | opening | open | closing
+  let endTimer = 0;
+  let onEnd = null;
+  const moving = (on) => {
+    if (on) root.dataset.cartMoving = '';
+    else if ('cartMoving' in root.dataset) {
+      delete root.dataset.cartMoving;
+      document.dispatchEvent(new CustomEvent('dds:cart-settled'));
+    }
+  };
+  const stopWaiting = () => {
+    clearTimeout(endTimer);
+    if (onEnd) panel.removeEventListener('transitionend', onEnd);
+    onEnd = null;
+  };
+  // Fin de la transition du panneau lui-même (pas celles des lignes, qui remontent jusqu'ici), avec un filet
+  const afterPanel = (ms, done) => {
+    stopWaiting();
+    const finish = () => {
+      stopWaiting();
+      done();
+    };
+    onEnd = (event) => {
+      if (event.target === panel && event.propertyName === 'transform') finish();
+    };
+    panel.addEventListener('transitionend', onEnd);
+    endTimer = setTimeout(finish, ms);
+  };
+  const reset = () => {
+    stopWaiting();
+    phase = 'closed';
+    dialog.classList.remove('is-visible', 'is-closing');
+    root.classList.remove('is-cart-open');
+    ui.message.textContent = '';
+    lenis?.start?.();
+    moving(false);
+  };
+
   function open() {
-    if (dialog.open) return;
+    if (phase === 'open' || phase === 'opening') return;
     navbar?.close?.();
-    if (typeof dialog.showModal === 'function') dialog.showModal();
-    else dialog.setAttribute('open', '');
-    root.classList.add('is-cart-open');
-    lenis?.stop?.();
-    requestAnimationFrame(() => dialog.classList.add('is-visible'));
+    if (!dialog.open) {
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+      root.classList.add('is-cart-open');
+      lenis?.stop?.();
+      // Le navigateur calcule d'abord le panneau hors écran : la transition part toujours de là
+      // (avec un simple requestAnimationFrame, elle était parfois sautée et le panneau apparaissait d'un coup).
+      void panel.getBoundingClientRect();
+    }
+    phase = 'opening';
+    dialog.classList.remove('is-closing');
+    dialog.classList.add('is-visible');
+    if (prefersReducedMotion()) {
+      phase = 'open';
+      return;
+    }
+    moving(true);
+    afterPanel(1000, () => {
+      phase = 'open';
+      moving(false);
+    });
   }
 
   function close() {
-    if (!dialog.open || dialog.classList.contains('is-closing')) return;
+    if (phase === 'closed' || phase === 'closing') return;
+    phase = 'closing';
     const finish = () => {
-      dialog.classList.remove('is-closing');
+      reset();
       if (typeof dialog.close === 'function') dialog.close();
       else dialog.removeAttribute('open');
-      root.classList.remove('is-cart-open');
-      ui.message.textContent = '';
-      lenis?.start?.();
     };
     dialog.classList.remove('is-visible');
     if (prefersReducedMotion()) return finish();
     dialog.classList.add('is-closing');
-    const panel = $('.cart_panel', dialog);
-    let done = false;
-    const once = () => {
-      if (done) return;
-      done = true;
-      finish();
-    };
-    // Seule la transition du panneau lui-même compte (pas celles des lignes, qui remontent jusqu'ici)
-    const onEnd = (event) => {
-      if (event.target !== panel || event.propertyName !== 'transform') return;
-      panel.removeEventListener('transitionend', onEnd);
-      once();
-    };
-    panel.addEventListener('transitionend', onEnd);
-    setTimeout(() => {
-      panel.removeEventListener('transitionend', onEnd);
-      once();
-    }, 600); // filet si la transition n'a pas lieu
+    moving(true);
+    afterPanel(800, finish);
   }
+  // Fermé par un autre moyen (navigateur, changement de page) : état remis à zéro
+  dialog.addEventListener('close', () => {
+    if (phase !== 'closed') reset();
+  });
 
   // Échap : fermeture animée plutôt que la fermeture sèche du navigateur
   dialog.addEventListener('cancel', (event) => {
@@ -487,7 +532,7 @@ export function initCart({ lenis, navbar } = {}) {
     close();
   });
   dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) return close(); // clic sur le fond
+    if (event.target === dialog || event.target.classList.contains('cart_scrim')) return close(); // clic sur le fond
     if (event.target.closest('[data-cart-close]')) return close();
     const checkout = event.target.closest('[data-cart-checkout]');
     if (checkout) {
