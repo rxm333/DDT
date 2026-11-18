@@ -1,1 +1,0 @@
-export{t as default}from"./sanity-CpseRTw2.js";
