@@ -487,6 +487,11 @@ export function initCart({ lenis, navbar } = {}) {
     if (!dialog.open) {
       if (typeof dialog.showModal === 'function') dialog.showModal();
       else dialog.setAttribute('open', '');
+      // Focus placé sans faire défiler (le bouton Fermer est encore hors écran) ; défilement remis à zéro
+      // par sécurité pour les navigateurs qui ne connaissent pas overflow: clip.
+      $('[data-cart-close]', dialog)?.focus({ preventScroll: true });
+      dialog.scrollLeft = 0;
+      dialog.scrollTop = 0;
       root.classList.add('is-cart-open');
       lenis?.stop?.();
       // Le navigateur calcule d'abord le panneau hors écran : la transition part toujours de là

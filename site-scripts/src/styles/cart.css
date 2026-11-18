@@ -54,7 +54,10 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
   background: transparent;
   color: var(--_theme---text--default, #efeee9);
   font-family: var(--font-family--body, Cantarell, sans-serif);
-  overflow: hidden;
+  /* « clip » et non « hidden » : une zone « hidden » peut encore défiler. À l'ouverture, le navigateur
+     donne le focus au bouton Fermer, encore hors écran, et faisait défiler la fenêtre pour l'amener à
+     l'écran : le panneau sautait en place puis l'animation s'y superposait (effet de rebond). */
+  overflow: clip;
 }
 .cart_drawer:not([open]) { display: none; }
 /* Assombrissement par un calque dont seule l'opacité change (calculé par la carte graphique) ;
