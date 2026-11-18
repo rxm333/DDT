@@ -59,14 +59,15 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 .cart_drawer:not([open]) { display: none; }
 /* Assombrissement par un calque dont seule l'opacité change (calculé par la carte graphique) ;
    le ::backdrop natif, dont la couleur était animée, repeignait tout l'écran à chaque image. */
-.cart_drawer { --cart-ease: cubic-bezier(0.32, 0.72, 0, 1); }
+/* Ouverture : décélération régulière jusqu'à l'arrêt. Fermeture : départ et arrivée en douceur. Aucun dépassement. */
+.cart_drawer { --cart-ease: cubic-bezier(0.25, 1, 0.5, 1); --cart-ease-close: cubic-bezier(0.65, 0, 0.35, 1); }
 .cart_drawer::backdrop { background: transparent; }
 .cart_scrim {
   position: absolute;
   inset: 0;
   background-color: rgba(10, 9, 13, 0.6);
   opacity: 0;
-  transition: opacity 0.6s var(--cart-ease);
+  transition: opacity 0.5s var(--cart-ease);
   will-change: opacity;
 }
 .cart_drawer.is-visible .cart_scrim { opacity: 1; }
@@ -83,14 +84,13 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
   border-left: 1px solid var(--_theme---line--default, #3b3743);
   box-shadow: -24px 0 64px -24px rgba(0, 0, 0, 0.6);
   transform: translate3d(100%, 0, 0);
-  transition: transform 0.6s var(--cart-ease);
+  transition: transform 0.5s var(--cart-ease);
   will-change: transform;
   backface-visibility: hidden;
 }
 .cart_drawer.is-visible .cart_panel { transform: translate3d(0, 0, 0); }
-/* Fermeture un peu plus courte, même courbe : démarrage immédiat, arrivée en douceur, sans à-coup */
-.cart_drawer.is-closing .cart_panel { transition-duration: 0.42s; }
-.cart_drawer.is-closing .cart_scrim { transition-duration: 0.42s; }
+.cart_drawer.is-closing .cart_panel { transition: transform 0.38s var(--cart-ease-close); }
+.cart_drawer.is-closing .cart_scrim { transition: opacity 0.38s var(--cart-ease-close); }
 
 .cart_header {
   display: flex;
@@ -254,23 +254,22 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 }
 
 /* ---------- Animations ---------- */
-/* Ouverture : en-tête, lignes (en cascade) et pied arrivent après le panneau. Les éléments ajoutés
-   panneau ouvert sont déjà dans leur état final : pas d'animation parasite à chaque mise à jour. */
-.cart_header, .cart_line, .cart_empty, .cart_footer {
-  transition: opacity 0.45s var(--cart-ease), transform 0.6s var(--cart-ease);
-}
-.cart_drawer:not(.is-visible) .cart_header { opacity: 0; transform: translateX(1.25rem); }
-.cart_drawer:not(.is-visible) .cart_line { opacity: 0; transform: translateX(2rem); }
-.cart_drawer:not(.is-visible) .cart_empty { opacity: 0; transform: translateY(0.75rem); }
-.cart_drawer:not(.is-visible) .cart_footer { opacity: 0; transform: translateY(1.5rem); }
-.cart_drawer.is-visible .cart_header { transition-delay: 0.08s; }
-.cart_drawer.is-visible .cart_line { transition-delay: calc(0.14s + min(var(--i, 0), 6) * 0.06s); }
-.cart_drawer.is-visible .cart_empty { transition-delay: 0.16s; }
-.cart_drawer.is-visible .cart_footer { transition-delay: 0.22s; }
+/* Le contenu apparaît en simple fondu pendant que le panneau glisse : aucun mouvement propre (en
+   cascade, il continuait de bouger après l'arrêt du panneau et donnait un effet de rebond). Les
+   éléments ajoutés panneau ouvert sont déjà dans leur état final. */
+.cart_header, .cart_line, .cart_empty, .cart_footer { transition: opacity 0.35s ease-out; }
+.cart_drawer:not(.is-visible) .cart_header,
+.cart_drawer:not(.is-visible) .cart_line,
+.cart_drawer:not(.is-visible) .cart_empty,
+.cart_drawer:not(.is-visible) .cart_footer { opacity: 0; }
+.cart_drawer.is-visible .cart_header,
+.cart_drawer.is-visible .cart_line,
+.cart_drawer.is-visible .cart_empty,
+.cart_drawer.is-visible .cart_footer { transition-delay: 0.1s; }
 .cart_drawer.is-closing .cart_header,
 .cart_drawer.is-closing .cart_line,
 .cart_drawer.is-closing .cart_empty,
-.cart_drawer.is-closing .cart_footer { transition-duration: 0.18s; transition-delay: 0s; }
+.cart_drawer.is-closing .cart_footer { transition-duration: 0.15s; transition-delay: 0s; }
 
 /* Ligne ajoutée ou augmentée : halo lilas qui s'estompe */
 .cart_line { position: relative; }
@@ -288,7 +287,7 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 .cart_line.is-new::before { animation: dds-cart-glow 1.4s var(--dds-ease-out); }
 .cart_line.is-new .cart_line-image { animation: dds-cart-pop 0.6s var(--dds-ease-out); }
 @keyframes dds-cart-glow { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes dds-cart-pop { 0% { transform: scale(0.85); } 60% { transform: scale(1.04); } 100% { transform: scale(1); } }
+@keyframes dds-cart-pop { 0% { opacity: 0.4; transform: scale(0.94); } 100% { opacity: 1; transform: scale(1); } }
 
 /* Ligne retirée : elle glisse, s'efface et se replie */
 .cart_line.is-removing {
@@ -309,15 +308,9 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
 
 /* Pastille et icône du panier quand un article arrive */
 .navbar_cart-count.is-bump { animation: dds-cart-bump 0.5s var(--dds-ease-out); }
-[data-navbar="cart"] svg.is-bump { animation: dds-cart-wiggle 0.6s var(--dds-ease-out); transform-origin: 50% 20%; }
-@keyframes dds-cart-bump { 0% { transform: scale(0.4); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-@keyframes dds-cart-wiggle {
-  0% { transform: rotate(0); }
-  25% { transform: rotate(-12deg); }
-  50% { transform: rotate(9deg); }
-  75% { transform: rotate(-4deg); }
-  100% { transform: rotate(0); }
-}
+[data-navbar="cart"] svg.is-bump { animation: dds-cart-wiggle 0.5s ease-in-out; transform-origin: 50% 20%; }
+@keyframes dds-cart-bump { 0% { transform: scale(0.6); } 100% { transform: scale(1); } }
+@keyframes dds-cart-wiggle { 0%, 100% { transform: rotate(0); } 40% { transform: rotate(-8deg); } 75% { transform: rotate(4deg); } }
 
 /* Bouton « Ajouter au panier » : attente puis confirmation */
 .prod-buy_add { position: relative; }
