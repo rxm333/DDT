@@ -1,0 +1,1 @@
+export{a as default}from"./sanity-DsjwQ2SR.js";

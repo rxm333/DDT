@@ -1,1 +1,0 @@
-export{t as default}from"./sanity-Xs41yKXX.js";
