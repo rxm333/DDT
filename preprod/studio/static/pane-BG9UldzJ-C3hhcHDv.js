@@ -1,0 +1,1 @@
+export{t as default}from"./sanity-C3hQ-nQm.js";
