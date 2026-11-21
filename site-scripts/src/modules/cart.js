@@ -270,7 +270,7 @@ export function initCart({ lenis, navbar } = {}) {
       };
       if (resumeHref(access)) {
         link('Reprendre la création', resumeHref(access), false);
-        link('Récapitulatif PDF', recapHref(access), true, 'Télécharger le récapitulatif PDF');
+        link('Récapitulatif PDF', recapHref(access), false);
       } else if (/^[a-f0-9-]{36}$/.test(id)) {
         link('Récapitulatif PDF', `https://personnalisation-jeu-echecs.damedetours.com/creation-recap.html?id=${id}`, true, 'Télécharger le récapitulatif PDF');
       }

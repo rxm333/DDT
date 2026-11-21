@@ -275,7 +275,7 @@ window.close();
     const hrefs = [...rowB.querySelectorAll('.cart_line-link')].map((a) => [a.textContent, a.getAttribute('href'), a.target]);
     assert.deepEqual(hrefs, [
       ['Reprendre la création', `/personnalisation?replace=${uuidB}#project=${accessB}`, ''],
-      ['Récapitulatif PDF', `https://personnalisation-jeu-echecs.damedetours.com/?recap=1#project=${accessB}`, '_blank'],
+      ['Récapitulatif PDF', `/personnalisation?replace=${uuidB}&recap=1#project=${accessB}`, ''],
     ], 'reprise dans la page et PDF complet depuis le panier');
   }
   assert.equal(lineOf(uuidA), undefined, 'ancienne version retirée');

@@ -23,7 +23,12 @@ export const resumeHref = (access) => {
   const m = ACCESS.exec(access || '');
   return m ? `/personnalisation?replace=${m[1]}#project=${access}` : '';
 };
-export const recapHref = (access) => (ACCESS.test(access || '') ? `${CUSTOMIZER_ORIGIN}/?recap=1#project=${access}` : '');
+// Récapitulatif PDF : la création s'ouvre dans la page /personnalisation du site (pas sur l'adresse du
+// personnaliseur), avec la fenêtre de téléchargement du PDF complet.
+export const recapHref = (access) => {
+  const m = ACCESS.exec(access || '');
+  return m ? `/personnalisation?replace=${m[1]}&recap=1#project=${access}` : '';
+};
 
 /**
  * Page /personnalisation ouverte avec « ?replace=id#project=id.jeton » (bouton « Reprendre la création »
@@ -40,7 +45,9 @@ export function resumeCreationFromUrl() {
   const [id] = m[1].split('.');
   const src = new URL(frame.src, location.href);
   src.searchParams.set('embed', '1');
-  if (new URLSearchParams(location.search).get('replace') === id) src.searchParams.set('replace', id);
+  const params = new URLSearchParams(location.search);
+  if (params.get('replace') === id) src.searchParams.set('replace', id);
+  if (params.get('recap') === '1') src.searchParams.set('recap', '1');
   src.hash = `project=${m[1]}`;
   frame.src = src.href;
   history.replaceState(history.state, '', location.pathname);
