@@ -355,6 +355,7 @@ html.is-cart-open { overflow: hidden; background-color: #0f0f13; }
   .navbar_cart-count.is-bump, [data-navbar="cart"] svg.is-bump, .prod-buy_add.is-added, .cart_message:not(:empty):not([data-tone="info"]) { animation: none; }
 }
 
-.cart_line-link{display:inline-block;margin-top:.25rem;font-size:.8125rem;line-height:1.4;color:var(--_theme---text--muted);text-decoration:underline;text-decoration-color:var(--_theme---accent--default);text-underline-offset:.2em}
+.cart_line-links{display:flex;flex-wrap:wrap;gap:.25rem 1rem;margin-top:.25rem}
+.cart_line-link{display:inline-block;font-size:.8125rem;line-height:1.4;color:var(--_theme---text--muted);text-decoration:underline;text-decoration-color:var(--_theme---accent--default);text-underline-offset:.2em}
 .cart_line-link:hover{color:var(--_theme---text--default)}
 .cart_line-link:focus-visible{outline:2px solid var(--_theme---system--focus-state);outline-offset:2px;border-radius:2px}

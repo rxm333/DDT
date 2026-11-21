@@ -1,5 +1,6 @@
 import { $, $$, prefersReducedMotion } from '../core/env.js';
 import { createClient, shopifyConfig } from './shopify.js';
+import { resumeHref, recapHref } from './customizer-embed.js';
 
 /**
  * Panier Shopify (API Storefront).
@@ -250,16 +251,30 @@ export function initCart({ lenis, navbar } = {}) {
     if (v.title && v.title !== 'Default Title') info.append(el('p', 'cart_line-variant', v.title));
     else if (creation) info.append(el('p', 'cart_line-variant', 'Création personnalisée'));
     if (creation) {
-      const id = line.attributes.find((a) => a.key === '_ddt_project')?.value || '';
-      if (/^[a-f0-9-]{36}$/.test(id)) {
-        const recap = el('a', 'cart_line-link', 'Récapitulatif de la création');
-        recap.href = `https://personnalisation-jeu-echecs.damedetours.com/creation-recap.html?id=${id}`;
-        recap.target = '_blank';
-        recap.rel = 'noopener';
-        recap.dataset.barbaPrevent = 'self';
-        recap.setAttribute('aria-label', 'Récapitulatif de la création (nouvel onglet)');
-        info.append(recap);
+      // Clé d'accès de la création (ajoutée par le personnaliseur) : reprise et PDF complet, comme dans
+      // « Votre composition ». Anciennes lignes sans clé : récapitulatif simplifié.
+      const attr2 = (key) => line.attributes.find((a) => a.key === key)?.value || '';
+      const id = attr2('_ddt_project');
+      const access = attr2('_ddt_access');
+      const links = el('div', 'cart_line-links');
+      const link = (text, href, external, label) => {
+        const a = el('a', 'cart_line-link', text);
+        a.href = href;
+        a.dataset.barbaPrevent = 'self';
+        if (external) {
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.setAttribute('aria-label', `${label || text} (nouvel onglet)`);
+        }
+        links.append(a);
+      };
+      if (resumeHref(access)) {
+        link('Reprendre la création', resumeHref(access), false);
+        link('Récapitulatif PDF', recapHref(access), true, 'Télécharger le récapitulatif PDF');
+      } else if (/^[a-f0-9-]{36}$/.test(id)) {
+        link('Récapitulatif PDF', `https://personnalisation-jeu-echecs.damedetours.com/creation-recap.html?id=${id}`, true, 'Télécharger le récapitulatif PDF');
       }
+      if (links.childElementCount) info.append(links);
     }
     if (line.quantity > 1 && v.price) info.append(el('p', 'cart_line-unit', `${formatMoney(v.price)} l’unité`));
     if (v.availableForSale === false) info.append(el('p', 'cart_line-alert', 'Épuisé : retirez-le pour commander.'));

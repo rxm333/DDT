@@ -35,7 +35,7 @@ const body = [
   main,
   markCurrent(footer, page.footerCurrent),
 ].join('\n');
-const tailHtml = fill(tail, { v_js: version('/site-scripts/dist/dame-de-tours.min.js') });
+const tailHtml = fill(tail, { v_js: version('/site-scripts/dist/dame-de-tours.min.js'), v_hero: version('/site-scripts/dist/hero-3d.min.js') });
 ---
 <!DOCTYPE html>
 <html data-wf-page={page.wfPage} data-wf-site="6af31f817b16f50a57d74331" lang="fr">

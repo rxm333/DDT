@@ -266,9 +266,18 @@ window.close();
   assert.equal(row.querySelector('.cart_line-link')?.getAttribute('href'), `https://personnalisation-jeu-echecs.damedetours.com/creation-recap.html?id=${uuidA}`, 'lien vers le récapitulatif');
   assert.ok(page.document.getElementById('dds-cart').open, 'panier ouvert après l’ajout');
 
-  post({ type: 'ddt:cart-add', requestId: 'r2', item: { id: 1, quantity: 1, properties: { _ddt_project: uuidB } }, replaceProjectId: uuidA });
+  const accessB = `${uuidB}.${'a'.repeat(64)}`;
+  post({ type: 'ddt:cart-add', requestId: 'r2', item: { id: 1, quantity: 1, properties: { _ddt_project: uuidB, _ddt_access: accessB } }, replaceProjectId: uuidA });
   await flush(); await flush(); await flush();
   assert.ok(lineOf(uuidB), 'nouvelle version ajoutée');
+  {
+    const rowB = page.document.querySelector(`[data-line-id="${lineOf(uuidB).id}"]`);
+    const hrefs = [...rowB.querySelectorAll('.cart_line-link')].map((a) => [a.textContent, a.getAttribute('href'), a.target]);
+    assert.deepEqual(hrefs, [
+      ['Reprendre la création', `/personnalisation?replace=${uuidB}#project=${accessB}`, ''],
+      ['Récapitulatif PDF', `https://personnalisation-jeu-echecs.damedetours.com/?recap=1#project=${accessB}`, '_blank'],
+    ], 'reprise dans la page et PDF complet depuis le panier');
+  }
   assert.equal(lineOf(uuidA), undefined, 'ancienne version retirée');
   page.window.close();
 }

@@ -1,7 +1,6 @@
 /**
  * Visionneuse plein écran des photos (fiches produit).
  * - un clic (ou Entrée) sur une photo l'ouvre en grand ; ← → ou glisser pour passer à la suivante ;
- * - un clic sur la photo agrandie zoome (×2) à l'endroit cliqué, la souris déplace la vue ;
  * - Échap, le bouton ✕ ou un clic sur le fond ferment ; le focus revient sur la photo d'origine.
  * Une seule <dialog> pour tout le site, créée au premier usage.
  */
@@ -43,29 +42,17 @@ function build() {
   });
   dialog.addEventListener('close', () => {
     document.documentElement.classList.remove('is-lightbox-open');
-    unzoom();
-    state.trigger?.focus?.({ preventScroll: true });
+      state.trigger?.focus?.({ preventScroll: true });
   });
   // Clic sur le fond (hors photo et boutons) : fermer
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog || e.target === stage) close();
   });
 
-  // Zoom ×2 à l'endroit cliqué ; la souris déplace la vue
-  const setOrigin = (e) => {
-    const r = img.getBoundingClientRect();
-    img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
-  };
-  img.addEventListener('click', (e) => {
-    if (swipe.moved) return;
-    if (dialog.classList.toggle('is-zoomed')) setOrigin(e);
-  });
-  img.addEventListener('mousemove', (e) => dialog.classList.contains('is-zoomed') && setOrigin(e));
-
   // Glisser (doigt) pour changer de photo
   const swipe = { x: 0, y: 0, id: null, moved: false };
   stage.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'mouse' || dialog.classList.contains('is-zoomed')) return;
+    if (e.pointerType === 'mouse') return;
     Object.assign(swipe, { x: e.clientX, y: e.clientY, id: e.pointerId, moved: false });
   });
   stage.addEventListener('pointerup', (e) => {
@@ -81,15 +68,10 @@ function build() {
   });
 }
 
-function unzoom() {
-  dialog?.classList.remove('is-zoomed');
-}
-
 function render() {
   const { items, index } = state;
   const item = items[index];
   const img = dialog.querySelector('.dds-lightbox_image');
-  unzoom();
   img.classList.remove('is-in');
   img.onload = () => img.classList.add('is-in');
   img.src = item.src;

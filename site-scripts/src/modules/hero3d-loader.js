@@ -5,9 +5,14 @@ import { $ } from '../core/env.js';
  * [data-hero-viewer] sur la page et que l'appareil s'y prête. Le fichier est servi
  * depuis le même dossier que ce bundle (même commit sur jsDelivr).
  */
+// Adresse versionnée (data-hero-v = empreinte du fichier) : sans elle, le cache d'Hostinger servait
+// pendant 7 jours une ancienne 3D (le zoom de la fiche produit n'existait pas encore dans cette copie).
 const SRC = (() => {
-  const s = document.currentScript?.src || '';
-  return s ? s.replace(/[^/]*$/, 'hero-3d.min.js') : '';
+  const script = document.currentScript;
+  const s = script?.src || '';
+  if (!s) return '';
+  const v = script.dataset?.heroV;
+  return s.replace(/[^/]*$/, 'hero-3d.min.js') + (v ? `?v=${encodeURIComponent(v)}` : '');
 })();
 
 let injected = null;

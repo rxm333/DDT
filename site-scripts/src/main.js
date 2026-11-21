@@ -28,7 +28,7 @@ import { initLogoSpin } from './modules/logo-spin.js';
 import { initArticle } from './modules/article.js';
 import { initNewsLists } from './modules/news.js';
 import { initCart } from './modules/cart.js';
-import { initCustomizerEmbed } from './modules/customizer-embed.js';
+import { initCustomizerEmbed, resumeCreationFromUrl } from './modules/customizer-embed.js';
 import { initVideos } from './modules/video.js';
 
 const VERSION = '1.22.0';
@@ -73,6 +73,7 @@ function initPage({ defer = false } = {}) {
   safe('news', initNewsLists);
   safe('swiper', initSwipers);
   safe('forms', initForms);
+  safe('resume-creation', resumeCreationFromUrl);
   const videos = safe('videos', initVideos);
   if (videos) c.push(() => videos.destroy());
   api.customizer = safe('customizer', initCustomizer);

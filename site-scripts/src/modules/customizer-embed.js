@@ -16,6 +16,35 @@ import { $$ } from '../core/env.js';
 export const CUSTOMIZER_ORIGIN = 'https://personnalisation-jeu-echecs.damedetours.com';
 const UUID = /^[a-f0-9-]{36}$/;
 const PROJECT_KEY = '_ddt_project';
+const ACCESS = /^([a-f0-9-]{36})\.([a-f0-9]{64})$/;
+
+/** Liens vers une création du panier (clé d'accès « id.jeton ») : reprise dans la page, PDF complet. */
+export const resumeHref = (access) => {
+  const m = ACCESS.exec(access || '');
+  return m ? `/personnalisation?replace=${m[1]}#project=${access}` : '';
+};
+export const recapHref = (access) => (ACCESS.test(access || '') ? `${CUSTOMIZER_ORIGIN}/?recap=1#project=${access}` : '');
+
+/**
+ * Page /personnalisation ouverte avec « ?replace=id#project=id.jeton » (bouton « Reprendre la création »
+ * du panier) : le personnaliseur intégré recharge cette création et, à la commande, remplace l'ancien
+ * jeu dans le panier. La clé est retirée de l'adresse affichée.
+ */
+export function resumeCreationFromUrl() {
+  const m = /^#project=([a-f0-9-]{36}\.[a-f0-9]{64})$/.exec(location.hash);
+  if (!m) return;
+  const frame = $$('iframe').find((f) => {
+    try { return new URL(f.src, location.href).origin === CUSTOMIZER_ORIGIN; } catch { return false; }
+  });
+  if (!frame) return;
+  const [id] = m[1].split('.');
+  const src = new URL(frame.src, location.href);
+  src.searchParams.set('embed', '1');
+  if (new URLSearchParams(location.search).get('replace') === id) src.searchParams.set('replace', id);
+  src.hash = `project=${m[1]}`;
+  frame.src = src.href;
+  history.replaceState(history.state, '', location.pathname);
+}
 
 export function initCustomizerEmbed({ lenis, cart } = {}) {
   const frames = () =>
@@ -196,6 +225,24 @@ export function initCustomizerEmbed({ lenis, cart } = {}) {
       return;
     }
 
+    // Défilement au doigt arrivé au bout du personnaliseur : la page prend le relais (iOS ne le fait pas
+    // depuis un iframe ; sur mobile le personnaliseur remplit l'écran et bloquait l'accès à la suite).
+    if (data.type === 'ddt:scroll-by' || data.type === 'ddt:scroll-fling') {
+      if (session || document.fullscreenElement || document.documentElement.classList.contains('is-cart-open')) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const now = lenis ? lenis.animatedScroll ?? lenis.scroll : window.scrollY;
+      if (data.type === 'ddt:scroll-by' && Number.isFinite(data.dy) && Math.abs(data.dy) < 400) {
+        const y = Math.max(0, Math.min(max, now + data.dy));
+        if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
+        else window.scrollTo(0, y);
+      } else if (data.type === 'ddt:scroll-fling' && Number.isFinite(data.v) && Math.abs(data.v) <= 6) {
+        // Élan : distance proportionnelle à la vitesse, décélération douce
+        const y = Math.max(0, Math.min(max, now + data.v * 320));
+        if (lenis) lenis.scrollTo(y, { duration: Math.min(1.2, 0.4 + Math.abs(data.v) * 0.15), easing: (t) => 1 - Math.pow(1 - t, 3), force: true });
+        else window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+      return;
+    }
     if (data.type === 'ddt:viewer' && typeof data.active === 'boolean') {
       if (data.active) open(frame);
       else if (session?.frame === frame) close();

@@ -319,7 +319,7 @@ html.is-lightbox-open { overflow: hidden; }
   max-height: 100%;
   object-fit: contain;
   border-radius: var(--dds-radius-card, 0.875rem);
-  cursor: zoom-in;
+  cursor: default;
   opacity: 0;
   transform: scale(0.98);
   transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -327,7 +327,6 @@ html.is-lightbox-open { overflow: hidden; }
   -webkit-user-drag: none;
 }
 .dds-lightbox_image.is-in { opacity: 1; transform: none; }
-.dds-lightbox.is-zoomed .dds-lightbox_image { transform: scale(2); cursor: zoom-out; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
 .dds-lightbox_caption {
   position: absolute;
   left: 50%;
