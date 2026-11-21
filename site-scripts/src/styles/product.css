@@ -284,7 +284,7 @@
 .prod-hero_zoom-btn:focus-visible { outline: 2px solid var(--_theme---system--focus-state, #b69cff); outline-offset: 1px; }
 @media (prefers-reduced-motion: reduce) { .prod-hero_zoom { transition: none; } }
 
-/* ---------- Visionneuse plein écran (photos des fiches produit) ---------- */
+/* ---------- Galerie plein écran (photos des fiches produit) ---------- */
 [data-lightbox] { cursor: zoom-in; }
 [data-lightbox]:focus-visible { outline: 2px solid var(--_theme---system--focus-state, #b69cff); outline-offset: 3px; }
 html.is-lightbox-open { overflow: hidden; }
@@ -298,59 +298,54 @@ html.is-lightbox-open { overflow: hidden; }
   margin: 0;
   padding: 0;
   border: 0;
-  background: #07050cf2;
+  overflow: clip;
+  background: #07050c;
   color: var(--_theme---text--default, #fff);
   opacity: 0;
   transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1), overlay 0.28s allow-discrete, display 0.28s allow-discrete;
 }
-.dds-lightbox[open] { opacity: 1; }
+.dds-lightbox[open] { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; opacity: 1; }
 @starting-style { .dds-lightbox[open] { opacity: 0; } }
 .dds-lightbox::backdrop { background: transparent; }
-.dds-lightbox_stage {
+
+/* Barre du haut : compteur, zoom, fermer */
+.dds-lightbox_bar { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; position: relative; z-index: 2; }
+.dds-lightbox_count { margin: 0 auto 0 0.5rem; color: var(--_theme---text--secondary, #ffffffb3); font-size: 0.8125rem; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+.dds-lightbox_tools { display: flex; align-items: center; gap: 0.125rem; padding: 0.1875rem; border: 1px solid #ffffff1f; border-radius: 999px; background: #0b0814b3; }
+.dds-lightbox_tools .dds-lightbox_btn { width: 2.25rem; height: 2.25rem; border-color: transparent; background: transparent; }
+.dds-lightbox_zoom { min-width: 3.75rem; height: 2.25rem; padding: 0 0.5rem; border: 0; border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 0.8125rem; font-variant-numeric: tabular-nums; cursor: pointer; }
+.dds-lightbox_zoom:hover { background: #ffffff14; }
+
+/* Scène : la photo est toujours entière (contenue), centrée */
+.dds-lightbox_stage { position: relative; min-height: 0; overflow: hidden; touch-action: none; cursor: default; }
+.dds-lightbox.is-zoomed .dds-lightbox_stage { cursor: grab; }
+.dds-lightbox.is-panning .dds-lightbox_stage { cursor: grabbing; }
+.dds-lightbox_frame {
   position: absolute;
-  inset: 4.5rem 4.5rem 4.5rem;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  touch-action: pan-y;
+  inset: 0.5rem clamp(0.5rem, 5vw, 5rem);
+  transform-origin: 50% 50%;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 .dds-lightbox_image {
-  max-width: 100%;
-  max-height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
   object-fit: contain;
-  border-radius: var(--dds-radius-card, 0.875rem);
-  cursor: default;
-  opacity: 0;
-  transform: scale(0.98);
-  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   user-select: none;
   -webkit-user-drag: none;
+  opacity: 0;
+  translate: var(--from, 0px) 0;
+  transition: opacity 0.3s ease, translate 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.dds-lightbox_image.is-in { opacity: 1; transform: none; }
-.dds-lightbox_caption {
-  position: absolute;
-  left: 50%;
-  bottom: 1.25rem;
-  width: min(42rem, calc(100% - 9rem));
-  margin: 0;
-  transform: translateX(-50%);
-  color: var(--_theme---text--secondary, #ffffffb3);
-  font-size: 0.875rem;
-  line-height: 1.4;
-  text-align: center;
-}
-.dds-lightbox_count {
-  position: absolute;
-  left: 1.5rem;
-  top: 1.6rem;
-  margin: 0;
-  color: var(--_theme---text--secondary, #ffffffb3);
-  font-size: 0.8125rem;
-  letter-spacing: 0.08em;
-  font-variant-numeric: tabular-nums;
-}
+.dds-lightbox_image.is-in { opacity: 1; translate: 0 0; }
+.dds-lightbox_spinner { position: absolute; left: 50%; top: 50%; width: 1.75rem; height: 1.75rem; margin: -0.875rem 0 0 -0.875rem; border: 2px solid #ffffff2e; border-top-color: #fff; border-radius: 50%; opacity: 0; transition: opacity 0.2s 0.25s; animation: dds-lb-spin 0.8s linear infinite; pointer-events: none; }
+.dds-lightbox.is-loading .dds-lightbox_spinner { opacity: 1; }
+@keyframes dds-lb-spin { to { transform: rotate(360deg); } }
+
+/* Boutons */
 .dds-lightbox_btn {
-  position: absolute;
   display: grid;
   place-items: center;
   width: 2.75rem;
@@ -361,22 +356,40 @@ html.is-lightbox-open { overflow: hidden; }
   background: #0b0814b3;
   color: inherit;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 .dds-lightbox_btn svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.dds-lightbox_btn:hover { background: #ffffff1a; border-color: #ffffff40; }
-.dds-lightbox_btn:focus-visible { outline: 2px solid var(--_theme---system--focus-state, #b69cff); outline-offset: 2px; }
-.dds-lightbox_btn.is-close { top: 1rem; right: 1rem; }
-.dds-lightbox_btn.is-prev { left: 1rem; top: 50%; transform: translateY(-50%); }
-.dds-lightbox_btn.is-next { right: 1rem; top: 50%; transform: translateY(-50%); }
-.dds-lightbox.is-single .is-prev, .dds-lightbox.is-single .is-next { display: none; }
+.dds-lightbox_btn:hover:not(:disabled) { background: #ffffff1a; border-color: #ffffff40; }
+.dds-lightbox_btn:disabled { opacity: 0.35; cursor: default; }
+.dds-lightbox_btn:focus-visible, .dds-lightbox_zoom:focus-visible, .dds-lightbox_thumb:focus-visible { outline: 2px solid var(--_theme---system--focus-state, #b69cff); outline-offset: 2px; }
+.dds-lightbox_btn.is-nav { position: absolute; top: 50%; z-index: 2; width: 3rem; height: 3rem; transform: translateY(-50%); }
+.dds-lightbox_btn.is-prev { left: 1rem; }
+.dds-lightbox_btn.is-next { right: 1rem; }
+.dds-lightbox.is-zoomed .dds-lightbox_btn.is-nav { opacity: 0; pointer-events: none; }
+.dds-lightbox.is-single .is-nav, .dds-lightbox.is-single .dds-lightbox_thumbs { display: none; }
+
+/* Bas : légende et miniatures */
+.dds-lightbox_foot { display: flex; flex-direction: column; align-items: center; gap: 0.625rem; padding: 0.5rem 1rem 1rem; position: relative; z-index: 2; }
+.dds-lightbox_caption { max-width: 42rem; min-height: 1.2em; margin: 0; color: var(--_theme---text--secondary, #ffffffb3); font-size: 0.875rem; line-height: 1.4; text-align: center; }
+.dds-lightbox_thumbs { display: flex; gap: 0.5rem; max-width: 100%; padding: 0.25rem; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.dds-lightbox_thumbs::-webkit-scrollbar { display: none; }
+.dds-lightbox_thumb { flex: 0 0 auto; width: 4.25rem; height: 3.25rem; padding: 0; border: 1px solid #ffffff1f; border-radius: 0.5rem; overflow: hidden; background: #ffffff0d; cursor: pointer; opacity: 0.5; transition: opacity 0.2s, border-color 0.2s; }
+.dds-lightbox_thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.dds-lightbox_thumb:hover { opacity: 0.85; }
+.dds-lightbox_thumb.is-active { opacity: 1; border-color: var(--_theme---accent--default, #b26bff); box-shadow: 0 0 0 1px var(--_theme---accent--default, #b26bff); }
+.dds-lightbox.is-zoomed .dds-lightbox_foot { opacity: 0.35; transition: opacity 0.2s; }
+.dds-lightbox.is-zoomed .dds-lightbox_foot:hover, .dds-lightbox.is-zoomed .dds-lightbox_foot:focus-within { opacity: 1; }
+
 @media (max-width: 767px) {
-  .dds-lightbox_stage { inset: 4rem 0.75rem 5.5rem; }
-  .dds-lightbox_btn.is-prev, .dds-lightbox_btn.is-next { top: auto; bottom: 1rem; transform: none; }
-  .dds-lightbox_btn.is-prev { left: 1rem; }
-  .dds-lightbox_btn.is-next { right: 1rem; }
-  .dds-lightbox_caption { bottom: 1.6rem; width: calc(100% - 8.5rem); font-size: 0.8125rem; }
+  .dds-lightbox_bar { padding: 0.625rem 0.625rem 0.25rem; }
+  .dds-lightbox_frame { inset: 0.25rem 0; }
+  .dds-lightbox_btn.is-nav { display: none; } /* au doigt : glisser, ou les miniatures */
+  .dds-lightbox_thumb { width: 3.5rem; height: 2.75rem; }
+  .dds-lightbox_foot { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+  .dds-lightbox_caption { font-size: 0.8125rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dds-lightbox, .dds-lightbox_image { transition: none; }
+  .dds-lightbox, .dds-lightbox_frame, .dds-lightbox_image { transition: none; }
+  .dds-lightbox_spinner { animation: none; }
 }
+
