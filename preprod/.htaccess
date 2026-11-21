@@ -5,9 +5,16 @@ Options -Indexes -MultiViews
 DirectoryIndex index.html
 DirectorySlash Off
 ErrorDocument 404 /404.html
+# Dossier de déploiement Git (racine de l'hébergement) jamais servi
+RedirectMatch 404 /\.git
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # À la racine de l'hébergement (damedetours.com), le dossier preprod/ est celui du sous-domaine de test :
+  # jamais servi sur le domaine principal (pas de doublon du site pour Google)
+  RewriteCond %{HTTP_HOST} !^preprod\. [NC]
+  RewriteRule ^preprod(/|$) - [R=404,L]
 
   # Toujours en HTTPS
   RewriteCond %{HTTPS} off

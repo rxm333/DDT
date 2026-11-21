@@ -1,0 +1,3 @@
+# Site de test preprod.damedetours.com : ne pas indexer
+User-agent: *
+Disallow: /

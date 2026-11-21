@@ -1,0 +1,1 @@
+function e(e){return e}function t(e){return e}function n(e,t){return t}function r(e){let t={};for(let n in e)e[n]!==void 0&&(t[n]=e[n]);return t}export{r as i,e as n,n as r,t};
