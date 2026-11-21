@@ -1,0 +1,1 @@
+export{t as default}from"./sanity-BSHMqm_1.js";
