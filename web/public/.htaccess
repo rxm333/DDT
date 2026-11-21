@@ -13,8 +13,10 @@ RedirectMatch 404 /\.git
 
   # À la racine de l'hébergement (damedetours.com), le dossier preprod/ est celui du sous-domaine de test :
   # jamais servi sur le domaine principal (pas de doublon du site pour Google)
+  # (Règle lue aussi depuis le .htaccess du dossier preprod/ lui-même : test sur l'adresse complète.)
   RewriteCond %{HTTP_HOST} !^preprod\. [NC]
-  RewriteRule ^preprod(/|$) - [R=404,L]
+  RewriteCond %{REQUEST_URI} ^/preprod(/|$) [NC]
+  RewriteRule ^ - [R=404,L]
 
   # Toujours en HTTPS
   RewriteCond %{HTTPS} off
