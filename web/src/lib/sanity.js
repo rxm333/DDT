@@ -60,7 +60,7 @@ export async function fetchSanityArticles() {
     cta: d.cta?.label && d.cta?.href ? { label: d.cta.label, href: d.cta.href } : null,
     product: PRODUCT_CARDS[d.product] || null,
     card: { text: d.cardText || d.intro || '', image: img(d.cover?.url, 960), alt: d.cover?.alt || '' },
-    seo: { title: d.seoTitle || `${d.title} | Dame de Tours`, description: d.seoDescription || d.intro, ogImage: d.cover?.url ? `${d.cover.url}?w=1200&h=630&fit=crop&auto=format` : null },
+    seo: { title: d.seoTitle || (d.title.includes('Dame de Tours') ? d.title : `${d.title} | Dame de Tours`), description: d.seoDescription || d.intro, ogImage: d.cover?.url ? `${d.cover.url}?w=1200&h=630&fit=crop&auto=format` : null },
   }));
 }
 

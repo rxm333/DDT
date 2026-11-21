@@ -14,7 +14,45 @@ const org = () => ({
     addressLocality: SITE.address.city, addressCountry: SITE.address.country,
   },
   sameAs: SITE.sameAs,
+  description: 'Atelier indépendant de Joué-lès-Tours (Touraine) qui conçoit, fabrique et assemble à la main des jeux d’échecs design et des échiquiers personnalisés.',
+  areaServed: [{ '@type': 'Country', name: 'France' }, { '@type': 'Place', name: 'Union européenne' }],
+  knowsAbout: ['Jeux d’échecs', 'Échiquiers personnalisés', 'Design de pièces d’échecs', 'Artisanat', 'Fabrication française'],
 });
+
+// Livraison et retours des jeux de la collection (pages /livraison, /remboursements, fiches produit) :
+// affichés par Google sous le prix, et repris par les moteurs de réponse.
+const shipping = {
+  '@type': 'OfferShippingDetails',
+  shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'EUR' },
+  shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'FR' },
+  deliveryTime: {
+    '@type': 'ShippingDeliveryTime',
+    handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 3, unitCode: 'DAY' },
+    transitTime: { '@type': 'QuantitativeValue', minValue: 3, maxValue: 5, unitCode: 'DAY' },
+  },
+};
+const returns = {
+  '@type': 'MerchantReturnPolicy',
+  applicableCountry: 'FR',
+  returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+  merchantReturnDays: 14,
+  returnMethod: 'https://schema.org/ReturnByMail',
+  returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+  merchantReturnLink: abs('/remboursements'),
+};
+// Caractéristiques communes aux échiquiers Ancolie (texte des fiches produit)
+const ancolieFacts = {
+  material: 'Bois, acier magnétique, cuir vegan, résine ABS',
+  countryOfOrigin: { '@type': 'Country', name: 'France' },
+  category: 'Jeux d’échecs',
+  additionalProperty: [
+    ['Pièces', '32 pièces exclusives, peintes et vernies à la main'],
+    ['Aimantation', 'Plateau et pièces aimantés'],
+    ['Plateau', 'Bois recouvert d’acier magnétique, cuir vegan imprimé, 64 clous ornementaux, 4 pieds en acier'],
+    ['Édition', 'Exemplaire numéroté avec certificat d’authenticité'],
+    ['Fabrication', 'Conçu, fabriqué et assemblé à Tours'],
+  ].map(([name, value]) => ({ '@type': 'PropertyValue', name, value })),
+};
 
 const crumbs = (items) => ({
   '@type': 'BreadcrumbList',
@@ -37,10 +75,10 @@ export function jsonLd({ page, main, article, shopify }) {
     const priceText = main.match(new RegExp(`data-cart-price="${PRODUCTS[key].key}" class="prod-hero_price">([^<]*)<`))?.[1] || '';
     const live = shopify?.[PRODUCTS[key].handle];
     const price = live?.price ?? priceText.replace(/[^\d,]/g, '').replace(',', '.');
-    const offer = { '@type': 'Offer', url: abs(path), priceCurrency: live?.currency || 'EUR', price, itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${SITE.url}/#organisation` } };
+    const offer = { '@type': 'Offer', url: abs(path), priceCurrency: live?.currency || 'EUR', price, itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${SITE.url}/#organisation` }, shippingDetails: shipping, hasMerchantReturnPolicy: returns };
     if (live) offer.availability = live.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
     out.push(
-      { '@type': 'Product', name, description: page.description, image: imgs(main).slice(0, 8), brand: { '@type': 'Brand', name: SITE.name }, manufacturer: { '@id': `${SITE.url}/#organisation` }, offers: offer },
+      { '@type': 'Product', '@id': `${abs(path)}#produit`, name, description: page.description, image: imgs(main).slice(0, 8), brand: { '@type': 'Brand', name: SITE.name }, manufacturer: { '@id': `${SITE.url}/#organisation` }, ...ancolieFacts, offers: offer },
       crumbs([['Accueil', '/'], ['Collection Ancolie', '/collection-ancolie'], [name, path]]),
     );
     if (path !== '/') out.push(org());
@@ -63,9 +101,29 @@ export function jsonLd({ page, main, article, shopify }) {
     const product = {
       '@type': 'Product', name: 'Échiquier personnalisé Dame de Tours', description: page.description,
       image: imgs(main).slice(0, 8), brand: { '@type': 'Brand', name: SITE.name }, manufacturer: { '@id': `${SITE.url}/#organisation` },
+      countryOfOrigin: { '@type': 'Country', name: 'France' }, category: 'Jeux d’échecs personnalisés',
     };
     if (from) product.offers = { '@type': 'Offer', url: abs(path), priceCurrency: 'EUR', price: from, availability: 'https://schema.org/MadeToOrder', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${SITE.url}/#organisation` } };
     out.push(product, crumbs([['Accueil', '/'], ['Échiquier personnalisé', path]]), org());
+  } else if (path === '/collection-ancolie') {
+    out.push(
+      {
+        '@type': 'CollectionPage', '@id': `${abs(path)}#collection`, name: 'Collection Ancolie', url: abs(path), description: page.description, inLanguage: 'fr-FR',
+        publisher: { '@id': `${SITE.url}/#organisation` },
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: Object.keys(PRODUCTS).map((key, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(`/${key}`) })),
+        },
+      },
+      crumbs([['Accueil', '/'], ['Collection Ancolie', path]]),
+      org(),
+    );
+  } else if (path === '/atelier') {
+    out.push(
+      { '@type': 'AboutPage', name: 'L’atelier Dame de Tours', url: abs(path), description: page.description, inLanguage: 'fr-FR', about: { '@id': `${SITE.url}/#organisation` } },
+      crumbs([['Accueil', '/'], ['L’atelier', path]]),
+      org(),
+    );
   } else if (path !== '/') {
     const h1 = main.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
     const name = h1 ? text(h1[1]) : page.title.split('|')[0].trim();

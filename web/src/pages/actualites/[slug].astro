@@ -26,7 +26,7 @@ const main = fill(tpl.trim(), {
   related: cards(articles, { limit: 3, exclude: a.slug }),
 });
 const page = {
-  path: `/actualites/${a.slug}`, title: a.seo?.title || `${a.title} | Dame de Tours`, description: a.seo?.description || a.intro,
+  path: `/actualites/${a.slug}`, title: a.seo?.title || (a.title.includes('Dame de Tours') ? a.title : `${a.title} | Dame de Tours`), description: a.seo?.description || a.intro,
   ogImage: a.seo?.ogImage || a.cover.src, ogType: 'article', wfPage: meta.wfPage, navCurrent: meta.navCurrent, footerCurrent: meta.footerCurrent,
 };
 const ld = jsonLd({ page, main, article: a });
