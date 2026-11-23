@@ -1,1 +1,0 @@
-export{a as default}from"./sanity-CU8Ncqwr.js";
