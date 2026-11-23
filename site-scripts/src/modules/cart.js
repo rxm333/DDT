@@ -1,6 +1,7 @@
 import { $, $$, prefersReducedMotion } from '../core/env.js';
 import { createClient, shopifyConfig } from './shopify.js';
 import { resumeHref, recapHref } from './customizer-embed.js';
+import { originAttributes } from './origin.js';
 
 /**
  * Panier Shopify (API Storefront).
@@ -395,10 +396,10 @@ export function initCart({ lenis, navbar } = {}) {
           result = await client.addLines(cart.id, lines);
         } catch (error) {
           if (!isMissingCart(error)) throw error;
-          result = await client.createCart(lines); // panier expiré entre-temps
+          result = await client.createCart(lines, originAttributes()); // panier expiré entre-temps
         }
       } else {
-        result = await client.createCart(lines);
+        result = await client.createCart(lines, originAttributes());
       }
       highlight = true;
       setCart(result.cart);
@@ -556,8 +557,18 @@ export function initCart({ lenis, navbar } = {}) {
     if (event.target.closest('[data-cart-close]')) return close();
     const checkout = event.target.closest('[data-cart-checkout]');
     if (checkout) {
-      if (checkout.getAttribute('aria-disabled') === 'true') event.preventDefault();
-      else checkout.classList.add('is-loading'); // départ vers la page de paiement Shopify
+      if (checkout.getAttribute('aria-disabled') === 'true') return event.preventDefault();
+      checkout.classList.add('is-loading'); // départ vers la page de paiement Shopify
+      // Panier créé avant le suivi de l'origine (ou sur un autre site) : l'origine est ajoutée juste avant
+      // le paiement, sans jamais retarder le départ de plus d'une seconde et demie.
+      if (cart?.id && !cart.attributes?.some((a) => a.key === 'Origine de la visite')) {
+        const attrs = originAttributes();
+        if (attrs.length && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
+          event.preventDefault();
+          const go = () => (location.href = checkout.href);
+          Promise.race([client.updateAttributes(cart.id, attrs), new Promise((r) => setTimeout(r, 1500))]).catch(() => {}).finally(go);
+        }
+      }
       return;
     }
     const button = event.target.closest('button[data-cart-action]');

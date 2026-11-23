@@ -32,6 +32,7 @@ export function shopifyConfig() {
 const CART_FIELDS = `
   id
   checkoutUrl
+  attributes { key value }
   totalQuantity
   cost {
     subtotalAmount { amount currencyCode }
@@ -130,12 +131,20 @@ export function createClient(config = shopifyConfig()) {
       return data.cart; // null si le panier a expiré ou a été payé
     },
 
-    async createCart(lines) {
+    async createCart(lines, attributes = []) {
       const query = `mutation CartCreate($input: CartInput!) ${context} {
         cartCreate(input: $input) { cart { ${CART_FIELDS} } ${MUTATION_TAIL} }
       }`;
       const input = { lines, buyerIdentity: { countryCode: config.country || 'FR' } };
+      if (attributes.length) input.attributes = attributes;
       return unwrap((await request(query, { input })).cartCreate);
+    },
+
+    async updateAttributes(cartId, attributes) {
+      const query = `mutation CartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) ${context} {
+        cartAttributesUpdate(cartId: $cartId, attributes: $attributes) { cart { ${CART_FIELDS} } ${MUTATION_TAIL} }
+      }`;
+      return unwrap((await request(query, { cartId, attributes })).cartAttributesUpdate);
     },
 
     async addLines(cartId, lines) {

@@ -181,6 +181,12 @@ assert.ok(drawer.open, 'panneau ouvert après l’ajout');
 const create = calls.find((c) => c.op === 'CartCreate');
 assert.deepEqual(create.variables.input.lines, [{ merchandiseId: 'gid://shopify/ProductVariant/1', quantity: 2 }], 'panier créé avec la bonne variante et la quantité');
 assert.equal(window.localStorage.getItem('dds-cart:id'), 'gid://shopify/Cart/c1', 'identifiant du panier gardé');
+{
+  // Origine de la visite jointe au panier (visible dans la commande Shopify)
+  const attrs = Object.fromEntries((create.variables.input.attributes || []).map((a) => [a.key, a.value]));
+  assert.ok(attrs['Origine de la visite'], 'origine de la visite jointe au panier');
+  assert.ok(attrs['Page d’arrivée']?.startsWith('/'), 'page d’arrivée jointe au panier');
+}
 assert.equal(cartLink.getAttribute('aria-label'), 'Panier, 2 articles');
 assert.equal(cartLink.querySelector('.navbar_cart-count').textContent, '2');
 let lines = drawer.querySelectorAll('.cart_line');

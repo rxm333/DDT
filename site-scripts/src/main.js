@@ -28,6 +28,7 @@ import { initLogoSpin } from './modules/logo-spin.js';
 import { initArticle } from './modules/article.js';
 import { initNewsLists } from './modules/news.js';
 import { initCart } from './modules/cart.js';
+import { captureOrigin } from './modules/origin.js';
 import { initCustomizerEmbed, resumeCreationFromUrl } from './modules/customizer-embed.js';
 import { initVideos } from './modules/video.js';
 
@@ -90,6 +91,7 @@ function destroyPage() {
 }
 
 function boot() {
+  safe('origin', captureOrigin); // avant tout : la première page vue est celle d'arrivée
   if (window.DDS?.version) return; // déjà initialisé
 
   // --- Éléments persistants (hors conteneur Barba) : une seule fois ---
