@@ -178,8 +178,8 @@
      "name": "i17",
      "type": "image",
      "section": "s1",
-     "label": "Photo (ancolie-la-chute-des-anges.webp)",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "label": "Photo (ancolie-la-chute-des-anges-v2.webp)",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": ""
     },
     {
@@ -531,7 +531,7 @@
      "type": "image",
      "section": "s4",
      "label": "Photo : Échiquier La Chute des Anges : plateau aux veines ",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": "Échiquier La Chute des Anges : plateau aux veines grises façon marbre, pièces noires et blanches."
     },
     {
@@ -746,8 +746,8 @@
      "name": "i17",
      "type": "image",
      "section": "s1",
-     "label": "Photo (ancolie-la-chute-des-anges.webp)",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "label": "Photo (ancolie-la-chute-des-anges-v2.webp)",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": ""
     },
     {
@@ -1307,8 +1307,8 @@
      "name": "i17",
      "type": "image",
      "section": "s1",
-     "label": "Photo (ancolie-la-chute-des-anges.webp)",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "label": "Photo (ancolie-la-chute-des-anges-v2.webp)",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": ""
     },
     {
@@ -1660,7 +1660,7 @@
      "type": "image",
      "section": "s4",
      "label": "Photo : Échiquier La Chute des Anges : plateau aux veines ",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": "Échiquier La Chute des Anges : plateau aux veines grises façon marbre, pièces noires et blanches."
     },
     {
@@ -2158,15 +2158,15 @@
      "type": "image",
      "section": "s1",
      "label": "Photo : Échiquier La Chute des Anges : plateau aux veines ",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": "Échiquier La Chute des Anges : plateau aux veines grises façon marbre, pièces noires et blanches."
     },
     {
      "name": "i12",
      "type": "image",
      "section": "s1",
-     "label": "Photo (ancolie-la-chute-des-anges.webp)",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "label": "Photo (ancolie-la-chute-des-anges-v2.webp)",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": ""
     },
     {
@@ -2299,7 +2299,7 @@
      "type": "image",
      "section": "s3",
      "label": "Photo : Échiquier La Chute des Anges de la collection Anco",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": "Échiquier La Chute des Anges de la collection Ancolie : plateau aux veines grises façon marbre, pièces noires et blanches."
     },
     {
@@ -4097,7 +4097,7 @@
      "type": "image",
      "section": "s2",
      "label": "Photo : Échiquier La Chute des Anges : plateau aux veines ",
-     "src": "/images/ancolie-la-chute-des-anges.webp",
+     "src": "/images/ancolie-la-chute-des-anges-v2.webp",
      "alt": "Échiquier La Chute des Anges : plateau aux veines grises façon marbre, pièces noires et blanches."
     },
     {
@@ -5297,7 +5297,7 @@
      "type": "image",
      "section": "s2",
      "label": "Photo : Le personnaliseur en ligne : échiquier rouge et bl",
-     "src": "/images/perso-etape-composer.webp",
+     "src": "/images/perso-etape-composer-v2.webp",
      "alt": "Le personnaliseur en ligne : échiquier rouge et bleu en 3D et palette de couleurs des cases."
     },
     {
@@ -5319,7 +5319,7 @@
      "type": "image",
      "section": "s2",
      "label": "Photo : Mains décollant le film protecteur d’un plateau au",
-     "src": "/images/perso-etape-sauvegarder.webp",
+     "src": "/images/perso-etape-sauvegarder-v2.webp",
      "alt": "Mains décollant le film protecteur d’un plateau au damier bleu et blanc bordé de cuir rouge."
     },
     {
@@ -5341,7 +5341,7 @@
      "type": "image",
      "section": "s2",
      "label": "Photo : Échiquier personnalisé terminé : plateau rouge, da",
-     "src": "/images/perso-etape-atelier.webp",
+     "src": "/images/perso-etape-atelier-v2.webp",
      "alt": "Échiquier personnalisé terminé : plateau rouge, damier bleu et blanc, pièces bleues et blanches."
     },
     {

@@ -128,7 +128,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -745,7 +745,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -757,14 +757,14 @@ export const pageDocs = [
    },
    {
     "name": "i12",
-    "title": "Photo (ancolie-la-chute-des-anges.webp)",
+    "title": "Photo (ancolie-la-chute-des-anges-v2.webp)",
     "fieldset": "s1",
     "group": "contenu",
     "type": "image",
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -984,7 +984,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -1954,7 +1954,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-composer.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (perso-etape-composer-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -1990,7 +1990,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-sauvegarder.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (perso-etape-sauvegarder-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -2026,7 +2026,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-atelier.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (perso-etape-atelier-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -2963,14 +2963,14 @@ export const pageDocs = [
    },
    {
     "name": "i17",
-    "title": "Photo (ancolie-la-chute-des-anges.webp)",
+    "title": "Photo (ancolie-la-chute-des-anges-v2.webp)",
     "fieldset": "s1",
     "group": "contenu",
     "type": "image",
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -3450,7 +3450,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -3862,14 +3862,14 @@ export const pageDocs = [
    },
    {
     "name": "i17",
-    "title": "Photo (ancolie-la-chute-des-anges.webp)",
+    "title": "Photo (ancolie-la-chute-des-anges-v2.webp)",
     "fieldset": "s1",
     "group": "contenu",
     "type": "image",
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -4349,7 +4349,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",
@@ -4761,14 +4761,14 @@ export const pageDocs = [
    },
    {
     "name": "i17",
-    "title": "Photo (ancolie-la-chute-des-anges.webp)",
+    "title": "Photo (ancolie-la-chute-des-anges-v2.webp)",
     "fieldset": "s1",
     "group": "contenu",
     "type": "image",
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (ancolie-la-chute-des-anges-v2.webp).",
     "fields": [
      {
       "name": "alt",

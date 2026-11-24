@@ -14,7 +14,7 @@ const QUERY = `*[_type == "article" && defined(slug.current) && !(_id in path("d
 const PRODUCT_CARDS = {
   blanc: { name: 'Ancolie Blanc', detail: 'Collection Ancolie', image: '/images/ancolie-blanc.webp', href: '/ancolie-blanc', priceKey: 'blanc', price: '199 €' },
   noir: { name: 'Ancolie Noir', detail: 'Collection Ancolie', image: '/images/ancolie-noir.webp', href: '/ancolie-noir', priceKey: 'noir', price: '199 €' },
-  'la-chute-des-anges': { name: 'La Chute des Anges', detail: 'Collection Ancolie · Série limitée', image: '/images/ancolie-la-chute-des-anges.webp', href: '/ancolie-la-chute-des-anges', priceKey: 'la-chute-des-anges', price: '199 €' },
+  'la-chute-des-anges': { name: 'La Chute des Anges', detail: 'Collection Ancolie · Série limitée', image: '/images/ancolie-la-chute-des-anges-v2.webp', href: '/ancolie-la-chute-des-anges', priceKey: 'la-chute-des-anges', price: '199 €' },
 };
 
 const img = (url, w) => (url ? `${url}?w=${w}&fit=max&auto=format` : '');
