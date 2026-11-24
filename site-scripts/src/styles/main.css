@@ -987,3 +987,21 @@ html.dds-film-open { overflow: hidden; }
   .atelier-hero_reel, .col-note_film-video, .dds-video_sound { transition: none; }
   .dds-film[open] { animation: none; }
 }
+
+/* ---------- Cartes produit : halo seulement au survol, sur toutes les cartes ---------- */
+.product-card_media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(closest-side, #2d2b35, #19191e00);
+  opacity: 0;
+  transition: opacity 0.5s var(--dds-ease-out);
+  pointer-events: none;
+}
+.product-card_media .product-card_image { position: relative; z-index: 1; }
+.product-card_media .product-card_media-link { z-index: 2; } /* le lien reste cliquable au-dessus de la photo */
+.product-card_component:hover .product-card_media::before,
+.product-card_media:focus-within::before { opacity: 1; }
+@media (hover: none) { .product-card_media::before { display: none; } }
+@media (prefers-reduced-motion: reduce) { .product-card_media::before { transition: none; } }

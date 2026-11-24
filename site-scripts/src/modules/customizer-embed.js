@@ -238,7 +238,15 @@ export function initCustomizerEmbed({ lenis, cart } = {}) {
       if (session || document.fullscreenElement || document.documentElement.classList.contains('is-cart-open')) return;
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const now = lenis ? lenis.animatedScroll ?? lenis.scroll : window.scrollY;
-      if (data.type === 'ddt:scroll-by' && Number.isFinite(data.dy) && Math.abs(data.dy) < 400) {
+      if (data.type === 'ddt:scroll-by' && Number.isFinite(data.dy) && Math.abs(data.dy) < 2000) {
+        if (data.smooth) {
+          // Molette : on s'ajoute à la cible en cours pour garder le défilement doux de la page
+          const from = lenis ? lenis.targetScroll ?? now : window.scrollY;
+          const y = Math.max(0, Math.min(max, from + data.dy));
+          if (lenis) lenis.scrollTo(y, { force: true });
+          else window.scrollTo({ top: y, behavior: 'auto' });
+          return;
+        }
         const y = Math.max(0, Math.min(max, now + data.dy));
         if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
         else window.scrollTo(0, y);
