@@ -1793,7 +1793,7 @@
      "type": "image",
      "section": "s2",
      "label": "Photo : Un artisan de l’atelier trace à la main le dessin ",
-     "src": "/images/perso-etape-atelier.webp",
+     "src": "/images/atelier-artisan-dessin.webp",
      "alt": "Un artisan de l’atelier trace à la main le dessin d’un plateau."
     },
     {
@@ -1901,7 +1901,7 @@
      "type": "image",
      "section": "s3",
      "label": "Photo : Mains qui rabattent le revêtement en cuir sur le b",
-     "src": "/images/perso-etape-sauvegarder.webp",
+     "src": "/images/atelier-pose-revetement.webp",
      "alt": "Mains qui rabattent le revêtement en cuir sur le bord d’un plateau."
     },
     {
@@ -1923,7 +1923,7 @@
      "type": "image",
      "section": "s3",
      "label": "Photo : Échiquier vert et blanc terminé, pièces en place.",
-     "src": "/images/perso-etape-composer.webp",
+     "src": "/images/atelier-plateau-mousse.webp",
      "alt": "Échiquier vert et blanc terminé, pièces en place."
     },
     {
@@ -4194,44 +4194,92 @@
      "original": "Découvrir l’atelier"
     },
     {
-     "name": "i17",
+     "name": "i38",
      "type": "image",
      "section": "s4",
-     "label": "Photo : Pièces d’échecs blanches sculptées sur un plateau,",
-     "src": "/images/atelier-pieces-blanches.webp",
-     "alt": "Pièces d’échecs blanches sculptées sur un plateau, en extérieur."
+     "label": "Photo : Pièces d’échecs vertes ornées de fleurs blanches, ",
+     "src": "/images/atelier-carousel-01.webp",
+     "alt": "Pièces d’échecs vertes ornées de fleurs blanches, sur un échiquier personnalisé."
     },
     {
-     "name": "i18",
+     "name": "i39",
      "type": "image",
      "section": "s4",
-     "label": "Photo : Pose d’un damier bleu et blanc sur un plateau roug",
-     "src": "/images/perso-etape-sauvegarder.webp",
-     "alt": "Pose d’un damier bleu et blanc sur un plateau rouge, à l’atelier."
+     "label": "Photo : Mains décollant le film d’un plateau au damier ble",
+     "src": "/images/atelier-carousel-02.webp",
+     "alt": "Mains décollant le film d’un plateau au damier bleu et blanc bordé de cuir rouge."
     },
     {
-     "name": "i19",
-     "type": "image",
-     "section": "s4",
-     "label": "Photo : L’artisan trace le plateau d’un échiquier à l’atel",
-     "src": "/images/perso-etape-atelier.webp",
-     "alt": "L’artisan trace le plateau d’un échiquier à l’atelier."
-    },
-    {
-     "name": "i20",
-     "type": "image",
-     "section": "s4",
-     "label": "Photo : Échiquier vert et blanc orné de mousse végétale.",
-     "src": "/images/perso-etape-composer.webp",
-     "alt": "Échiquier vert et blanc orné de mousse végétale."
-    },
-    {
-     "name": "i21",
+     "name": "i40",
      "type": "image",
      "section": "s4",
      "label": "Photo : Les lauréats de l’exposition artistique 2026 au ch",
-     "src": "/images/atelier-laureats-mothe-chandeniers.webp",
+     "src": "/images/atelier-carousel-03.webp",
      "alt": "Les lauréats de l’exposition artistique 2026 au château de la Mothe-Chandeniers, avec leur échiquier."
+    },
+    {
+     "name": "i41",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Pièces blanches sculptées sur l’échiquier de la Mo",
+     "src": "/images/atelier-carousel-04.webp",
+     "alt": "Pièces blanches sculptées sur l’échiquier de la Mothe-Chandeniers."
+    },
+    {
+     "name": "i42",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Clou ornemental planté dans le cuir du plateau, en",
+     "src": "/images/atelier-carousel-05.webp",
+     "alt": "Clou ornemental planté dans le cuir du plateau, en gros plan."
+    },
+    {
+     "name": "i43",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Bord de l’échiquier La Chute des Anges, signé Dame",
+     "src": "/images/atelier-carousel-07.webp",
+     "alt": "Bord de l’échiquier La Chute des Anges, signé Dame de Tours, et ses pièces."
+    },
+    {
+     "name": "i44",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Main tenant l’angle rouge d’un plateau bordé de cl",
+     "src": "/images/atelier-carousel-06.webp",
+     "alt": "Main tenant l’angle rouge d’un plateau bordé de clous dorés."
+    },
+    {
+     "name": "i45",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Pièces bleues en gros plan et angle rouge d’un pla",
+     "src": "/images/atelier-carousel-08.webp",
+     "alt": "Pièces bleues en gros plan et angle rouge d’un plateau tenu à la main."
+    },
+    {
+     "name": "i46",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Pièces d’échecs bleues cerclées de blanc, en gros ",
+     "src": "/images/atelier-carousel-09.webp",
+     "alt": "Pièces d’échecs bleues cerclées de blanc, en gros plan."
+    },
+    {
+     "name": "i47",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Fou et cavalier roses sculptés, en gros plan.",
+     "src": "/images/atelier-carousel-10.webp",
+     "alt": "Fou et cavalier roses sculptés, en gros plan."
+    },
+    {
+     "name": "i48",
+     "type": "image",
+     "section": "s4",
+     "label": "Photo : Angle d’un plateau blanc orné d’une rosace, pièces",
+     "src": "/images/atelier-carousel-11.webp",
+     "alt": "Angle d’un plateau blanc orné d’une rosace, pièces noires."
     },
     {
      "name": "t22",
@@ -5061,7 +5109,7 @@
      "type": "image",
      "section": "s4",
      "label": "Photo : Un artisan de l’atelier trace à la main le dessin ",
-     "src": "/images/perso-etape-atelier.webp",
+     "src": "/images/atelier-artisan-dessin.webp",
      "alt": "Un artisan de l’atelier trace à la main le dessin d’un plateau."
     },
     {
@@ -5248,9 +5296,9 @@
      "name": "i3",
      "type": "image",
      "section": "s2",
-     "label": "Photo : Échiquier personnalisé aux pièces vertes et blanch",
+     "label": "Photo : Le personnaliseur en ligne : échiquier rouge et bl",
      "src": "/images/perso-etape-composer.webp",
-     "alt": "Échiquier personnalisé aux pièces vertes et blanches posé sur une nappe blanche."
+     "alt": "Le personnaliseur en ligne : échiquier rouge et bleu en 3D et palette de couleurs des cases."
     },
     {
      "name": "t4",
@@ -5292,9 +5340,9 @@
      "name": "i9",
      "type": "image",
      "section": "s2",
-     "label": "Photo : Artisan de l’atelier travaillant à la main sur un ",
+     "label": "Photo : Échiquier personnalisé terminé : plateau rouge, da",
      "src": "/images/perso-etape-atelier.webp",
-     "alt": "Artisan de l’atelier travaillant à la main sur un plateau."
+     "alt": "Échiquier personnalisé terminé : plateau rouge, damier bleu et blanc, pièces bleues et blanches."
     },
     {
      "name": "t10",

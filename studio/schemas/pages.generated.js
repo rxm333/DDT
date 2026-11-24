@@ -269,83 +269,45 @@ export const pageDocs = [
     "description": "Texte d’origine : « Découvrir l’atelier »"
    },
    {
-    "name": "i17",
-    "title": "Photo : Pièces d’échecs blanches sculptées sur un plateau,",
+    "name": "i38",
+    "title": "Photo : Pièces d’échecs vertes ornées de fleurs blanches, ",
     "fieldset": "s4",
     "group": "contenu",
     "type": "image",
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (atelier-pieces-blanches.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-01.webp).",
     "fields": [
      {
       "name": "alt",
       "type": "string",
       "title": "Description de la photo",
-      "description": "Actuelle : « Pièces d’échecs blanches sculptées sur un plateau, en extérieur. »"
+      "description": "Actuelle : « Pièces d’échecs vertes ornées de fleurs blanches, sur un échiquier personnalisé. »"
      }
     ]
    },
    {
-    "name": "i18",
-    "title": "Photo : Pose d’un damier bleu et blanc sur un plateau roug",
+    "name": "i39",
+    "title": "Photo : Mains décollant le film d’un plateau au damier ble",
     "fieldset": "s4",
     "group": "contenu",
     "type": "image",
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-sauvegarder.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-02.webp).",
     "fields": [
      {
       "name": "alt",
       "type": "string",
       "title": "Description de la photo",
-      "description": "Actuelle : « Pose d’un damier bleu et blanc sur un plateau rouge, à l’atelier. »"
+      "description": "Actuelle : « Mains décollant le film d’un plateau au damier bleu et blanc bordé de cuir rouge. »"
      }
     ]
    },
    {
-    "name": "i19",
-    "title": "Photo : L’artisan trace le plateau d’un échiquier à l’atel",
-    "fieldset": "s4",
-    "group": "contenu",
-    "type": "image",
-    "options": {
-     "hotspot": true
-    },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-atelier.webp).",
-    "fields": [
-     {
-      "name": "alt",
-      "type": "string",
-      "title": "Description de la photo",
-      "description": "Actuelle : « L’artisan trace le plateau d’un échiquier à l’atelier. »"
-     }
-    ]
-   },
-   {
-    "name": "i20",
-    "title": "Photo : Échiquier vert et blanc orné de mousse végétale.",
-    "fieldset": "s4",
-    "group": "contenu",
-    "type": "image",
-    "options": {
-     "hotspot": true
-    },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-composer.webp).",
-    "fields": [
-     {
-      "name": "alt",
-      "type": "string",
-      "title": "Description de la photo",
-      "description": "Actuelle : « Échiquier vert et blanc orné de mousse végétale. »"
-     }
-    ]
-   },
-   {
-    "name": "i21",
+    "name": "i40",
     "title": "Photo : Les lauréats de l’exposition artistique 2026 au ch",
     "fieldset": "s4",
     "group": "contenu",
@@ -353,13 +315,165 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (atelier-laureats-mothe-chandeniers.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-03.webp).",
     "fields": [
      {
       "name": "alt",
       "type": "string",
       "title": "Description de la photo",
       "description": "Actuelle : « Les lauréats de l’exposition artistique 2026 au château de la Mothe-Chandeniers, avec leur échiquie… »"
+     }
+    ]
+   },
+   {
+    "name": "i41",
+    "title": "Photo : Pièces blanches sculptées sur l’échiquier de la Mo",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-04.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Pièces blanches sculptées sur l’échiquier de la Mothe-Chandeniers. »"
+     }
+    ]
+   },
+   {
+    "name": "i42",
+    "title": "Photo : Clou ornemental planté dans le cuir du plateau, en",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-05.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Clou ornemental planté dans le cuir du plateau, en gros plan. »"
+     }
+    ]
+   },
+   {
+    "name": "i43",
+    "title": "Photo : Bord de l’échiquier La Chute des Anges, signé Dame",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-07.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Bord de l’échiquier La Chute des Anges, signé Dame de Tours, et ses pièces. »"
+     }
+    ]
+   },
+   {
+    "name": "i44",
+    "title": "Photo : Main tenant l’angle rouge d’un plateau bordé de cl",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-06.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Main tenant l’angle rouge d’un plateau bordé de clous dorés. »"
+     }
+    ]
+   },
+   {
+    "name": "i45",
+    "title": "Photo : Pièces bleues en gros plan et angle rouge d’un pla",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-08.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Pièces bleues en gros plan et angle rouge d’un plateau tenu à la main. »"
+     }
+    ]
+   },
+   {
+    "name": "i46",
+    "title": "Photo : Pièces d’échecs bleues cerclées de blanc, en gros ",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-09.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Pièces d’échecs bleues cerclées de blanc, en gros plan. »"
+     }
+    ]
+   },
+   {
+    "name": "i47",
+    "title": "Photo : Fou et cavalier roses sculptés, en gros plan.",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-10.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Fou et cavalier roses sculptés, en gros plan. »"
+     }
+    ]
+   },
+   {
+    "name": "i48",
+    "title": "Photo : Angle d’un plateau blanc orné d’une rosace, pièces",
+    "fieldset": "s4",
+    "group": "contenu",
+    "type": "image",
+    "options": {
+     "hotspot": true
+    },
+    "description": "Laisser vide pour garder la photo actuelle (atelier-carousel-11.webp).",
+    "fields": [
+     {
+      "name": "alt",
+      "type": "string",
+      "title": "Description de la photo",
+      "description": "Actuelle : « Angle d’un plateau blanc orné d’une rosace, pièces noires. »"
      }
     ]
    },
@@ -1368,7 +1482,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-atelier.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (atelier-artisan-dessin.webp).",
     "fields": [
      {
       "name": "alt",
@@ -1526,7 +1640,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-sauvegarder.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (atelier-pose-revetement.webp).",
     "fields": [
      {
       "name": "alt",
@@ -1562,7 +1676,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-composer.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (atelier-plateau-mousse.webp).",
     "fields": [
      {
       "name": "alt",
@@ -1833,7 +1947,7 @@ export const pageDocs = [
    },
    {
     "name": "i3",
-    "title": "Photo : Échiquier personnalisé aux pièces vertes et blanch",
+    "title": "Photo : Le personnaliseur en ligne : échiquier rouge et bl",
     "fieldset": "s2",
     "group": "contenu",
     "type": "image",
@@ -1846,7 +1960,7 @@ export const pageDocs = [
       "name": "alt",
       "type": "string",
       "title": "Description de la photo",
-      "description": "Actuelle : « Échiquier personnalisé aux pièces vertes et blanches posé sur une nappe blanche. »"
+      "description": "Actuelle : « Le personnaliseur en ligne : échiquier rouge et bleu en 3D et palette de couleurs des cases. »"
      }
     ]
    },
@@ -1905,7 +2019,7 @@ export const pageDocs = [
    },
    {
     "name": "i9",
-    "title": "Photo : Artisan de l’atelier travaillant à la main sur un ",
+    "title": "Photo : Échiquier personnalisé terminé : plateau rouge, da",
     "fieldset": "s2",
     "group": "contenu",
     "type": "image",
@@ -1918,7 +2032,7 @@ export const pageDocs = [
       "name": "alt",
       "type": "string",
       "title": "Description de la photo",
-      "description": "Actuelle : « Artisan de l’atelier travaillant à la main sur un plateau. »"
+      "description": "Actuelle : « Échiquier personnalisé terminé : plateau rouge, damier bleu et blanc, pièces bleues et blanches. »"
      }
     ]
    },
@@ -8701,7 +8815,7 @@ export const pageDocs = [
     "options": {
      "hotspot": true
     },
-    "description": "Laisser vide pour garder la photo actuelle (perso-etape-atelier.webp).",
+    "description": "Laisser vide pour garder la photo actuelle (atelier-artisan-dessin.webp).",
     "fields": [
      {
       "name": "alt",
