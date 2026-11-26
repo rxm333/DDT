@@ -34,7 +34,8 @@ for (const file of pages) {
   for (const [, json] of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try { JSON.parse(json); } catch { fail('JSON-LD invalide'); }
   }
-  if (rel !== '404.html') {
+  const noindex = html.includes('<meta name="robots" content="noindex">');
+  if (rel !== '404.html' && !noindex) {
     const path = rel === 'index.html' ? '' : '/' + rel.replace(/\.html$/, '');
     if (!sitemap.includes(`/${path.slice(1)}</loc>`) && !(path === '' && sitemap.includes('.com</loc>'))) fail('absente du plan du site');
   }

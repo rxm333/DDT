@@ -7,16 +7,16 @@
    "sections": [
     {
      "name": "s1",
-     "title": "Actualités"
+     "title": "Actualités de l’atelier"
     }
    ],
    "fields": [
     {
-     "name": "t1",
+     "name": "t3",
      "kind": "plain",
      "section": "s1",
      "label": "Grand titre",
-     "original": "Actualités"
+     "original": "Actualités de l’atelier"
     },
     {
      "name": "t2",
@@ -34,7 +34,7 @@
    "sections": [
     {
      "name": "s1",
-     "title": "Ancolie Blanc"
+     "title": "Jeu d’échecs magnétique Ancolie Blanc"
     },
     {
      "name": "s2",
@@ -147,10 +147,17 @@
      "alt": ""
     },
     {
+     "name": "t75",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Texte 2",
+     "original": "Jeu d’échecs magnétique"
+    },
+    {
      "name": "t13",
      "kind": "plain",
      "section": "s1",
-     "label": "Grand titre",
+     "label": "Texte 3",
      "original": "Ancolie Blanc"
     },
     {
@@ -171,7 +178,7 @@
      "name": "t16",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 2",
+     "label": "Texte 4",
      "original": "Finition"
     },
     {
@@ -186,7 +193,7 @@
      "name": "t18",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 3",
+     "label": "Texte 5",
      "original": "La Chute des Anges"
     },
     {
@@ -201,7 +208,7 @@
      "name": "t20",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 4",
+     "label": "Texte 6",
      "original": "Blanc"
     },
     {
@@ -216,35 +223,35 @@
      "name": "t22",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 5",
+     "label": "Texte 7",
      "original": "Noir"
     },
     {
      "name": "t23",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 6",
+     "label": "Texte 8",
      "original": "Ajouter au panier"
     },
     {
      "name": "t24",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 7",
+     "label": "Texte 9",
      "original": "Conçu, fabriqué et assemblé à Tours"
     },
     {
      "name": "t25",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 8",
+     "label": "Texte 10",
      "original": "Exemplaire numéroté et certifié"
     },
     {
      "name": "t26",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 9",
+     "label": "Texte 11",
      "original": "Plateau et pièces aimantés"
     },
     {
@@ -602,7 +609,7 @@
    "sections": [
     {
      "name": "s1",
-     "title": "La Chute des Anges"
+     "title": "Échiquier en série limitée d’après Gustave Doré La Chute …"
     },
     {
      "name": "s2",
@@ -715,10 +722,17 @@
      "alt": ""
     },
     {
+     "name": "t74",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Texte 2",
+     "original": "Échiquier en série limitée d’après Gustave Doré"
+    },
+    {
      "name": "t13",
      "kind": "plain",
      "section": "s1",
-     "label": "Grand titre",
+     "label": "Texte 3",
      "original": "La Chute des Anges"
     },
     {
@@ -739,7 +753,7 @@
      "name": "t16",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 2",
+     "label": "Texte 4",
      "original": "Finition"
     },
     {
@@ -762,7 +776,7 @@
      "name": "t19",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 3",
+     "label": "Texte 5",
      "original": "Blanc"
     },
     {
@@ -777,35 +791,35 @@
      "name": "t21",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 4",
+     "label": "Texte 6",
      "original": "Noir"
     },
     {
      "name": "t22",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 5",
+     "label": "Texte 7",
      "original": "Ajouter au panier"
     },
     {
      "name": "t23",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 6",
+     "label": "Texte 8",
      "original": "Conçu, fabriqué et assemblé à Tours"
     },
     {
      "name": "t24",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 7",
+     "label": "Texte 9",
      "original": "Exemplaire numéroté et certifié"
     },
     {
      "name": "t25",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 8",
+     "label": "Texte 10",
      "original": "Plateau et pièces aimantés"
     },
     {
@@ -1163,7 +1177,7 @@
    "sections": [
     {
      "name": "s1",
-     "title": "Ancolie Noir"
+     "title": "Jeu d’échecs magnétique Ancolie Noir"
     },
     {
      "name": "s2",
@@ -1276,10 +1290,17 @@
      "alt": ""
     },
     {
+     "name": "t75",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Texte 2",
+     "original": "Jeu d’échecs magnétique"
+    },
+    {
      "name": "t13",
      "kind": "plain",
      "section": "s1",
-     "label": "Grand titre",
+     "label": "Texte 3",
      "original": "Ancolie Noir"
     },
     {
@@ -1300,7 +1321,7 @@
      "name": "t16",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 2",
+     "label": "Texte 4",
      "original": "Finition"
     },
     {
@@ -1315,7 +1336,7 @@
      "name": "t18",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 3",
+     "label": "Texte 5",
      "original": "La Chute des Anges"
     },
     {
@@ -1330,7 +1351,7 @@
      "name": "t20",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 4",
+     "label": "Texte 6",
      "original": "Blanc"
     },
     {
@@ -1345,35 +1366,35 @@
      "name": "t22",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 5",
+     "label": "Texte 7",
      "original": "Noir"
     },
     {
      "name": "t23",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 6",
+     "label": "Texte 8",
      "original": "Ajouter au panier"
     },
     {
      "name": "t24",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 7",
+     "label": "Texte 9",
      "original": "Conçu, fabriqué et assemblé à Tours"
     },
     {
      "name": "t25",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 8",
+     "label": "Texte 10",
      "original": "Exemplaire numéroté et certifié"
     },
     {
      "name": "t26",
      "kind": "plain",
      "section": "s1",
-     "label": "Texte 9",
+     "label": "Texte 11",
      "original": "Plateau et pièces aimantés"
     },
     {
@@ -1731,7 +1752,7 @@
    "sections": [
     {
      "name": "s1",
-     "title": "Fait à la main, en Touraine"
+     "title": "Jeux d’échecs artisanaux, faits main en Touraine"
     },
     {
      "name": "s2",
@@ -1775,11 +1796,11 @@
      "original": "L’atelier Dame de Tours"
     },
     {
-     "name": "t3",
+     "name": "t42",
      "kind": "plain",
      "section": "s1",
      "label": "Grand titre",
-     "original": "Fait à la main, en Touraine"
+     "original": "Jeux d’échecs artisanaux, faits main en Touraine"
     },
     {
      "name": "t4",
@@ -2089,6 +2110,13 @@
      "section": "s1",
      "label": "Texte (invisible, lu par Google et les lecteurs d’écran)",
      "original": "Collection Ancolie"
+    },
+    {
+     "name": "t62",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Grand titre",
+     "original": "Jeux d’échecs de luxe en série limitée"
     },
     {
      "name": "t2",
@@ -4034,7 +4062,7 @@
     },
     {
      "name": "s3",
-     "title": "Votre propre jeu d’échecs"
+     "title": "Votre échiquier personnalisé"
     },
     {
      "name": "s4",
@@ -4056,6 +4084,13 @@
      "section": "s1",
      "label": "Texte (invisible, lu par Google et les lecteurs d’écran)",
      "original": "Dame de Tours"
+    },
+    {
+     "name": "t49",
+     "kind": "plain",
+     "section": "s1",
+     "label": "Grand titre",
+     "original": "Échiquiers et jeux d’échecs personnalisés"
     },
     {
      "name": "t2",
@@ -4152,11 +4187,11 @@
      "original": "Personnalisation"
     },
     {
-     "name": "t35",
+     "name": "t50",
      "kind": "plain",
      "section": "s3",
      "label": "Titre",
-     "original": "Votre propre jeu d’échecs"
+     "original": "Votre échiquier personnalisé"
     },
     {
      "name": "t36",
@@ -4448,11 +4483,11 @@
    ],
    "fields": [
     {
-     "name": "t1",
+     "name": "t38",
      "kind": "plain",
      "section": "entete",
      "label": "Titre de la page",
-     "original": "Politique d’expédition"
+     "original": "Livraison et expédition"
     },
     {
      "name": "t2",
@@ -5279,7 +5314,7 @@
    ],
    "fields": [
     {
-     "name": "t1",
+     "name": "t55",
      "kind": "plain",
      "section": "s1",
      "label": "Grand titre (invisible, lu par Google et les lecteurs d’écran)",
@@ -5757,11 +5792,11 @@
    ],
    "fields": [
     {
-     "name": "t1",
+     "name": "t46",
      "kind": "plain",
      "section": "entete",
      "label": "Titre de la page",
-     "original": "Politique de remboursement"
+     "original": "Retours et remboursements"
     },
     {
      "name": "t2",

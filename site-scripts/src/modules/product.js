@@ -55,7 +55,7 @@ function initGallery(gallery) {
     if (photo) setMain(photo);
     gallery.setAttribute('data-model-viewer', '');
     gallery.dataset.viewerDefault = thumb.dataset.galleryModel || '';
-    gallery.dataset.viewerName = $('h1')?.textContent.trim() || '';
+    gallery.dataset.viewerName = ($('.prod-hero_name') || $('h1'))?.textContent.trim() || '';
     gallery.dataset.viewerFit = '1.32'; // l'échiquier entier, coins compris, dans le cadre
     gallery.dataset.viewerZoom = ''; // zoom autorisé (pincement, Ctrl + molette, boutons, double-clic)
     stage.setAttribute('data-viewer-stage', '');

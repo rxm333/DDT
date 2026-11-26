@@ -71,7 +71,7 @@ export function jsonLd({ page, main, article, shopify }) {
   }
   const key = path.slice(1);
   if (PRODUCTS[key]) {
-    const name = text(main.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1]);
+    const name = text((main.match(/class="prod-hero_name">([\s\S]*?)<\/span>/) || main.match(/<h1[^>]*>([\s\S]*?)<\/h1>/))[1]);
     const priceText = main.match(new RegExp(`data-cart-price="${PRODUCTS[key].key}" class="prod-hero_price">([^<]*)<`))?.[1] || '';
     const live = shopify?.[PRODUCTS[key].handle];
     const price = live?.price ?? priceText.replace(/[^\d,]/g, '').replace(',', '.');

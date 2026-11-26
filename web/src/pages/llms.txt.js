@@ -7,7 +7,7 @@ import { shopifyProducts } from '../lib/shopify.js';
 import { SITE, PRODUCTS, abs, NOINDEX } from '../lib/site.js';
 
 const LEGAL = ['/conditions-generales-de-vente', '/conditions-utilisation', '/confidentialite', '/mentions-legales', '/livraison', '/remboursements', '/coordonnees'];
-const ORDER = ['/', '/collection-ancolie', '/ancolie-blanc', '/ancolie-noir', '/ancolie-la-chute-des-anges', '/personnalisation', '/atelier', '/actualites', '/contact', '/ouverture'];
+const ORDER = ['/', '/collection-ancolie', '/ancolie-blanc', '/ancolie-noir', '/ancolie-la-chute-des-anges', '/personnalisation', '/atelier', '/actualites', '/contact'];
 const euros = (p) => (p ? `${Number(p.price).toLocaleString('fr-FR', { minimumFractionDigits: Number(p.price) % 1 ? 2 : 0 })} € TTC` : '');
 
 export async function GET() {

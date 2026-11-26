@@ -20,6 +20,6 @@ export const PRODUCTS = {
 };
 
 // Pages exclues du plan du site et marquées « noindex »
-export const NOINDEX = new Set(['/404']);
+export const NOINDEX = new Set(['/404', '/ouverture']); // /ouverture : page des QR codes, doublon de /personnalisation
 
 export const abs = (path) => (/^https?:/.test(path) ? path : SITE.url + (path === '/' ? '' : path));

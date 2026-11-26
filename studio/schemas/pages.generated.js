@@ -37,7 +37,7 @@ export const pageDocs = [
    },
    {
     "name": "s3",
-    "title": "Votre propre jeu d’échecs",
+    "title": "Votre échiquier personnalisé",
     "options": {
      "collapsible": true,
      "collapsed": true
@@ -76,6 +76,14 @@ export const pageDocs = [
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Dame de Tours »"
+   },
+   {
+    "name": "t49",
+    "title": "Grand titre",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Échiquiers et jeux d’échecs personnalisés »"
    },
    {
     "name": "t2",
@@ -219,12 +227,12 @@ export const pageDocs = [
     "description": "Texte d’origine : « Personnalisation »"
    },
    {
-    "name": "t35",
+    "name": "t50",
     "title": "Titre",
     "fieldset": "s3",
     "group": "contenu",
     "type": "string",
-    "description": "Texte d’origine : « Votre propre jeu d’échecs »"
+    "description": "Texte d’origine : « Votre échiquier personnalisé »"
    },
    {
     "name": "t36",
@@ -661,6 +669,14 @@ export const pageDocs = [
     "group": "contenu",
     "type": "string",
     "description": "Texte d’origine : « Collection Ancolie »"
+   },
+   {
+    "name": "t62",
+    "title": "Grand titre",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Jeux d’échecs de luxe en série limitée »"
    },
    {
     "name": "t2",
@@ -1372,7 +1388,7 @@ export const pageDocs = [
   "fieldsets": [
    {
     "name": "s1",
-    "title": "Fait à la main, en Touraine",
+    "title": "Jeux d’échecs artisanaux, faits main en Touraine",
     "options": {
      "collapsible": true,
      "collapsed": false
@@ -1457,12 +1473,12 @@ export const pageDocs = [
     "description": "Texte d’origine : « L’atelier Dame de Tours »"
    },
    {
-    "name": "t3",
+    "name": "t42",
     "title": "Grand titre",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
-    "description": "Texte d’origine : « Fait à la main, en Touraine »"
+    "description": "Texte d’origine : « Jeux d’échecs artisanaux, faits main en Touraine »"
    },
    {
     "name": "t4",
@@ -1930,7 +1946,7 @@ export const pageDocs = [
   ],
   "fields": [
    {
-    "name": "t1",
+    "name": "t55",
     "title": "Grand titre (invisible, lu par Google et les lecteurs d’écran)",
     "fieldset": "s1",
     "group": "contenu",
@@ -2625,7 +2641,7 @@ export const pageDocs = [
   "fieldsets": [
    {
     "name": "s1",
-    "title": "Actualités",
+    "title": "Actualités de l’atelier",
     "options": {
      "collapsible": true,
      "collapsed": false
@@ -2634,12 +2650,12 @@ export const pageDocs = [
   ],
   "fields": [
    {
-    "name": "t1",
+    "name": "t3",
     "title": "Grand titre",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
-    "description": "Texte d’origine : « Actualités »"
+    "description": "Texte d’origine : « Actualités de l’atelier »"
    },
    {
     "name": "t2",
@@ -2688,7 +2704,7 @@ export const pageDocs = [
   "fieldsets": [
    {
     "name": "s1",
-    "title": "Ancolie Noir",
+    "title": "Jeu d’échecs magnétique Ancolie Noir",
     "options": {
      "collapsible": true,
      "collapsed": false
@@ -2928,8 +2944,16 @@ export const pageDocs = [
     ]
    },
    {
+    "name": "t75",
+    "title": "Texte 2",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Jeu d’échecs magnétique »"
+   },
+   {
     "name": "t13",
-    "title": "Grand titre",
+    "title": "Texte 3",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -2955,7 +2979,7 @@ export const pageDocs = [
    },
    {
     "name": "t16",
-    "title": "Texte 2",
+    "title": "Texte 4",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -2981,7 +3005,7 @@ export const pageDocs = [
    },
    {
     "name": "t18",
-    "title": "Texte 3",
+    "title": "Texte 5",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3007,7 +3031,7 @@ export const pageDocs = [
    },
    {
     "name": "t20",
-    "title": "Texte 4",
+    "title": "Texte 6",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3033,7 +3057,7 @@ export const pageDocs = [
    },
    {
     "name": "t22",
-    "title": "Texte 5",
+    "title": "Texte 7",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3041,7 +3065,7 @@ export const pageDocs = [
    },
    {
     "name": "t23",
-    "title": "Texte 6",
+    "title": "Texte 8",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3049,7 +3073,7 @@ export const pageDocs = [
    },
    {
     "name": "t24",
-    "title": "Texte 7",
+    "title": "Texte 9",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3057,7 +3081,7 @@ export const pageDocs = [
    },
    {
     "name": "t25",
-    "title": "Texte 8",
+    "title": "Texte 10",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3065,7 +3089,7 @@ export const pageDocs = [
    },
    {
     "name": "t26",
-    "title": "Texte 9",
+    "title": "Texte 11",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3587,7 +3611,7 @@ export const pageDocs = [
   "fieldsets": [
    {
     "name": "s1",
-    "title": "Ancolie Blanc",
+    "title": "Jeu d’échecs magnétique Ancolie Blanc",
     "options": {
      "collapsible": true,
      "collapsed": false
@@ -3827,8 +3851,16 @@ export const pageDocs = [
     ]
    },
    {
+    "name": "t75",
+    "title": "Texte 2",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Jeu d’échecs magnétique »"
+   },
+   {
     "name": "t13",
-    "title": "Grand titre",
+    "title": "Texte 3",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3854,7 +3886,7 @@ export const pageDocs = [
    },
    {
     "name": "t16",
-    "title": "Texte 2",
+    "title": "Texte 4",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3880,7 +3912,7 @@ export const pageDocs = [
    },
    {
     "name": "t18",
-    "title": "Texte 3",
+    "title": "Texte 5",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3906,7 +3938,7 @@ export const pageDocs = [
    },
    {
     "name": "t20",
-    "title": "Texte 4",
+    "title": "Texte 6",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3932,7 +3964,7 @@ export const pageDocs = [
    },
    {
     "name": "t22",
-    "title": "Texte 5",
+    "title": "Texte 7",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3940,7 +3972,7 @@ export const pageDocs = [
    },
    {
     "name": "t23",
-    "title": "Texte 6",
+    "title": "Texte 8",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3948,7 +3980,7 @@ export const pageDocs = [
    },
    {
     "name": "t24",
-    "title": "Texte 7",
+    "title": "Texte 9",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3956,7 +3988,7 @@ export const pageDocs = [
    },
    {
     "name": "t25",
-    "title": "Texte 8",
+    "title": "Texte 10",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -3964,7 +3996,7 @@ export const pageDocs = [
    },
    {
     "name": "t26",
-    "title": "Texte 9",
+    "title": "Texte 11",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4486,7 +4518,7 @@ export const pageDocs = [
   "fieldsets": [
    {
     "name": "s1",
-    "title": "La Chute des Anges",
+    "title": "Échiquier en série limitée d’après Gustave Doré La Chute …",
     "options": {
      "collapsible": true,
      "collapsed": false
@@ -4726,8 +4758,16 @@ export const pageDocs = [
     ]
    },
    {
+    "name": "t74",
+    "title": "Texte 2",
+    "fieldset": "s1",
+    "group": "contenu",
+    "type": "string",
+    "description": "Texte d’origine : « Échiquier en série limitée d’après Gustave Doré »"
+   },
+   {
     "name": "t13",
-    "title": "Grand titre",
+    "title": "Texte 3",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4753,7 +4793,7 @@ export const pageDocs = [
    },
    {
     "name": "t16",
-    "title": "Texte 2",
+    "title": "Texte 4",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4797,7 +4837,7 @@ export const pageDocs = [
    },
    {
     "name": "t19",
-    "title": "Texte 3",
+    "title": "Texte 5",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4823,7 +4863,7 @@ export const pageDocs = [
    },
    {
     "name": "t21",
-    "title": "Texte 4",
+    "title": "Texte 6",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4831,7 +4871,7 @@ export const pageDocs = [
    },
    {
     "name": "t22",
-    "title": "Texte 5",
+    "title": "Texte 7",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4839,7 +4879,7 @@ export const pageDocs = [
    },
    {
     "name": "t23",
-    "title": "Texte 6",
+    "title": "Texte 8",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4847,7 +4887,7 @@ export const pageDocs = [
    },
    {
     "name": "t24",
-    "title": "Texte 7",
+    "title": "Texte 9",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -4855,7 +4895,7 @@ export const pageDocs = [
    },
    {
     "name": "t25",
-    "title": "Texte 8",
+    "title": "Texte 10",
     "fieldset": "s1",
     "group": "contenu",
     "type": "string",
@@ -6389,12 +6429,12 @@ export const pageDocs = [
   ],
   "fields": [
    {
-    "name": "t1",
+    "name": "t38",
     "title": "Titre de la page",
     "fieldset": "entete",
     "group": "contenu",
     "type": "string",
-    "description": "Texte d’origine : « Politique d’expédition »"
+    "description": "Texte d’origine : « Livraison et expédition »"
    },
    {
     "name": "t2",
@@ -6881,12 +6921,12 @@ export const pageDocs = [
   ],
   "fields": [
    {
-    "name": "t1",
+    "name": "t46",
     "title": "Titre de la page",
     "fieldset": "entete",
     "group": "contenu",
     "type": "string",
-    "description": "Texte d’origine : « Politique de remboursement »"
+    "description": "Texte d’origine : « Retours et remboursements »"
    },
    {
     "name": "t2",

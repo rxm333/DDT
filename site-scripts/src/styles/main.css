@@ -1005,3 +1005,15 @@ html.dds-film-open { overflow: hidden; }
 .product-card_media:focus-within::before { opacity: 1; }
 @media (hover: none) { .product-card_media::before { display: none; } }
 @media (prefers-reduced-motion: reduce) { .product-card_media::before { transition: none; } }
+
+/* Petits titres H1 porteurs de mots-clés (accueil, collection, fiches produit) : style « surtitre » du site,
+   le logo ou le nom du jeu restent affichés en grand à l'identique */
+.hero_kicker,
+.prod-hero_kicker {
+  font-family: var(--font-family--body);
+  font-weight: 400;
+  line-height: 1.4;
+}
+.hero_kicker { margin: 0 0 -0.75rem; }
+.col-hero_content .hero_kicker { margin: -0.75rem 0 -1rem; }
+.prod-hero_kicker { display: block; margin-bottom: 0.5rem; }
