@@ -324,30 +324,33 @@ html.lenis.lenis-smooth {
   cursor: grabbing;
 }
 
-/* Le texte du héros apparaît après l'échiquier (classe .is-hero-in posée par le JS).
-   Filet de sécurité : sans JS ou si la 3D échoue, il apparaît de lui-même au bout de 4 s. */
+/* Ouverture du héros : le grand logo « Dame de Tours » apparaît tout de suite, sans attendre la 3D,
+   puis l'échiquier arrive par-dessus les lettres (calque au-dessus). Le reste du texte (petit titre,
+   phrase, boutons) apparaît avec l'échiquier (classe .is-hero-in posée par le JS).
+   Filet de sécurité : sans JS ou si la 3D échoue, il apparaît de lui-même au bout de 7 s. */
 @media (prefers-reduced-motion: no-preference) {
-  .section_hero:has(.hero_viewer) :is(.hero_heading, .hero_content) {
+  .section_hero:has(.hero_viewer) .hero_heading {
+    animation: dds-hero-wordmark 1.6s var(--dds-ease-out) 0.15s both;
+  }
+  .section_hero:has(.hero_viewer) .hero_content {
     opacity: 0;
     transform: translateY(18px);
     animation: dds-hero-failsafe 0.8s var(--dds-ease-out) 7s forwards;
   }
-  .section_hero:has(.hero_viewer) .hero_heading {
-    filter: blur(10px);
-    transform: translateY(10px) scale(0.985);
-  }
-  .section_hero.is-hero-in :is(.hero_heading, .hero_content) {
+  .section_hero.is-hero-in .hero_content {
     animation: none;
     opacity: 1;
     transform: none;
-    filter: none;
     transition:
-      opacity 1.1s var(--dds-ease-out),
-      transform 1.4s var(--dds-ease-out),
-      filter 1.2s var(--dds-ease-out);
+      opacity 1.1s var(--dds-ease-out) 0.25s,
+      transform 1.4s var(--dds-ease-out) 0.25s;
   }
-  .section_hero.is-hero-in .hero_content {
-    transition-delay: 0.25s;
+}
+@keyframes dds-hero-wordmark {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(10px) scale(0.985);
   }
 }
 @keyframes dds-hero-failsafe {
@@ -969,7 +972,14 @@ html.dds-film-open { overflow: hidden; }
 .perso-film_title .collection_heading { margin: 0; }
 .perso-film_side { display: flex; flex-direction: column; align-items: flex-start; row-gap: 1.5rem; }
 .perso-film_text { margin: 0; color: var(--_theme---text--muted); font-size: 1.125rem; line-height: 1.55; }
-.perso-film_media { position: relative; aspect-ratio: 16 / 9; border-radius: var(--dds-radius-panel, 1.75rem); overflow: hidden; background: #000; box-shadow: inset 0 0 0 1px #ffffff14, 0 2px 4px #0003, 0 24px 60px #00000059, 0 0 120px -30px #b26bff59; }
+.perso-film_media { position: relative; aspect-ratio: 16 / 9; border-radius: var(--dds-radius-panel, 1.75rem); overflow: hidden; background: #000; box-shadow: 0 0 0 1px #00000080, 0 1px 2px #0000004d, 0 12px 24px -8px #00000066, 0 40px 80px -24px #00000080; }
+/* Biseau intérieur posé sur la vidéo : liseré dégradé (plus clair en haut), bords assombris ; pas de halo coloré */
+.perso-film_media::before,
+.perso-film_media::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; }
+.perso-film_media::before { box-shadow: inset 0 0 0 7px #0000003d, inset 0 0 56px 6px #0000008c, inset 0 -80px 80px -56px #000000b3; }
+.perso-film_media::after { padding: 1px; background: linear-gradient(180deg, #ffffff47 0%, #ffffff14 30%, #ffffff0a 70%, #ffffff1f 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
 .perso-film_media .dds-video_sound { right: 1.25rem; bottom: 1.25rem; }
 @media (max-width: 991px) {
   .perso-film_component { padding-block: 5rem; row-gap: 2rem; }
